@@ -9,10 +9,15 @@ import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/data/models/delete/delete_confirmation_type.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.f.dart';
 import 'package:ion/app/features/feed/providers/delete_entity_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/current_user_story_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/feed_stories_provider.r.dart';
+import 'package:ion/app/features/feed/stories/providers/user_stories_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class EntityDeleteConfirmationModal extends HookConsumerWidget {
@@ -77,7 +82,7 @@ class EntityDeleteConfirmationModal extends HookConsumerWidget {
                   onPressed: () async {
                     await ref.read(deleteEntityControllerProvider.notifier).deleteByReference(
                           eventReference,
-                          onDelete: _getOnDeleteCallback(ref),
+                          onDelete: _getOnDeleteCallback(ref, eventReference),
                         );
                   },
                   disabled: deleteState.isLoading,
@@ -93,10 +98,30 @@ class EntityDeleteConfirmationModal extends HookConsumerWidget {
     );
   }
 
-  FutureOr<void> Function()? _getOnDeleteCallback(WidgetRef ref) {
+  FutureOr<void> Function()? _getOnDeleteCallback(WidgetRef ref, EventReference eventReference) {
     return switch (deleteConfirmationType) {
-      DeleteConfirmationType.story => () => ref.read(feedStoriesProvider.notifier).refresh(),
+      DeleteConfirmationType.story => () => _refreshProviders(ref, eventReference),
       _ => null,
     };
+  }
+
+  void _refreshProviders(WidgetRef ref, EventReference eventReference) {
+    final pubkey = ref.read(currentPubkeySelectorProvider) ?? '';
+    final id = switch (eventReference) {
+      ImmutableEventReference() => eventReference.eventId,
+      ReplaceableEventReference() => eventReference.dTag,
+      _ => throw ArgumentError(
+          'Unsupported EventReference type: ${eventReference.runtimeType}',
+        ),
+    };
+    ref.read(feedStoriesProvider.notifier).refresh();
+    ref.read(currentUserStoryProvider.notifier).refresh();
+    ref.read(userStoriesProvider(pubkey).notifier).removeStory(id);
+    ref.read(ionConnectCacheProvider.notifier).remove(
+          EventCountResultEntity.cacheKeyBuilder(
+            key: pubkey,
+            type: EventCountResultType.stories,
+          ),
+        );
   }
 }

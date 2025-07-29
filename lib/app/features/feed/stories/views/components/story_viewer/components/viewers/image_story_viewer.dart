@@ -12,7 +12,7 @@ import 'package:ion/app/features/ion_connect/model/quoted_event.f.dart';
 import 'package:ion/app/features/ion_connect/model/source_post_reference.f.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 
-class ImageStoryViewer extends ConsumerWidget {
+class ImageStoryViewer extends HookConsumerWidget {
   const ImageStoryViewer({
     required this.imageUrl,
     required this.authorPubkey,
@@ -33,6 +33,9 @@ class ImageStoryViewer extends ConsumerWidget {
     final cacheManager = ref.watch(storyImageCacheManagerProvider);
 
     final hasQuotedPost = quotedEvent != null || sourcePostReference != null;
+
+    // Keep the provider alive as long as the image is being displayed
+    ref.watch(storyImageLoadStatusProvider(storyId));
 
     final imageWidget = IonConnectNetworkImage(
       imageUrl: imageUrl,
