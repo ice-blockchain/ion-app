@@ -32,7 +32,6 @@ class ImageStoryViewer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cacheManager = ref.watch(storyImageCacheManagerProvider);
 
-
     final hasQuotedPost = quotedEvent != null || sourcePostReference != null;
 
     final imageWidget = IonConnectNetworkImage(

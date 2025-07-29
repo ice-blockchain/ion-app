@@ -111,7 +111,6 @@ class ModifiablePostData
     final quotedEventTag =
         tags[QuotedImmutableEvent.tagName] ?? tags[QuotedReplaceableEvent.tagName];
 
-
     return ModifiablePostData(
       textContent: eventMessage.content,
       media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
@@ -149,7 +148,6 @@ class ModifiablePostData
     List<List<String>> tags = const [],
     int? createdAt,
   }) {
-
     final allTags = [
       ...tags,
       replaceableEventId.toTag(),
@@ -167,7 +165,6 @@ class ModifiablePostData
       if (poll != null) poll!.toTag(),
       if (sourcePostReference != null) sourcePostReference!.toTag(),
     ];
-
 
     return EventMessage.fromData(
       signer: signer,

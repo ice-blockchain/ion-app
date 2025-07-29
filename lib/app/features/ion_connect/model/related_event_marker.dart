@@ -9,7 +9,7 @@ enum RelatedEventMarker {
 
   static RelatedEventMarker? fromValue(String? value) {
     if (value == null) return null;
-    
+
     try {
       return RelatedEventMarker.values.firstWhere(
         (marker) => marker.name == value,

@@ -59,7 +59,7 @@ class SourcePostReference with _$SourcePostReference {
     final marker = RelatedEventMarker.fromValue(markerString);
     return marker == RelatedEventMarker.mention;
   }
-  
+
   static SourcePostReference? fromTags(List<List<String>> tags) {
     for (final tag in tags) {
       if (isSourcePostTag(tag)) {

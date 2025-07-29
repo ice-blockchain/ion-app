@@ -112,7 +112,7 @@ List<PostRepost> loadRepostsFromCache(Ref ref) {
 @riverpod
 OptimisticService<PostRepost> postRepostService(Ref ref) {
   keepAliveWhenAuthenticated(ref);
-  
+
   final manager = ref.watch(postRepostManagerProvider);
   final postReposts = ref.watch(loadRepostsFromCacheProvider);
 
@@ -132,7 +132,7 @@ Stream<PostRepost?> postRepostWatch(Ref ref, String id) {
 @riverpod
 OptimisticOperationManager<PostRepost> postRepostManager(Ref ref) {
   keepAliveWhenAuthenticated(ref);
-  
+
   final strategy = ref.watch(repostSyncStrategyProvider);
 
   final manager = OptimisticOperationManager<PostRepost>(
