@@ -23,7 +23,7 @@ class NavigationBackButton extends StatelessWidget {
 
   static double get iconSize => 24.0.s;
 
-  static double get totalSize => iconSize + UiConstants.hitSlop * 2;
+  static double get totalSize => iconSize + UiConstants.hitSlop * 4;
 
   @override
   Widget build(BuildContext context) {

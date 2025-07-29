@@ -16,9 +16,12 @@ class NavigationCloseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: onPressed ?? () => Navigator.of(context, rootNavigator: true).pop(),
+      onPressed: onPressed ?? Navigator.of(context, rootNavigator: true).pop,
       child: Padding(
-        padding: EdgeInsets.all(UiConstants.hitSlop),
+        padding: EdgeInsets.symmetric(
+          horizontal: UiConstants.hitSlop,
+          vertical: UiConstants.hitSlop * 2,
+        ),
         child: Assets.svg.iconSheetClose.icon(
           color: context.theme.appColors.tertararyText,
         ),
