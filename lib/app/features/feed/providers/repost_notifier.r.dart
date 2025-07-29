@@ -14,6 +14,7 @@ import 'package:ion/app/features/feed/providers/feed_user_interests_provider.r.d
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_response.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
 import 'package:ion/app/features/user/providers/user_events_metadata_provider.r.dart';
@@ -69,7 +70,7 @@ class RepostNotifier extends _$RepostNotifier {
 
       final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
 
-      final (repostEntity, _) = await (
+      final (IonConnectSendResponse(data: repostEntity), _) = await (
         ionNotifier.sendEvent(repostEvent),
         ionNotifier.sendEvent(
           repostEvent,

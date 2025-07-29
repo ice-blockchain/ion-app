@@ -101,9 +101,9 @@ class PollVoteNotifier extends _$PollVoteNotifier {
         ],
       );
 
-      final result = await ref.read(ionConnectNotifierProvider.notifier).sendEvent(voteEvent);
+      final response = await ref.read(ionConnectNotifierProvider.notifier).sendEvent(voteEvent);
 
-      if (result != null) {
+      if (response.data != null) {
         ref
           ..read(ionConnectEntityWithCountersProvider(eventReference: postReference, cache: false))
           ..invalidate(userPollVoteProvider(postReference))

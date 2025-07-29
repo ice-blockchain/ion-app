@@ -19,6 +19,7 @@ import 'package:ion/app/features/ion_connect/model/events_metadata_builder.dart'
 import 'package:ion/app/features/ion_connect/model/file_metadata.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.f.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_response.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
@@ -45,7 +46,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<List<IonConnectEntity>?> _sendEvents(
+  Future<IonConnectSendResponse<List<IonConnectEntity>?>> _sendEvents(
     List<EventMessage> events, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
@@ -85,10 +86,13 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             );
 
         if (cache) {
-          return events.map(_parseAndCache).toList();
+          return IonConnectSendResponse(
+            data: events.map(_parseAndCache).toList(),
+            relay: relay,
+          );
         }
 
-        return null;
+        return IonConnectSendResponse(relay: relay, data: null);
       },
       retryWhen: (error) {
         // Retry in case of any error except when no relay is selected.
@@ -113,7 +117,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     );
   }
 
-  Future<List<IonConnectEntity>?> sendEvents(
+  Future<IonConnectSendResponse<List<IonConnectEntity>?>> sendEvents(
     List<EventMessage> events, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     List<EventsMetadataBuilder> metadataBuilders = const [],
@@ -130,22 +134,25 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return _sendEvents(eventsToSend, actionSource: actionSource, cache: cache);
   }
 
-  Future<IonConnectEntity?> sendEvent(
+  Future<IonConnectSendResponse<IonConnectEntity?>> sendEvent(
     EventMessage event, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     List<EventsMetadataBuilder> metadataBuilders = const [],
     bool cache = true,
   }) async {
-    final result = await sendEvents(
+    final response = await sendEvents(
       [event],
       cache: cache,
       actionSource: actionSource,
       metadataBuilders: metadataBuilders,
     );
-    return result?.elementAtOrNull(0);
+    return IonConnectSendResponse(
+      data: response.data?.firstOrNull,
+      relay: response.relay,
+    );
   }
 
-  Future<List<IonConnectEntity>?> sendEntitiesData(
+  Future<IonConnectSendResponse<List<IonConnectEntity>?>> sendEntitiesData(
     List<EventSerializable> entitiesData, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     List<EventsMetadataBuilder> metadataBuilders = const [],
@@ -161,19 +168,22 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     );
   }
 
-  Future<T?> sendEntityData<T extends IonConnectEntity>(
+  Future<IonConnectSendResponse<T?>> sendEntityData<T extends IonConnectEntity>(
     EventSerializable entityData, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     List<EventsMetadataBuilder> metadataBuilders = const [],
     bool cache = true,
   }) async {
-    final entities = await sendEntitiesData(
+    final response = await sendEntitiesData(
       [entityData],
       actionSource: actionSource,
       metadataBuilders: metadataBuilders,
       cache: cache,
     );
-    return entities?.whereType<T>().elementAtOrNull(0);
+    return IonConnectSendResponse(
+      relay: response.relay,
+      data: response.data?.whereType<T>().elementAtOrNull(0),
+    );
   }
 
   Stream<EventMessage> requestEvents(

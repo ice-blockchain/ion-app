@@ -25,11 +25,11 @@ class InviteToCommunityNotifier extends _$InviteToCommunityNotifier {
         expiration: expiration.microsecondsSinceEpoch,
       );
 
-      final result = await ref
+      final response = await ref
           .read(ionConnectNotifierProvider.notifier)
           .sendEntityData(invitation, actionSource: ActionSourceUser(invitedPubkey));
 
-      if (result == null) {
+      if (response.data == null) {
         throw FailedToSendInvitationException();
       }
     });

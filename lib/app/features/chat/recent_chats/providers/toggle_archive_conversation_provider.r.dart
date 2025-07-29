@@ -11,6 +11,7 @@ import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.f.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.f.dart';
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.r.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_response.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
 import 'package:ion/app/services/ion_connect/encrypted_message_service.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -51,16 +52,16 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
         type: BookmarksSetType.chats.dTagName,
       );
 
-      final result =
+      final IonConnectSendResponse(data: bookmarksSet) =
           await ref.read(ionConnectNotifierProvider.notifier).sendEntityData<BookmarksSetEntity>(
                 bookmarksSetData,
               );
 
-      if (result == null) {
+      if (bookmarksSet == null) {
         throw FailedToCreateBookmarksSetException(BookmarksSetType.chats.dTagName);
       }
 
-      return result.data;
+      return bookmarksSet.data;
     }
     return archivedConversationBookmarksData;
   }

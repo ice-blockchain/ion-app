@@ -12,6 +12,7 @@ import 'package:ion/app/features/chat/community/providers/join_community_provide
 import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.f.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_response.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.m.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.m.dart';
@@ -63,7 +64,7 @@ class CreateCommunityNotifier extends _$CreateCommunityNotifier {
         );
       }
 
-      final communityEntity = await ref
+      final IonConnectSendResponse(data: communityEntity) = await ref
           .read(ionConnectNotifierProvider.notifier)
           .sendEntityData<CommunityDefinitionEntity>(communityDefinitionData);
 
