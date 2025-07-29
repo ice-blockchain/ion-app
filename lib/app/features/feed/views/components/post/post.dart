@@ -91,27 +91,35 @@ class Post extends ConsumerWidget {
 
     final isParentShown = displayParent && parentEventReference != null;
 
+    final body = PostBody(
+      entity: entity,
+      maxLines: bodyMaxLines,
+      onVideoTap: onVideoTap,
+      accentTheme: accentTheme,
+      videoAutoplay: videoAutoplay,
+      isTextSelectable: isTextSelectable,
+      framedEventReference: repostEventReference ?? quotedEventReference,
+    );
+
     final content = Column(
       children: [
         SizedBox(height: headerOffset ?? 10.0.s),
-        PostBody(
-          entity: entity,
-          maxLines: bodyMaxLines,
-          onVideoTap: onVideoTap,
-          accentTheme: accentTheme,
-          videoAutoplay: videoAutoplay,
-          isTextSelectable: isTextSelectable,
-          framedEventReference: repostEventReference ?? quotedEventReference,
-        ),
-        if (displayQuote && quotedEventReference != null)
+        if (displayQuote && quotedEventReference != null) ...[
           ScreenSideOffset.small(
-            child: _QuotedEvent(
-              accentTheme: accentTheme,
-              eventReference: quotedEventReference,
-              header: accentTheme && header != null ? header : null,
-              footer: quotedEventFooter,
+            child: Column(
+              children: [
+                body,
+                _QuotedEvent(
+                  accentTheme: accentTheme,
+                  eventReference: quotedEventReference,
+                  header: accentTheme && header != null ? header : null,
+                  footer: quotedEventFooter,
+                ),
+              ],
             ),
           ),
+        ] else
+          body,
         footer ?? CounterItemsFooter(eventReference: eventReference),
       ],
     );
@@ -139,7 +147,14 @@ class Post extends ConsumerWidget {
                     )
                   : null,
               trailing: isOwnedByCurrentUser
-                  ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
+                  ? OwnEntityMenu(
+                      eventReference: eventReference,
+                      onDelete: onDelete,
+                      padding: EdgeInsetsGeometry.symmetric(
+                        horizontal: ScreenSideOffset.defaultSmallMargin,
+                        vertical: 5.0.s,
+                      ),
+                    )
                   : UserInfoMenu(
                       eventReference: eventReference,
                       padding: EdgeInsetsGeometry.symmetric(
