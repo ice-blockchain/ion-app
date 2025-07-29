@@ -22,12 +22,13 @@ import 'package:ion/app/services/media_service/media_service.m.dart';
 class MediaPickerPage extends HookConsumerWidget {
   const MediaPickerPage({
     required this.maxSelection,
+    super.key,
     this.type = MediaPickerType.common,
     this.title,
     this.isBottomSheet = false,
     this.maxVideoDurationInSeconds,
     this.showCameraCell = true,
-    super.key,
+    this.onSelectCallback,
   });
 
   final int maxSelection;
@@ -36,6 +37,7 @@ class MediaPickerPage extends HookConsumerWidget {
   final bool isBottomSheet;
   final int? maxVideoDurationInSeconds;
   final bool showCameraCell;
+  final void Function(List<MediaFile> media)? onSelectCallback;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -52,11 +54,16 @@ class MediaPickerPage extends HookConsumerWidget {
       if (maxSelection == 1 && value.selectedMedia.isNotEmpty == true) {
         // this is need to avoid this callback running too early, before the previous screen
         // is closed
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (context.mounted) {
-            Navigator.of(context).pop(value.selectedMedia);
-          }
-        });
+        if (onSelectCallback == null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              Navigator.of(context).pop(value.selectedMedia);
+            }
+          });
+        } else {
+          onSelectCallback!(value.selectedMedia);
+          ref.invalidate(mediaSelectionNotifierProvider);
+        }
       }
     });
 
