@@ -45,9 +45,10 @@ final class IonConnectRelaysRanker {
         },
       ).catchError(
         (Object? reason) {
-          final error = reason is Object ? reason : 'Unknown error';
-          Logger.error(error, message: '[RELAY] Error pinging relay $relayUrl');
-          resultsController.addError(error);
+          Logger.error(
+            reason is Object ? reason : 'Unknown error',
+            message: '[RELAY] Error pinging relay $relayUrl',
+          );
         },
       ).whenComplete(() {
         completedCount++;
