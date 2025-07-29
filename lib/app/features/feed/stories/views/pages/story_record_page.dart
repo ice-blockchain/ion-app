@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
@@ -249,7 +250,7 @@ class StoryRecordPage extends HookConsumerWidget {
       },
       published: () {
         if (context.mounted) {
-          FeedRoute().go(context);
+          context.pop();
         }
       },
       cancelled: () {},
