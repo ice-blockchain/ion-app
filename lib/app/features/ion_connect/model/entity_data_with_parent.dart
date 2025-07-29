@@ -36,7 +36,7 @@ mixin EntityDataWithRelatedEvents<T extends RelatedEvent> {
     final relatedEvents = <RelatedEvent>[
       ...(tags[RelatedImmutableEvent.tagName]?.map(RelatedImmutableEvent.fromTag) ?? []),
     ];
-    
+
     // Filter out "a" tags with "mention" marker
     final aTags = tags[RelatedReplaceableEvent.tagName];
     if (aTags != null) {
@@ -45,7 +45,7 @@ mixin EntityDataWithRelatedEvents<T extends RelatedEvent> {
         if (tag.length >= 4 && tag[3] == 'mention') {
           continue;
         }
-        
+
         try {
           relatedEvents.add(RelatedReplaceableEvent.fromTag(tag));
         } catch (_) {
@@ -53,7 +53,7 @@ mixin EntityDataWithRelatedEvents<T extends RelatedEvent> {
         }
       }
     }
-    
+
     return relatedEvents.isEmpty ? null : relatedEvents;
   }
 }
