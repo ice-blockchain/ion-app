@@ -6,12 +6,17 @@ import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
+import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item_divider.dart';
-import 'package:ion/app/features/user/pages/profile_page/providers/profile_context_menu_provider.r.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/providers/report_notifier.m.dart';
+import 'package:ion/app/features/user_block/optimistic_ui/block_user_provider.r.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.r.dart';
+import 'package:ion/app/router/app_routes.gr.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ProfileContextMenu extends ConsumerWidget {
@@ -55,7 +60,6 @@ class ProfileContextMenu extends ConsumerWidget {
     WidgetRef ref,
     VoidCallback closeMenu,
   ) {
-    final controller = ref.read(profileContextMenuControllerProvider);
     final isCurrentUser = ref.watch(isCurrentUserSelectorProvider(pubkey));
 
     if (isCurrentUser) {
@@ -65,7 +69,11 @@ class ProfileContextMenu extends ConsumerWidget {
           iconAsset: Assets.svg.iconButtonShare,
           onPressed: () {
             closeMenu();
-            controller.shareProfile(context, pubkey);
+            ShareViaMessageModalRoute(
+              eventReference:
+                  ReplaceableEventReference(masterPubkey: pubkey, kind: UserMetadataEntity.kind)
+                      .encode(),
+            ).push<void>(context);
           },
         ),
         const ContextMenuItemDivider(),
@@ -74,7 +82,7 @@ class ProfileContextMenu extends ConsumerWidget {
           iconAsset: Assets.svg.iconBookmarks,
           onPressed: () {
             closeMenu();
-            controller.viewBookmarks(context);
+            BookmarksRoute().push<void>(context);
           },
         ),
         const ContextMenuItemDivider(),
@@ -83,7 +91,7 @@ class ProfileContextMenu extends ConsumerWidget {
           iconAsset: Assets.svg.iconProfileSettings,
           onPressed: () {
             closeMenu();
-            controller.openSettings(context);
+            SettingsRoute().push<void>(context);
           },
         ),
       ];
@@ -94,7 +102,11 @@ class ProfileContextMenu extends ConsumerWidget {
           iconAsset: Assets.svg.iconButtonShare,
           onPressed: () {
             closeMenu();
-            controller.shareProfile(context, pubkey);
+            ShareViaMessageModalRoute(
+              eventReference:
+                  ReplaceableEventReference(masterPubkey: pubkey, kind: UserMetadataEntity.kind)
+                      .encode(),
+            ).push<void>(context);
           },
         ),
         const ContextMenuItemDivider(),
@@ -105,7 +117,7 @@ class ProfileContextMenu extends ConsumerWidget {
           iconAsset: Assets.svg.iconReport,
           onPressed: () {
             closeMenu();
-            controller.reportUser(pubkey);
+            ref.read(reportNotifierProvider.notifier).report(ReportReason.user(pubkey: pubkey));
           },
         ),
       ];
@@ -124,7 +136,6 @@ class _BlockUserMenuItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = ref.read(profileContextMenuControllerProvider);
     final isBlocked = ref.watch(isBlockedNotifierProvider(masterPubkey)).valueOrNull ?? false;
 
     return ContextMenuItem(
@@ -132,7 +143,14 @@ class _BlockUserMenuItem extends ConsumerWidget {
       iconAsset: Assets.svg.iconBlockClose3,
       onPressed: () {
         closeMenu();
-        controller.handleBlockUser(context, masterPubkey: masterPubkey, isBlocked: isBlocked);
+        if (!isBlocked) {
+          showSimpleBottomSheet<void>(
+            context: context,
+            child: BlockUserModal(pubkey: masterPubkey),
+          );
+        } else {
+          ref.read(toggleBlockNotifierProvider.notifier).toggle(masterPubkey);
+        }
       },
     );
   }
