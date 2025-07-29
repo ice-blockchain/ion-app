@@ -313,7 +313,6 @@ class SendCoinsConfirmationChatRoute extends BaseRouteData with _$SendCoinsConfi
       : super(
           child: ConfirmationSheet(
             successRouteLocationBuilder: () => CoinTransactionResultChatRoute().location,
-            redirectType: RedirectType.push,
           ),
           type: IceRouteType.bottomSheet,
         );

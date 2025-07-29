@@ -273,7 +273,6 @@ class SendCoinsConfirmationWalletRoute extends BaseRouteData
       : super(
           child: ConfirmationSheet(
             successRouteLocationBuilder: () => CoinTransactionResultWalletRoute().location,
-            redirectType: RedirectType.push,
           ),
           type: IceRouteType.bottomSheet,
         );
