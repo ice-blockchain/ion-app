@@ -2,9 +2,11 @@
 
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/user/providers/relays/ranked_user_relays_provider.r.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_relays_ranker.r.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,8 +18,9 @@ part 'relevant_user_relays_provider.r.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<List<String>> relevantCurrentUserRelays(Ref ref) async {
-  final rankedCurrentUserRelays = await ref.watch(rankedCurrentUserRelaysProvider.future);
-  final topRelayUrl = rankedCurrentUserRelays?.data.list.firstOrNull?.url;
+  final topRelayUrl = await ref.watch(
+    rankedCurrentUserRelaysProvider.selectAsync((state) => state?.firstOrNull?.url),
+  );
   if (topRelayUrl == null) {
     return [];
   }
@@ -32,15 +35,37 @@ Future<List<String>> relevantRelays(Ref ref, String relayUrl) async {
 }
 
 @Riverpod(keepAlive: true)
-Future<List<String>> rankedRelevantCurrentUserRelaysUrls(Ref ref) async {
-  final relevantRelaysUrls = await ref.watch(relevantCurrentUserRelaysProvider.future);
+class RankedRelevantCurrentUserRelaysUrls extends _$RankedRelevantCurrentUserRelaysUrls {
+  @override
+  Stream<List<String>> build() async* {
+    final relevantRelaysUrls = await ref.watch(relevantCurrentUserRelaysProvider.future);
 
-  final pingIntervalSeconds =
-      ref.read(envProvider.notifier).get<int>(EnvVariable.RELAY_PING_INTERVAL_SECONDS);
-  final timer = Timer.periodic(Duration(seconds: pingIntervalSeconds), (_) {
-    ref.invalidate(rankedRelayUrlsProvider(relevantRelaysUrls));
-  });
-  ref.onDispose(timer.cancel);
+    final cancelToken = CancelToken();
 
-  return ref.watch(rankedRelayUrlsProvider(relevantRelaysUrls).future);
+    yield* _rank(relevantRelaysUrls, cancelToken: cancelToken);
+
+    final pingIntervalSeconds =
+        ref.watch(envProvider.notifier).get<int>(EnvVariable.RELAY_PING_INTERVAL_SECONDS);
+
+    final controller = StreamController<List<String>>();
+
+    final timer = Timer.periodic(Duration(seconds: pingIntervalSeconds), (_) {
+      controller.addStream(_rank(relevantRelaysUrls, cancelToken: cancelToken));
+    });
+
+    ref.onDispose(() async {
+      timer.cancel();
+      cancelToken.cancel();
+      await controller.close();
+    });
+
+    yield* controller.stream;
+  }
+
+  Stream<List<String>> _rank(
+    List<String> relayUrls, {
+    required CancelToken cancelToken,
+  }) {
+    return ref.read(ionConnectRelaysRankerProvider).ranked(relayUrls, cancelToken: cancelToken);
+  }
 }

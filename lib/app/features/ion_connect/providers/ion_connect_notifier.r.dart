@@ -85,17 +85,22 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         return null;
       },
       retryWhen: (error) {
-        // Retry should not be attempted if no relay is selected (i.e., no relays are available for the specified action)
-        return triedRelay != null;
+        // Retry in case of any error except when no relay is selected.
+        // This is to avoid retrying when there are no available relays left or they are not assigned (registration).
+        final triedRelayUrl = error is RelayUnreachableException ? error.relayUrl : triedRelay?.url;
+        Logger.log('[RELAY] $triedRelayUrl retry: ${triedRelayUrl != null} for error: $error');
+        return triedRelayUrl != null;
       },
       onRetry: (error) async {
-        if (triedRelay case final IonConnectRelay relay
-            when !RelayAuthService.isRelayAuthError(error)) {
+        final triedRelayUrl = error is RelayUnreachableException ? error.relayUrl : triedRelay?.url;
+        if (triedRelayUrl != null && !RelayAuthService.isRelayAuthError(error)) {
           Logger.error(error ?? '', message: '[RELAY] Got error $error');
-          Logger.log('[RELAY] ${relay.url} Adding to the list of disliked relays');
-          dislikedRelaysUrls.add(relay.url);
+          Logger.log('[RELAY] $triedRelayUrl Adding to the list of disliked relays');
+          dislikedRelaysUrls.add(triedRelayUrl);
           if (UserRelaysManager.isRelayReadOnlyError(error)) {
-            await ref.read(userRelaysManagerProvider.notifier).handleCachedReadOnlyRelay(relay.url);
+            await ref
+                .read(userRelaysManagerProvider.notifier)
+                .handleCachedReadOnlyRelay(triedRelayUrl);
           }
         }
       },
@@ -219,15 +224,18 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         }
       },
       retryWhen: (error) {
-        // Retry should not be attempted if no relay is selected (i.e., no relays are available for the specified action)
-        return triedRelay != null;
+        // Retry in case of any error except when no relay is selected.
+        // This is to avoid retrying when there are no available relays left or they are not assigned (registration).
+        final triedRelayUrl = error is RelayUnreachableException ? error.relayUrl : triedRelay?.url;
+        Logger.log('[RELAY] $triedRelayUrl retry: ${triedRelayUrl != null} for error: $error');
+        return triedRelayUrl != null;
       },
       onRetry: (error) {
-        if (triedRelay case final IonConnectRelay relay
-            when !RelayAuthService.isRelayAuthError(error)) {
+        final triedRelayUrl = error is RelayUnreachableException ? error.relayUrl : triedRelay?.url;
+        if (triedRelayUrl != null && !RelayAuthService.isRelayAuthError(error)) {
           Logger.error(error ?? '', message: '[RELAY] Got error $error');
-          Logger.log('[RELAY] ${relay.url} Adding to the list of disliked relays');
-          dislikedRelaysUrls.add(relay.url);
+          Logger.log('[RELAY] $triedRelayUrl Adding to the list of disliked relays');
+          dislikedRelaysUrls.add(triedRelayUrl);
         }
       },
     );
