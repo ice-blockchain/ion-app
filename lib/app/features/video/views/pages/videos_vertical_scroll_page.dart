@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/status_bar/status_bar_color_wrapper.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
@@ -128,67 +129,69 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
       [userPageController],
     );
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      extendBodyBehindAppBar: true,
-      backgroundColor: primaryTextColor,
-      appBar: NavigationAppBar.screen(
-        backgroundColor: Colors.transparent,
-        leading: NavigationBackButton(
-          () => context.pop(),
-          icon: Assets.svg.iconChatBack.icon(
-            size: NavigationAppBar.actionButtonSide,
-            color: onPrimaryAccentColor,
-            flipForRtl: true,
+    return StatusBarColorWrapper.light(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        extendBodyBehindAppBar: true,
+        backgroundColor: primaryTextColor,
+        appBar: NavigationAppBar.screen(
+          backgroundColor: Colors.transparent,
+          leading: NavigationBackButton(
+            () => context.pop(),
+            icon: Assets.svg.iconChatBack.icon(
+              size: NavigationAppBar.actionButtonSide,
+              color: onPrimaryAccentColor,
+              flipForRtl: true,
+            ),
           ),
+          onBackPress: () => context.pop(),
+          actions: [
+            Padding(
+              padding: EdgeInsetsDirectional.only(end: rightPadding),
+              child: isOwnedByCurrentUser
+                  ? OwnEntityMenu(
+                      eventReference: currentEventReference.value,
+                      iconColor: secondaryBackgroundColor,
+                      onDelete: () {
+                        if (context.canPop()) {
+                          context.pop();
+                        }
+                      },
+                    )
+                  : UserInfoMenu(
+                      eventReference: currentEventReference.value,
+                      iconColor: secondaryBackgroundColor,
+                    ),
+            ),
+          ],
         ),
-        onBackPress: () => context.pop(),
-        actions: [
-          Padding(
-            padding: EdgeInsetsDirectional.only(end: rightPadding),
-            child: isOwnedByCurrentUser
-                ? OwnEntityMenu(
-                    eventReference: currentEventReference.value,
-                    iconColor: secondaryBackgroundColor,
-                    onDelete: () {
-                      if (context.canPop()) {
-                        context.pop();
-                      }
-                    },
-                  )
-                : UserInfoMenu(
-                    eventReference: currentEventReference.value,
-                    iconColor: secondaryBackgroundColor,
-                  ),
-          ),
-        ],
-      ),
-      body: PageView.builder(
-        controller: userPageController,
-        itemCount: flattenedVideos.length,
-        scrollDirection: Axis.vertical,
-        onPageChanged: (index) {
-          _loadMore(ref, index, flattenedVideos.length);
-          currentEventReference.value = flattenedVideos[index].entity.toEventReference();
-        },
-        itemBuilder: (_, index) => VideoPage(
-          videoInfo: VideoPostInfo(videoPost: flattenedVideos[index].entity),
-          bottomOverlay:
-              VideoActions(eventReference: flattenedVideos[index].entity.toEventReference()),
-          videoUrl: flattenedVideos[index].media.url,
-          authorPubkey: eventReference.masterPubkey,
-          thumbnailUrl: flattenedVideos[index].media.thumb,
-          blurhash: flattenedVideos[index].media.blurhash,
-          aspectRatio: flattenedVideos[index].media.aspectRatio,
-          framedEventReference: index == initialPage ? framedEventReference : null,
-          onVideoEnded: () {
-            if (index < flattenedVideos.length - 1) {
-              userPageController.nextPage(
-                duration: animationDuration,
-                curve: Curves.easeInOut,
-              );
-            }
+        body: PageView.builder(
+          controller: userPageController,
+          itemCount: flattenedVideos.length,
+          scrollDirection: Axis.vertical,
+          onPageChanged: (index) {
+            _loadMore(ref, index, flattenedVideos.length);
+            currentEventReference.value = flattenedVideos[index].entity.toEventReference();
           },
+          itemBuilder: (_, index) => VideoPage(
+            videoInfo: VideoPostInfo(videoPost: flattenedVideos[index].entity),
+            bottomOverlay:
+                VideoActions(eventReference: flattenedVideos[index].entity.toEventReference()),
+            videoUrl: flattenedVideos[index].media.url,
+            authorPubkey: eventReference.masterPubkey,
+            thumbnailUrl: flattenedVideos[index].media.thumb,
+            blurhash: flattenedVideos[index].media.blurhash,
+            aspectRatio: flattenedVideos[index].media.aspectRatio,
+            framedEventReference: index == initialPage ? framedEventReference : null,
+            onVideoEnded: () {
+              if (index < flattenedVideos.length - 1) {
+                userPageController.nextPage(
+                  duration: animationDuration,
+                  curve: Curves.easeInOut,
+                );
+              }
+            },
+          ),
         ),
       ),
     );

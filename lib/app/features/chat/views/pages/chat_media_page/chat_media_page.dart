@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/badges_user_list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/status_bar/status_bar_color_wrapper.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
@@ -85,8 +86,7 @@ class ChatMediaPage extends HookConsumerWidget {
         .where((e) => !entity.data.visualMedias.any((c) => c.thumb == e.url && c.url != e.url))
         .toList();
 
-    return Material(
-      color: context.theme.appColors.primaryText,
+    return StatusBarColorWrapper.light(
       child: Scaffold(
         backgroundColor: context.theme.appColors.primaryText,
         extendBodyBehindAppBar: true,

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/global_notification_bar/global_notification_bar_wrapper.dart';
+import 'package:ion/app/components/status_bar/status_bar_color_wrapper.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/debug/views/debug_rotate_gesture.dart';
 import 'package:ion/app/features/feed/global_notifications/helpers/feed_global_notifications_helper.dart';
@@ -18,18 +19,20 @@ class AppRouterBuilder extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Material(
       color: context.theme.appColors.secondaryBackground,
-      child: GlobalNotificationBarWrapper(
-        setUpListeners: setupFeedGlobalNotificationsListeners,
-        children: [
-          const UiEventQueueListener(),
-          Expanded(
-            child: DebugRotateGesture(
-              child: TwoFaSignatureWrapper(
-                child: child ?? const SizedBox.shrink(),
+      child: StatusBarColorWrapper.dark(
+        child: GlobalNotificationBarWrapper(
+          setUpListeners: setupFeedGlobalNotificationsListeners,
+          children: [
+            const UiEventQueueListener(),
+            Expanded(
+              child: DebugRotateGesture(
+                child: TwoFaSignatureWrapper(
+                  child: child ?? const SizedBox.shrink(),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
