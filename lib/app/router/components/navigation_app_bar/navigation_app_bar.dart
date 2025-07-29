@@ -91,8 +91,8 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     final effectiveTrailing = actions != null && actions!.isNotEmpty
         ? Padding(
-            padding: EdgeInsets.only(
-              right: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
+            padding: EdgeInsetsDirectional.only(
+              end: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
             ),
             child: Row(mainAxisSize: MainAxisSize.min, children: actions!),
           )
