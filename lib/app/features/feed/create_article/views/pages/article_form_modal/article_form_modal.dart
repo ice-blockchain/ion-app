@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/back_hardware_button_interceptor/back_hardware_button_interceptor.dart';
 import 'package:ion/app/components/button/button.dart';
@@ -101,13 +102,19 @@ class ArticleFormModal extends HookConsumerWidget {
                   backgroundColor: context.theme.appColors.secondaryBackground,
                   borderColor: context.theme.appColors.secondaryBackground,
                   disabled: !articleState.isButtonEnabled,
-                  onPressed: () {
+                  onPressed: () async {
                     articleState.onNext();
                     if (modifiedEvent != null) {
                       final eventEncoded = modifiedEvent!.encode();
-                      EditArticlePreviewRoute(modifiedEvent: eventEncoded).push<void>(context);
+                      await EditArticlePreviewRoute(modifiedEvent: eventEncoded)
+                          .push<void>(context);
                     } else {
-                      ArticlePreviewRoute().push<void>(context);
+                      await ArticlePreviewRoute().push<void>(context);
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (context.mounted) {
+                          context.pop();
+                        }
+                      });
                     }
                   },
                 ),

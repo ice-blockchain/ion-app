@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
@@ -113,7 +114,15 @@ class StoryRecordPage extends HookConsumerWidget {
               );
 
           if (edited != null && edited != file.path && context.mounted) {
-            await StoryPreviewRoute(path: edited, mimeType: file.mimeType).push<void>(context);
+            final shouldPop =
+                await StoryPreviewRoute(path: edited, mimeType: file.mimeType).push<bool?>(context);
+            if (shouldPop.falseOrValue) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) {
+                  context.pop();
+                }
+              });
+            }
           }
           await ref.read(cameraControllerNotifierProvider.notifier).resumeCamera();
         } else if (mediaType == MediaType.image) {
@@ -145,7 +154,15 @@ class StoryRecordPage extends HookConsumerWidget {
             .editExternalPhoto(file.path, resumeCamera: false);
 
         if (edited != null && edited != file.path && context.mounted) {
-          await StoryPreviewRoute(path: edited, mimeType: file.mimeType).push<void>(context);
+          final shouldPop =
+              await StoryPreviewRoute(path: edited, mimeType: file.mimeType).push<bool?>(context);
+          if (shouldPop.falseOrValue) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (context.mounted) {
+                context.pop();
+              }
+            });
+          }
         }
         await ref.read(cameraControllerNotifierProvider.notifier).resumeCamera();
       },
@@ -167,7 +184,15 @@ class StoryRecordPage extends HookConsumerWidget {
           );
 
       if (edited != null && edited != file.path && context.mounted) {
-        await StoryPreviewRoute(path: edited, mimeType: file.mimeType).push<void>(context);
+        final shouldPop =
+            await StoryPreviewRoute(path: edited, mimeType: file.mimeType).push<bool?>(context);
+        if (shouldPop.falseOrValue) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              context.pop();
+            }
+          });
+        }
       }
       await ref.read(cameraControllerNotifierProvider.notifier).resumeCamera();
     } else if (mediaType == MediaType.image) {

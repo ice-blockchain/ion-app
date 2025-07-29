@@ -74,7 +74,12 @@ class _SharePostButton extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MainModalItem(
       item: type,
-      onTap: () => CreatePostRoute().go(context),
+      onTap: () async {
+        await CreatePostRoute().push<void>(context);
+        if (context.mounted) {
+          context.pop();
+        }
+      },
       index: index,
     );
   }
@@ -143,11 +148,16 @@ class _ShareVideoButton extends HookConsumerWidget {
               if (editedMedia == null) {
                 context.pop();
               } else {
-                CreateVideoRoute(
+                await CreateVideoRoute(
                   videoPath: editedMedia.path,
                   videoThumbPath: editedMedia.thumb,
                   mimeType: result[0].mimeType ?? '',
-                ).go(context);
+                ).push<void>(context);
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (context.mounted) {
+                    context.pop();
+                  }
+                });
               }
             } else {
               context.pop();
@@ -177,7 +187,14 @@ class _ShareArticleButton extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MainModalItem(
       item: type,
-      onTap: () => CreateArticleRoute().go(context),
+      onTap: () async {
+        await CreateArticleRoute().push<void>(context);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted) {
+            context.pop();
+          }
+        });
+      },
       index: index,
     );
   }
