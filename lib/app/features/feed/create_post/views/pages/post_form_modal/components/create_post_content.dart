@@ -185,11 +185,30 @@ class _TextInputSection extends HookConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextEditor(
-                    textEditorController,
-                    placeholder: createOption.getPlaceholder(context),
-                    key: textEditorKey,
-                    scrollController: scrollController,
+                  AnimatedBuilder(
+                    animation: textEditorController,
+                    builder: (context, _) {
+                      final isEmpty = textEditorController.document.toPlainText().trim().isEmpty;
+                      return Stack(
+                        children: [
+                          TextEditor(
+                            textEditorController,
+                            key: textEditorKey,
+                            placeholder: '',
+                            scrollController: scrollController,
+                          ),
+                          if (isEmpty)
+                            IgnorePointer(
+                              child: Text(
+                                createOption.getPlaceholder(context),
+                                style: context.theme.appTextThemes.body2.copyWith(
+                                  color: context.theme.appColors.tertararyText,
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
                   ),
                   if (draftPoll.added) ...[
                     SizedBox(height: 12.0.s),
