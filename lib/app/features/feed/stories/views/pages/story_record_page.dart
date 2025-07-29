@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
@@ -12,6 +11,7 @@ import 'package:ion/app/features/core/permissions/data/models/permissions_types.
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/feed/stories/data/models/camera_capture_state.f.dart';
+import 'package:ion/app/features/feed/stories/data/models/story_preview_result.f.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_recording_progress.dart';
 import 'package:ion/app/features/feed/stories/providers/camera_capture_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/media_editing_service.r.dart';
@@ -23,6 +23,7 @@ import 'package:ion/app/features/gallery/data/models/camera_state.f.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.r.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.m.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
+import 'package:ion/app/services/media_service/banuba_service.r.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
 
@@ -114,14 +115,15 @@ class StoryRecordPage extends HookConsumerWidget {
               );
 
           if (edited != null && edited != file.path && context.mounted) {
-            final shouldPop =
-                await StoryPreviewRoute(path: edited, mimeType: file.mimeType).push<bool?>(context);
-            if (shouldPop.falseOrValue) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (context.mounted) {
-                  context.pop();
-                }
-              });
+            final result = await StoryPreviewRoute(
+              path: edited,
+              mimeType: file.mimeType,
+              fromEditor: true,
+              originalFilePath: file.path,
+            ).push<StoryPreviewResult>(context);
+
+            if (result != null && context.mounted) {
+              await _handleStoryPreviewResult(context, ref, result);
             }
           }
           await ref.read(cameraControllerNotifierProvider.notifier).resumeCamera();
@@ -154,14 +156,15 @@ class StoryRecordPage extends HookConsumerWidget {
             .editExternalPhoto(file.path, resumeCamera: false);
 
         if (edited != null && edited != file.path && context.mounted) {
-          final shouldPop =
-              await StoryPreviewRoute(path: edited, mimeType: file.mimeType).push<bool?>(context);
-          if (shouldPop.falseOrValue) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (context.mounted) {
-                context.pop();
-              }
-            });
+          final result = await StoryPreviewRoute(
+            path: edited,
+            mimeType: file.mimeType,
+            fromEditor: true,
+            originalFilePath: file.path,
+          ).push<StoryPreviewResult>(context);
+
+          if (result != null && context.mounted) {
+            await _handleStoryPreviewResult(context, ref, result);
           }
         }
         await ref.read(cameraControllerNotifierProvider.notifier).resumeCamera();
@@ -184,14 +187,15 @@ class StoryRecordPage extends HookConsumerWidget {
           );
 
       if (edited != null && edited != file.path && context.mounted) {
-        final shouldPop =
-            await StoryPreviewRoute(path: edited, mimeType: file.mimeType).push<bool?>(context);
-        if (shouldPop.falseOrValue) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (context.mounted) {
-              context.pop();
-            }
-          });
+        final result = await StoryPreviewRoute(
+          path: edited,
+          mimeType: file.mimeType,
+          fromEditor: true,
+          originalFilePath: file.path,
+        ).push<StoryPreviewResult>(context);
+
+        if (result != null && context.mounted) {
+          await _handleStoryPreviewResult(context, ref, result);
         }
       }
       await ref.read(cameraControllerNotifierProvider.notifier).resumeCamera();
@@ -208,5 +212,47 @@ class StoryRecordPage extends HookConsumerWidget {
             ),
           );
     }
+  }
+
+  Future<void> _handleStoryPreviewResult(
+    BuildContext context,
+    WidgetRef ref,
+    StoryPreviewResult result,
+  ) async {
+    await result.when(
+      edited: (originalPath, mimeType) async {
+        final mediaType = MediaType.fromMimeType(mimeType);
+        final banubaService = ref.read(banubaServiceProvider);
+
+        String? editedPath;
+
+        if (mediaType == MediaType.image) {
+          editedPath = await banubaService.editPhoto(originalPath);
+        } else if (mediaType == MediaType.video) {
+          final result = await banubaService.editVideo(originalPath);
+          editedPath = result?.newPath;
+        }
+
+        if (editedPath != null && context.mounted) {
+          final previewResult = await StoryPreviewRoute(
+            path: editedPath,
+            mimeType: mimeType,
+            fromEditor: true,
+            originalFilePath: originalPath,
+          ).push<StoryPreviewResult>(context);
+
+          // Recursively handle results if user wants to edit again
+          if (previewResult != null && context.mounted) {
+            await _handleStoryPreviewResult(context, ref, previewResult);
+          }
+        }
+      },
+      published: () {
+        if (context.mounted) {
+          FeedRoute().go(context);
+        }
+      },
+      cancelled: () {},
+    );
   }
 }

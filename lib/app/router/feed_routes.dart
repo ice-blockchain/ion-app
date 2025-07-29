@@ -375,6 +375,8 @@ class StoryPreviewRoute extends BaseRouteData with _$StoryPreviewRoute {
     required this.mimeType,
     this.eventReference,
     this.isPostScreenshot = false,
+    this.fromEditor = false,
+    this.originalFilePath,
   }) : super(
           child: StoryPreviewPage(
             path: path,
@@ -382,6 +384,8 @@ class StoryPreviewRoute extends BaseRouteData with _$StoryPreviewRoute {
             eventReference:
                 eventReference != null ? EventReference.fromEncoded(eventReference) : null,
             isPostScreenshot: isPostScreenshot,
+            fromEditor: fromEditor,
+            originalFilePath: originalFilePath,
           ),
           type: IceRouteType.slideFromLeft,
         );
@@ -390,6 +394,8 @@ class StoryPreviewRoute extends BaseRouteData with _$StoryPreviewRoute {
   final String? mimeType;
   final String? eventReference;
   final bool isPostScreenshot;
+  final bool fromEditor;
+  final String? originalFilePath;
 }
 
 class StoryViewerRoute extends BaseRouteData with _$StoryViewerRoute {

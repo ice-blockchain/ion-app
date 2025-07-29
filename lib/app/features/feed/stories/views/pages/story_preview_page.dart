@@ -15,6 +15,7 @@ import 'package:ion/app/features/feed/create_post/providers/create_post_notifier
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.f.dart';
 import 'package:ion/app/features/feed/providers/selected_interests_notifier.r.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.r.dart';
+import 'package:ion/app/features/feed/stories/data/models/story_preview_result.f.dart';
 import 'package:ion/app/features/feed/stories/providers/current_user_story_provider.r.dart';
 import 'package:ion/app/features/feed/stories/providers/user_stories_provider.r.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/actions/story_share_button.dart';
@@ -34,6 +35,8 @@ class StoryPreviewPage extends HookConsumerWidget {
     required this.mimeType,
     this.eventReference,
     this.isPostScreenshot = false,
+    this.fromEditor = false,
+    this.originalFilePath,
     super.key,
   });
 
@@ -41,6 +44,8 @@ class StoryPreviewPage extends HookConsumerWidget {
   final String? mimeType;
   final EventReference? eventReference;
   final bool isPostScreenshot;
+  final bool fromEditor;
+  final String? originalFilePath;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -54,10 +59,12 @@ class StoryPreviewPage extends HookConsumerWidget {
         createPostNotifierProvider(CreatePostOption.story),
         (_) {
           if (context.mounted) {
-            context.pop(true);
+            context.pop(const StoryPreviewResult.published());
           }
         },
       );
+
+    final shouldUseCustomBack = fromEditor && originalFilePath != null;
 
     return Scaffold(
       body: SafeArea(
@@ -68,6 +75,14 @@ class StoryPreviewPage extends HookConsumerWidget {
                 context.i18n.story_preview_title,
                 style: context.theme.appTextThemes.subtitle2,
               ),
+              onBackPress: shouldUseCustomBack
+                  ? () => context.pop(
+                        StoryPreviewResult.edited(
+                          originalPath: originalFilePath!,
+                          mimeType: mimeType!,
+                        ),
+                      )
+                  : null,
             ),
             Expanded(
               child: Padding(
