@@ -76,8 +76,6 @@ class NftCollectionSyncController {
   }
 }
 
-/// Riverpod provider for NftCollectionSyncController.
-/// Assembles all dependencies and constructs the controller.
 @riverpod
 NftCollectionSyncController nftCollectionSyncController(Ref ref) {
   final userMasterKey = ref.watch(currentPubkeySelectorProvider);

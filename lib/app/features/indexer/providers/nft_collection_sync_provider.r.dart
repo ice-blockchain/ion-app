@@ -10,7 +10,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'nft_collection_sync_provider.r.g.dart';
 
 /// Riverpod provider that manages the lifecycle of NFT collection sync.
-/// Uses ref.listen to react to app lifecycle and authentication changes.
 @riverpod
 class NftCollectionSync extends _$NftCollectionSync {
   @override
