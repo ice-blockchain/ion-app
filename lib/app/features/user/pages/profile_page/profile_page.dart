@@ -15,8 +15,8 @@ import 'package:ion/app/features/user/model/user_content_type.dart';
 import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';
 import 'package:ion/app/features/user/pages/profile_page/cant_find_profile_page.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/header.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/header/profile_context_menu.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_details.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tab_entities_list.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_header/tabs_header.dart';
@@ -25,7 +25,6 @@ import 'package:ion/app/features/user/pages/profile_page/profile_skeleton.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.r.dart';
 import 'package:ion/app/features/user_block/providers/block_list_notifier.r.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
-import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ProfilePage extends HookConsumerWidget {
@@ -193,32 +192,7 @@ class ProfilePage extends HookConsumerWidget {
                   padding: EdgeInsetsDirectional.only(end: 16.s),
                   child: SizedBox(
                     height: HeaderAction.buttonSize,
-                    child: isCurrentUserProfile
-                        ? Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              HeaderAction(
-                                onPressed: () {
-                                  BookmarksRoute().push<void>(context);
-                                },
-                                assetName: Assets.svg.iconBookmarks,
-                                opacity: 1,
-                              ),
-                              SizedBox(
-                                width: 16.0.s,
-                              ),
-                              HeaderAction(
-                                onPressed: () {
-                                  SettingsRoute().push<void>(context);
-                                },
-                                assetName: Assets.svg.iconProfileSettings,
-                                opacity: 1,
-                              ),
-                            ],
-                          )
-                        : ContextMenu(
-                            pubkey: pubkey,
-                          ),
+                    child: ProfileContextMenu(pubkey: pubkey),
                   ),
                 ),
               ),
