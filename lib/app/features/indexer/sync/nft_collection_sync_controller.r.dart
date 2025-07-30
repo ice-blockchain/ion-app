@@ -40,6 +40,7 @@ class NftCollectionSyncController {
     if (_status == _SyncStatus.running || _status == _SyncStatus.completed) return;
     _status = _SyncStatus.running;
     _performSync();
+    _timer?.cancel();
     _timer = Timer.periodic(syncInterval, (_) => _performSync());
   }
 
@@ -75,9 +76,16 @@ class NftCollectionSyncController {
         stopSync();
       }
     } catch (e, st) {
-      Logger.log('Failed to sync NFT collection: $e', error: e, stackTrace: st);
+      if (e is DioException && CancelToken.isCancel(e)) {
+        Logger.log('Sync cancelled');
+      } else {
+        Logger.log('Failed to sync NFT collection: $e', error: e, stackTrace: st);
+      }
     } finally {
-      _status = _SyncStatus.running;
+      _cancelToken = null;
+      if (_status != _SyncStatus.completed) {
+        _status = _SyncStatus.running;
+      }
     }
   }
 }
