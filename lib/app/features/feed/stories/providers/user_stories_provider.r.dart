@@ -38,6 +38,10 @@ class UserStories extends _$UserStories {
       ref.invalidate(entitiesPagedDataProvider(dataSources));
     }
   }
+
+  void removeStory(String id) {
+    state = state?.where((story) => story.data.replaceableEventId.value != id);
+  }
 }
 
 @riverpod
