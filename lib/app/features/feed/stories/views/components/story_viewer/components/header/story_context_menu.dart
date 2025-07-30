@@ -14,6 +14,7 @@ import 'package:ion/app/features/feed/stories/providers/story_pause_provider.r.d
 import 'package:ion/app/features/feed/views/pages/entity_delete_confirmation_modal/entity_delete_confirmation_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item_divider.dart';
+import 'package:ion/app/features/user/providers/follow_list_provider.r.dart';
 import 'package:ion/app/features/user/providers/report_notifier.m.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -161,6 +162,7 @@ class _OtherUserMenuItems extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = context.i18n;
     final isMuted = ref.watch(globalMuteNotifierProvider);
+    final following = ref.watch(isCurrentUserFollowingSelectorProvider(pubkey));
 
     ref.displayErrors(reportNotifierProvider);
 
@@ -187,14 +189,20 @@ class _OtherUserMenuItems extends ConsumerWidget {
         ),
         const ContextMenuItemDivider(),
         ContextMenuItem(
-          label: i18n.button_unfollow,
-          iconAsset: Assets.svg.iconCategoriesUnflow,
+          label: following ? context.i18n.button_unfollow : context.i18n.button_follow,
+          iconAsset: following ? Assets.svg.iconCategoriesUnflow : Assets.svg.iconSearchFollow,
           onPressed: () {
             onClose();
-            showSimpleBottomSheet<void>(
-              context: context,
-              child: UnfollowUserModal(pubkey: pubkey),
-            );
+            if (following) {
+              showSimpleBottomSheet<void>(
+                context: context,
+                child: UnfollowUserModal(
+                  pubkey: pubkey,
+                ),
+              );
+            } else {
+              ref.read(followListManagerProvider.notifier).toggleFollow(pubkey);
+            }
           },
         ),
       ],
