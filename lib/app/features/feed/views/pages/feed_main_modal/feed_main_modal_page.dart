@@ -76,8 +76,12 @@ class _SharePostButton extends HookConsumerWidget {
       item: type,
       onTap: () async {
         await CreatePostRoute().push<void>(context);
-        if (context.mounted) {
-          context.pop();
+        if (context.mounted && context.canPop()) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              context.pop();
+            }
+          });
         }
       },
       index: index,
@@ -127,42 +131,51 @@ class _ShareVideoButton extends HookConsumerWidget {
       permissionType: Permission.photos,
       onGranted: () async {
         Future<void> showMediaPickerAndCreatePost() async {
-          final result = await showSimpleBottomSheet<List<MediaFile>>(
+          await showSimpleBottomSheet<List<MediaFile>>(
             context: context,
-            child: const MediaPickerPage(
+            child: MediaPickerPage(
               maxSelection: 1,
               isBottomSheet: true,
               type: MediaPickerType.video,
-            ),
-          );
+              onSelectCallback: (result) async {
+                if (context.mounted) {
+                  if (result.isNotEmpty) {
+                    final editedMedia = await ref.read(
+                      editMediaProvider(
+                        result[0],
+                        maxVideoDuration: VideoConstants.feedVideoMaxDuration,
+                      ).future,
+                    );
+                    if (!context.mounted) return;
+                    if (editedMedia == null) {
+                      return;
+                    } else {
+                      final finishEditing = await CreateVideoRoute(
+                        videoPath: editedMedia.path,
+                        videoThumbPath: editedMedia.thumb,
+                        mimeType: result[0].mimeType ?? '',
+                      ).push<bool?>(context);
 
-          if (context.mounted) {
-            if (result != null && result.isNotEmpty) {
-              final editedMedia = await ref.read(
-                editMediaProvider(
-                  result[0],
-                  maxVideoDuration: VideoConstants.feedVideoMaxDuration,
-                ).future,
-              );
-              if (!context.mounted) return;
-              if (editedMedia == null) {
-                context.pop();
-              } else {
-                await CreateVideoRoute(
-                  videoPath: editedMedia.path,
-                  videoThumbPath: editedMedia.thumb,
-                  mimeType: result[0].mimeType ?? '',
-                ).push<void>(context);
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (context.mounted) {
+                      if (finishEditing.falseOrValue) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (context.mounted) {
+                            context.pop();
+                          }
+                        });
+                      }
+                    }
+                  } else {
                     context.pop();
                   }
-                });
-              }
-            } else {
+                }
+              },
+            ),
+          );
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
               context.pop();
             }
-          }
+          });
         }
 
         await showMediaPickerAndCreatePost();
