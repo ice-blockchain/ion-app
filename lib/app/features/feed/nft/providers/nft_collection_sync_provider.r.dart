@@ -4,7 +4,7 @@ import 'dart:ui';
 
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.r.dart';
-import 'package:ion/app/features/indexer/sync/nft_collection_sync_controller.r.dart';
+import 'package:ion/app/features/feed/nft/sync/nft_collection_sync_controller.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nft_collection_sync_provider.r.g.dart';
