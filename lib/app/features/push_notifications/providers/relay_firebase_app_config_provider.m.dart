@@ -42,12 +42,13 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
     }
 
     final actionSourceRelay = ref.watch(relayPickerProvider.notifier);
-    const noFirebaseConfigRelays = DislikedRelayUrlsCollection({});
+    final noFirebaseConfigRelays = <String>{};
 
-    while (userRelays.length > noFirebaseConfigRelays.urls.length) {
+    while (userRelays.length > noFirebaseConfigRelays.length) {
       final relay = await actionSourceRelay.getActionSourceRelay(
         const ActionSourceCurrentUser(),
         actionType: ActionType.write,
+        dislikedUrls: DislikedRelayUrlsCollection(noFirebaseConfigRelays),
       );
       final relayUrl = relay.url;
 
@@ -55,7 +56,7 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
       if (relayFirebaseConfig != null) {
         return relayFirebaseConfig;
       } else {
-        noFirebaseConfigRelays.urls.add(relayUrl);
+        noFirebaseConfigRelays.add(relayUrl);
       }
     }
 
