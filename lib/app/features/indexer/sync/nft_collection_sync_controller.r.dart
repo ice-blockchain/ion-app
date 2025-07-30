@@ -14,6 +14,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nft_collection_sync_controller.r.g.dart';
 
+enum _SyncStatus { idle, running, syncing, completed }
+
 /// Controls the background NFT collection sync process.
 /// Manages timer, calls the service, and exposes start/stop/dispose methods.
 class NftCollectionSyncController {
@@ -30,13 +32,11 @@ class NftCollectionSyncController {
   final ValueChanged<TargetNftCollectionData> onSuccess;
 
   Timer? _timer;
-  bool _isRunning = false;
-  bool _isCompleted = false;
-  bool _isSyncing = false;
+  _SyncStatus _status = _SyncStatus.idle;
 
   void startSync() {
-    if (_isRunning || _isCompleted) return;
-    _isRunning = true;
+    if (_status == _SyncStatus.running || _status == _SyncStatus.completed) return;
+    _status = _SyncStatus.running;
     _performSync();
     _timer = Timer.periodic(syncInterval, (_) => _performSync());
   }
@@ -44,7 +44,7 @@ class NftCollectionSyncController {
   void stopSync() {
     _timer?.cancel();
     _timer = null;
-    _isRunning = false;
+    _status = _SyncStatus.idle;
   }
 
   void dispose() {
@@ -52,26 +52,26 @@ class NftCollectionSyncController {
   }
 
   Future<void> _performSync() async {
-    if (_isCompleted) {
+    if (_status == _SyncStatus.completed) {
       stopSync();
       return;
     }
-    if (_isSyncing) return;
-    _isSyncing = true;
+    if (_status == _SyncStatus.syncing) return;
+    _status = _SyncStatus.syncing;
     try {
       final result = await service.fetchAndFindTargetCollection(
         userMasterKey: userMasterKey,
       );
 
       if (result != null) {
-        _isCompleted = true;
+        _status = _SyncStatus.completed;
         onSuccess(result);
         stopSync();
       }
     } catch (e, st) {
       Logger.log('Failed to sync NFT collection: $e', error: e, stackTrace: st);
     } finally {
-      _isSyncing = false;
+      _status = _SyncStatus.running;
     }
   }
 }
