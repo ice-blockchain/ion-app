@@ -24,10 +24,12 @@ class IndexersNftsRepository {
   /// Fetches NFT collections from the indexer API
   Future<NftCollectionResponse> getNftCollections({
     required NftCollectionsQuery query,
+    CancelToken? cancelToken,
   }) async {
     final response = await _dio.get<Map<String, dynamic>>(
       baseUrl + nftCollectionsPath,
       queryParameters: query.toJson(),
+      cancelToken: cancelToken,
     );
 
     if (response.statusCode != 200 || response.data == null) {

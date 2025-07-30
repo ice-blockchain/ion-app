@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
@@ -32,6 +33,7 @@ class NftCollectionSyncController {
   final ValueChanged<TargetNftCollectionData> onSuccess;
 
   Timer? _timer;
+  CancelToken? _cancelToken;
   _SyncStatus _status = _SyncStatus.idle;
 
   void startSync() {
@@ -44,6 +46,8 @@ class NftCollectionSyncController {
   void stopSync() {
     _timer?.cancel();
     _timer = null;
+    _cancelToken?.cancel();
+    _cancelToken = null;
     _status = _SyncStatus.idle;
   }
 
@@ -58,9 +62,11 @@ class NftCollectionSyncController {
     }
     if (_status == _SyncStatus.syncing) return;
     _status = _SyncStatus.syncing;
+    _cancelToken = CancelToken();
     try {
       final result = await service.fetchAndFindTargetCollection(
         userMasterKey: userMasterKey,
+        cancelToken: _cancelToken,
       );
 
       if (result != null) {

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/indexer/data/repositories/indexers_nfts_repository.r.dart';
 import 'package:ion/app/features/indexer/model/nft_collection_response.f.dart';
@@ -26,6 +27,7 @@ class NftCollectionSyncService {
   Future<TargetNftCollectionData?> fetchAndFindTargetCollection({
     required String userMasterKey,
     String targetCollectionName = ionContentNftCollectionName,
+    CancelToken? cancelToken,
   }) async {
     var offset = 0;
     var hasMore = true;
@@ -36,6 +38,7 @@ class NftCollectionSyncService {
           ownerAddress: userMasterKey,
           offset: offset,
         ),
+        cancelToken: cancelToken,
       );
       final foundCollection = _findTargetCollection(response, targetCollectionName);
       if (foundCollection != null) {
