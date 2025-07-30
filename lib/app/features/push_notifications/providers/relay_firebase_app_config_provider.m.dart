@@ -6,8 +6,11 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/core/providers/env_provider.r.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
+import 'package:ion/app/features/ion_connect/model/disliked_relay_urls_collection.f.dart';
 import 'package:ion/app/features/ion_connect/model/relay_info.f.dart';
 import 'package:ion/app/features/ion_connect/providers/relays/relay_info_provider.r.dart';
+import 'package:ion/app/features/ion_connect/providers/relays/relay_picker_provider.r.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/local_storage.r.dart';
@@ -38,12 +41,21 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
       return savedConfig;
     }
 
-    while (relayUrls.isNotEmpty) {
-      final relayUrl = relayUrls.first;
-      relayUrls.remove(relayUrl);
+    final actionSourceRelay = ref.watch(relayPickerProvider.notifier);
+    const noFirebaseConfigRelays = DislikedRelayUrlsCollection({});
+
+    while (userRelays.length > noFirebaseConfigRelays.urls.length) {
+      final relay = await actionSourceRelay.getActionSourceRelay(
+        const ActionSourceCurrentUser(),
+        actionType: ActionType.write,
+      );
+      final relayUrl = relay.url;
+
       final relayFirebaseConfig = await _getRelayFirebaseConfig(relayUrl);
       if (relayFirebaseConfig != null) {
         return relayFirebaseConfig;
+      } else {
+        noFirebaseConfigRelays.urls.add(relayUrl);
       }
     }
 
