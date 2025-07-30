@@ -29,8 +29,9 @@ class NftCollectionSyncService {
   }) async {
     var offset = 0;
     const limit = 10;
+    var hasMore = true;
 
-    while (true) {
+    while (hasMore) {
       final response = await repository.getNftCollections(
         query: NftCollectionsQuery(
           ownerAddress: userMasterKey,
@@ -43,11 +44,12 @@ class NftCollectionSyncService {
       }
 
       if (response.nftCollections.length < limit) {
-        return null;
+        hasMore = false;
       } else {
         offset += limit;
       }
     }
+    return null;
   }
 
   /// Finds the target NFT collection in the response.
