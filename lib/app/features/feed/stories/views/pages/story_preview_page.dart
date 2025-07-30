@@ -64,7 +64,7 @@ class StoryPreviewPage extends HookConsumerWidget {
               if (context.mounted) {
                 // Close StoryRecordPage
                 context.pop();
-                
+
                 // Close main modal after StoryRecordPage is closed
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (context.mounted && GoRouter.of(context).canPop()) {
