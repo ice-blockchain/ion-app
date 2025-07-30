@@ -1,6 +1,6 @@
-# Ice Open Network App
+# ION Framework
 
-The Flutter app for the ice ecosystem.
+The ION Framework, built using Flutter, which allows anyone to create and deploy cross-platform DApps easily.
 
 # Getting started
 
