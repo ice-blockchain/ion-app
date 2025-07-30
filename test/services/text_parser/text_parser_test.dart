@@ -69,10 +69,10 @@ void main() {
     });
 
     test('should not parse as URLs any text with dot', () {
-      final results = parser.parse('Some dummy text.To test links.to test links');
+      final results = parser.parse('Some dummy text.To test links.asd test links');
 
       expect(results.length, equals(1));
-      expect(results[0].text, equals('Some dummy text.To test links.to test links'));
+      expect(results[0].text, equals('Some dummy text.To test links.asd test links'));
     });
 
     test('should parse www-prefixed URLs correctly', () {
@@ -130,6 +130,17 @@ void main() {
       expect(results[2].text, equals('.no questions'));
 
       expect(results.length, 3);
+    });
+
+    test('should parse URLs with dots in domain correctly', () {
+      final results = parser.parse('Visit https://ion.onelink.me/f1Pi/4yqm2bwx');
+
+      expect(results.length, equals(2));
+      expect(results[0].text, equals('Visit '));
+      expect(results[1].text, equals('https://ion.onelink.me/f1Pi/4yqm2bwx'));
+      expect(results[1].matcher, isA<UrlMatcher>());
+
+      expect(results.length, 2);
     });
 
     test('should parse mixed content correctly', () {

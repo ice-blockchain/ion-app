@@ -52,6 +52,7 @@ class SignUpPasskeyForm extends HookConsumerWidget {
                   ),
             onPressed: () {
               if (formKey.value.currentState!.validate()) {
+                FocusScope.of(context).unfocus();
                 guardPasskeyDialog(
                   ref.context,
                   (child) => RiverpodVerifyIdentityRequestBuilder(

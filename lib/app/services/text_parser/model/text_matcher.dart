@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/generated/tlds_group.dart';
+
 sealed class TextMatcher {
   const TextMatcher();
 
@@ -32,12 +34,12 @@ class UrlMatcher extends TextMatcher {
       ')'
       r'(?:[^@\s]+@)?' // optional auth
       r'(?:(?:(?!-)[A-Za-z0-9-]+(?<!-)\.)+' // labels with dots
-      '(?:com|net|org|info|biz|gov|edu|mil|int|arpa|io|ai|app|dev|xyz|online|site|tech|blog|store|news|shop|club|us|uk|ca|de|fr|cn|jp|ru|br|in|au|es|it|nl|se|no|fi|dk|be|ch|at|pl|cz|sk|pt|gr|tr|kr|sg|hk|tw|mx|ar|za)' // explicit TLD list
+      '$tldGroup'
       '|(?!-)[A-Za-z0-9-]{2,}(?<!-))' // or fallback host (like localhost)
       '|'
       // bare domain with explicit TLD only
       r'(?:[A-Za-z0-9-]+\.)+' // labels with dots
-      '(?:com|net|org|info|biz|gov|edu|mil|int|arpa|io|ai|app|dev|xyz|online|site|tech|blog|store|news|shop|club|us|uk|ca|de|fr|cn|jp|ru|br|in|au|es|it|nl|se|no|fi|dk|be|ch|at|pl|cz|sk|pt|gr|tr|kr|sg|hk|tw|mx|ar|za)' // explicit TLD list
+      '$tldGroup'
       ')'
       r'(?::\d{2,5})?' // optional port
       r'(?:\/[^\s!?.,;:]*[A-Za-z0-9\/])?' // optional path
