@@ -91,11 +91,12 @@ class FeedUserInterests extends _$FeedUserInterests {
     try {
       return await fetchFor(locale);
     } on AppConfigException catch (e) {
+      const defaultLocale = 'en';
       if (e.originalError is DioException &&
           (e.originalError as DioException).response?.statusCode == 404 &&
-          locale != 'en') {
+          locale != defaultLocale) {
         // Retry with en locale on 404
-        return fetchFor('en');
+        return fetchFor(defaultLocale);
       }
       rethrow;
     }

@@ -13,7 +13,7 @@ import 'package:ion/app/features/auth/views/pages/select_languages/language_list
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.r.dart';
 import 'package:ion/app/hooks/use_languages.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/hooks/use_measured_widget_height.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -48,17 +48,7 @@ class LanguageSelectorPage extends HookConsumerWidget {
     final mayContinue = selectedLanguages.isNotEmpty;
     final renderBottomBar = mayContinue && continueButton != null;
 
-    final bottomBarKey = useMemoized(GlobalKey.new);
-    final bottomBarHeight = useState<double>(0);
-    useOnInit(
-      () {
-        final ctx = bottomBarKey.currentContext;
-        if (ctx != null) {
-          bottomBarHeight.value = ctx.size?.height ?? 0;
-        }
-      },
-      [mayContinue, searchQuery.value, selectedLanguages],
-    );
+    final (bottomBarKey, bottomBarHeight) = useMeasuredWidgetHeight(enabled: renderBottomBar);
 
     return SheetContent(
       bottomBar: renderBottomBar
@@ -117,7 +107,7 @@ class LanguageSelectorPage extends HookConsumerWidget {
           SliverPadding(
             padding: EdgeInsetsDirectional.only(
               bottom: 16.0.s +
-                  (renderBottomBar ? bottomBarHeight.value : MediaQuery.paddingOf(context).bottom),
+                  (renderBottomBar ? bottomBarHeight : MediaQuery.paddingOf(context).bottom),
             ),
           ),
         ],
