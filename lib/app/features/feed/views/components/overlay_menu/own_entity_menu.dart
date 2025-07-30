@@ -27,6 +27,7 @@ class OwnEntityMenu extends ConsumerWidget {
     required this.eventReference,
     this.iconColor,
     this.onDelete,
+    this.padding = EdgeInsets.zero,
     super.key,
   });
 
@@ -34,6 +35,7 @@ class OwnEntityMenu extends ConsumerWidget {
 
   final EventReference eventReference;
   final Color? iconColor;
+  final EdgeInsetsGeometry padding;
   final VoidCallback? onDelete;
 
   @override
@@ -130,8 +132,11 @@ class OwnEntityMenu extends ConsumerWidget {
           ),
         ],
       ),
-      child: Assets.svg.iconMorePopup.icon(
-        color: iconColor ?? context.theme.appColors.onTertararyBackground,
+      child: Padding(
+        padding: padding,
+        child: Assets.svg.iconMorePopup.icon(
+          color: iconColor ?? context.theme.appColors.onTertararyBackground,
+        ),
       ),
     );
   }

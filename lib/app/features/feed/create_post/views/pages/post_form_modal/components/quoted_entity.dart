@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
@@ -40,7 +41,13 @@ class QuotedEntity extends HookConsumerWidget {
               child: Post(
                 eventReference: eventReference,
                 displayQuote: false,
-                header: UserInfo(pubkey: eventReference.masterPubkey),
+                header: UserInfo(
+                  pubkey: eventReference.masterPubkey,
+                  padding: EdgeInsetsDirectional.only(
+                    start: ScreenSideOffset.defaultSmallMargin,
+                    top: ScreenSideOffset.defaultSmallMargin,
+                  ),
+                ),
                 footer: const SizedBox.shrink(),
               ),
             );

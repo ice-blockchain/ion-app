@@ -139,7 +139,14 @@ class Post extends ConsumerWidget {
                     )
                   : null,
               trailing: isOwnedByCurrentUser
-                  ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
+                  ? OwnEntityMenu(
+                      eventReference: eventReference,
+                      onDelete: onDelete,
+                      padding: EdgeInsetsGeometry.symmetric(
+                        horizontal: ScreenSideOffset.defaultSmallMargin,
+                        vertical: 5.0.s,
+                      ),
+                    )
                   : UserInfoMenu(
                       eventReference: eventReference,
                       padding: EdgeInsetsGeometry.symmetric(
