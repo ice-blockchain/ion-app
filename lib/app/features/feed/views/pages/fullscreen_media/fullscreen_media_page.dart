@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/status_bar/status_bar_color_wrapper.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/own_entity_menu.dart';
@@ -36,12 +36,7 @@ class FullscreenMediaPage extends HookConsumerWidget {
 
     return Material(
       color: Colors.transparent,
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
-          statusBarColor: context.theme.appColors.primaryText,
-          statusBarIconBrightness: Brightness.light,
-          statusBarBrightness: Brightness.dark,
-        ),
+      child: StatusBarColorWrapper.light(
         child: Scaffold(
           backgroundColor: context.theme.appColors.primaryText,
           extendBodyBehindAppBar: true,

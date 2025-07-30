@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/badges_user_list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/status_bar/status_bar_color_wrapper.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.f.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.m.dart';
@@ -85,64 +86,56 @@ class ChatMediaPage extends HookConsumerWidget {
         .where((e) => !entity.data.visualMedias.any((c) => c.thumb == e.url && c.url != e.url))
         .toList();
 
-    return Material(
-      color: context.theme.appColors.primaryText,
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
-          statusBarColor: context.theme.appColors.primaryText,
-          statusBarIconBrightness: Brightness.light,
-          statusBarBrightness: Brightness.dark,
-        ),
-        child: Scaffold(
-          backgroundColor: context.theme.appColors.primaryText,
-          extendBodyBehindAppBar: true,
-          body: Stack(
-            children: [
-              ChatMediaPageView(
-                medias: medias,
-                eventReference: eventReference,
-                initialIndex: initialIndex,
-                zoomController: zoomController,
-                isZoomed: isZoomed,
-                pageController: pageController,
-              ),
-              PositionedDirectional(
-                top: 0,
-                start: 0,
-                end: 0,
-                child: ColoredBox(
-                  color: context.theme.appColors.primaryText.withValues(alpha: 0.5),
-                  child: NavigationAppBar.screen(
-                    backgroundColor: Colors.transparent,
-                    leading: NavigationBackButton(
-                      () => context.pop(),
-                      icon: Assets.svg.iconChatBack.icon(
-                        size: NavigationAppBar.actionButtonSide,
-                        color: context.theme.appColors.onPrimaryAccent,
-                        flipForRtl: true,
-                      ),
+    return StatusBarColorWrapper.light(
+      child: Scaffold(
+        backgroundColor: context.theme.appColors.primaryText,
+        extendBodyBehindAppBar: true,
+        body: Stack(
+          children: [
+            ChatMediaPageView(
+              medias: medias,
+              eventReference: eventReference,
+              initialIndex: initialIndex,
+              zoomController: zoomController,
+              isZoomed: isZoomed,
+              pageController: pageController,
+            ),
+            PositionedDirectional(
+              top: 0,
+              start: 0,
+              end: 0,
+              child: ColoredBox(
+                color: context.theme.appColors.primaryText.withValues(alpha: 0.5),
+                child: NavigationAppBar.screen(
+                  backgroundColor: Colors.transparent,
+                  leading: NavigationBackButton(
+                    () => context.pop(),
+                    icon: Assets.svg.iconChatBack.icon(
+                      size: NavigationAppBar.actionButtonSide,
+                      color: context.theme.appColors.onPrimaryAccent,
+                      flipForRtl: true,
                     ),
-                    onBackPress: () => context.pop(),
-                    actions: [
-                      ChatMediaContextMenu(
-                        eventMessage: eventMessage,
-                        activeMedia: medias[currentPage.value],
-                      ),
-                    ],
-                    title: _MediaPagerCounter(
-                      currentPage: currentPage.value,
-                      totalPages: medias.length,
+                  ),
+                  onBackPress: () => context.pop(),
+                  actions: [
+                    ChatMediaContextMenu(
+                      eventMessage: eventMessage,
+                      activeMedia: medias[currentPage.value],
                     ),
+                  ],
+                  title: _MediaPagerCounter(
+                    currentPage: currentPage.value,
+                    totalPages: medias.length,
                   ),
                 ),
               ),
-              _MediaBottomOverlay(
-                messageEntity: entity,
-                medias: medias,
-                currentIndex: currentPage.value,
-              ),
-            ],
-          ),
+            ),
+            _MediaBottomOverlay(
+              messageEntity: entity,
+              medias: medias,
+              currentIndex: currentPage.value,
+            ),
+          ],
         ),
       ),
     );
