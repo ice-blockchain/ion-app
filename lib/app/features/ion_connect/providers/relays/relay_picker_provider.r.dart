@@ -138,7 +138,7 @@ class RelayPicker extends _$RelayPicker {
 
   Future<List<UserRelay>> _getCurrentUserRankedRelays() async {
     final relays = await ref.read(rankedCurrentUserRelaysProvider.future);
-    if (relays == null || relays.isEmpty) {
+    if (relays.isEmpty) {
       throw UserRelaysNotFoundException();
     }
     return relays;

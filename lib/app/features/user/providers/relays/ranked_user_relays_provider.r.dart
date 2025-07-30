@@ -21,11 +21,11 @@ part 'ranked_user_relays_provider.r.g.dart';
 @Riverpod(keepAlive: true)
 class RankedCurrentUserRelays extends _$RankedCurrentUserRelays {
   @override
-  Stream<List<UserRelay>?> build() async* {
+  Stream<List<UserRelay>> build() async* {
     final currentUserRelays = await ref.watch(currentUserIdentityConnectRelaysProvider.future);
 
     if (currentUserRelays == null) {
-      yield null;
+      yield [];
       return;
     }
 
@@ -36,7 +36,7 @@ class RankedCurrentUserRelays extends _$RankedCurrentUserRelays {
     final pingIntervalSeconds =
         ref.watch(envProvider.notifier).get<int>(EnvVariable.RELAY_PING_INTERVAL_SECONDS);
 
-    final controller = StreamController<List<UserRelay>?>();
+    final controller = StreamController<List<UserRelay>>();
 
     final timer = Timer.periodic(Duration(seconds: pingIntervalSeconds), (_) {
       controller.addStream(_rank(currentUserRelays, cancelToken: cancelToken));
@@ -51,12 +51,12 @@ class RankedCurrentUserRelays extends _$RankedCurrentUserRelays {
     yield* controller.stream;
   }
 
-  Stream<List<UserRelay>?> _rank(
+  Stream<List<UserRelay>> _rank(
     List<UserRelay> relays, {
     required CancelToken cancelToken,
   }) async* {
     if (relays.isEmpty) {
-      yield null;
+      yield [];
       return;
     }
 
@@ -70,12 +70,20 @@ class RankedCurrentUserRelays extends _$RankedCurrentUserRelays {
     var rankedRelays = <UserRelay>[];
     await for (final results in rankedResultsStream) {
       rankedRelays = results
-          .map((url) => relays.firstWhereOrNull((relay) => relay.url == url))
+          .where((rankedRelay) => rankedRelay.isReachable)
+          .map((rankedRelay) => relays.firstWhereOrNull((relay) => relay.url == rankedRelay.url))
           .nonNulls
           .toList();
-      yield rankedRelays;
+      if (rankedRelays.isNotEmpty) {
+        yield rankedRelays;
+      }
     }
 
+    // forcefully yield the final ranked relays in case nothing was
+    // yielded during the stream to avoid listeners hanging
+    if (rankedRelays.isEmpty) {
+      yield rankedRelays;
+    }
     Logger.log('[RELAY] Ranked relays: $rankedRelays');
   }
 }

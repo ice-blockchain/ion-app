@@ -19,7 +19,7 @@ part 'relevant_user_relays_provider.r.g.dart';
 @Riverpod(keepAlive: true)
 Future<List<String>> relevantCurrentUserRelays(Ref ref) async {
   final topRelayUrl = await ref.watch(
-    rankedCurrentUserRelaysProvider.selectAsync((state) => state?.firstOrNull?.url),
+    rankedCurrentUserRelaysProvider.selectAsync((state) => state.firstOrNull?.url),
   );
   if (topRelayUrl == null) {
     return [];
@@ -65,7 +65,27 @@ class RankedRelevantCurrentUserRelaysUrls extends _$RankedRelevantCurrentUserRel
   Stream<List<String>> _rank(
     List<String> relayUrls, {
     required CancelToken cancelToken,
-  }) {
-    return ref.read(ionConnectRelaysRankerProvider).ranked(relayUrls, cancelToken: cancelToken);
+  }) async* {
+    final relaysStream = ref.read(ionConnectRelaysRankerProvider).ranked(
+          relayUrls,
+          cancelToken: cancelToken,
+        );
+
+    var rankedRelaysUrls = <String>[];
+    await for (final results in relaysStream) {
+      rankedRelaysUrls = results
+          .where((rankedRelay) => rankedRelay.isReachable)
+          .map((rankedRelay) => rankedRelay.url)
+          .toList();
+      if (rankedRelaysUrls.isNotEmpty) {
+        yield rankedRelaysUrls;
+      }
+    }
+
+    // forcefully yield the final ranked relays in case nothing was
+    // yielded during the stream to avoid listeners hanging
+    if (rankedRelaysUrls.isEmpty) {
+      yield rankedRelaysUrls;
+    }
   }
 }
