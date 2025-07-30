@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/chat/model/message_list_item.f.dart';
@@ -85,15 +86,20 @@ class SharedPostMessage extends HookConsumerWidget {
           contentAsPlainText.isEmpty ? context.i18n.post_page_title : contentAsPlainText,
     );
 
-    final userInfo = UserInfo(
-      accentTheme: isMe,
-      createdAt: createdAt,
-      pubkey: postEntity.masterPubkey,
-      textStyle: isMe
-          ? context.theme.appTextThemes.caption.copyWith(
-              color: context.theme.appColors.onPrimaryAccent,
-            )
-          : null,
+    final userInfo = Padding(
+      padding: EdgeInsetsDirectional.only(
+        start: ScreenSideOffset.defaultSmallMargin,
+      ),
+      child: UserInfo(
+        accentTheme: isMe,
+        createdAt: createdAt,
+        pubkey: postEntity.masterPubkey,
+        textStyle: isMe
+            ? context.theme.appTextThemes.caption.copyWith(
+                color: context.theme.appColors.onPrimaryAccent,
+              )
+            : null,
+      ),
     );
     return MessageItemWrapper(
       isMe: isMe,
