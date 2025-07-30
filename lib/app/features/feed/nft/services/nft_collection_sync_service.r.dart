@@ -2,9 +2,9 @@
 
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/indexer/data/repositories/indexers_nfts_repository.r.dart';
-import 'package:ion/app/features/indexer/model/nft_collection_response.f.dart';
-import 'package:ion/app/features/indexer/model/nft_collections_query.f.dart';
+import 'package:ion/app/features/feed/nft/data/repositories/indexers_nfts_repository.r.dart';
+import 'package:ion/app/features/feed/nft/model/nft_collection_response.f.dart';
+import 'package:ion/app/features/feed/nft/model/nft_collections_query.f.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nft_collection_sync_service.r.g.dart';
