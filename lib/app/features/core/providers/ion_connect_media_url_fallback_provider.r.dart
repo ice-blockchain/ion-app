@@ -27,7 +27,7 @@ class IONConnectMediaUrlFallback extends _$IONConnectMediaUrlFallback {
     // TODO: the fallback relays should be taken from the user with `authorPubkey` relays, so userRelayProvider(authorPubkey)
     // + if the fallback doesn't work we need to take the relays from the identity and persist those
     final userRelays = await ref.read(rankedCurrentUserRelaysProvider.future);
-    if (userRelays == null) {
+    if (userRelays.isEmpty) {
       return null;
     }
 

@@ -26,22 +26,20 @@ final class IonConnectRelaysRanker {
 
   /// Ranks the relays based on their latency.
   ///
-  /// Returns a List of relay URLs sorted by their latency in ascending order (from best to worst).
+  /// Returns a List of MeasuredRelays sorted by their latency in ascending order (from best to worst).
   /// Emits results each time a relay is pinged.
-  Stream<List<String>> ranked(List<String> relaysUrls, {CancelToken? cancelToken}) {
-    final resultsController = StreamController<List<String>>();
-    final measurements = <({int time, String url})>[];
+  Stream<List<RankedRelay>> ranked(List<String> relaysUrls, {CancelToken? cancelToken}) {
+    final resultsController = StreamController<List<RankedRelay>>();
+    final measurements = <RankedRelay>[];
     var completedCount = 0;
     for (final relayUrl in relaysUrls) {
-      _getRelayRank(relayUrl, cancelToken).then(
+      _getRankedRelay(relayUrl, cancelToken).then(
         (result) {
           Logger.log('[RELAY] Relays ping results $result');
           measurements
             ..add(result)
-            ..sort((a, b) => a.time.compareTo(b.time));
-          resultsController.add(
-            measurements.map((measurement) => measurement.url).toList(),
-          );
+            ..sort((a, b) => a.latency.compareTo(b.latency));
+          resultsController.add(List.from(measurements));
         },
       ).catchError(
         (Object? reason) {
@@ -61,7 +59,7 @@ final class IonConnectRelaysRanker {
     return resultsController.stream;
   }
 
-  Future<({String url, int time})> _getRelayRank(
+  Future<RankedRelay> _getRankedRelay(
     String relayUrl, [
     CancelToken? cancelToken,
   ]) async {
@@ -86,10 +84,25 @@ final class IonConnectRelaysRanker {
         cancelToken: cancelToken,
       );
       stopWatch.stop();
-      return (url: relayUrl, time: stopWatch.elapsedMilliseconds);
+      return RankedRelay(url: relayUrl, latency: stopWatch.elapsedMilliseconds);
     } catch (e) {
-      // infinite rank if relay is unreachable
-      return (url: relayUrl, time: 9999999999);
+      return RankedRelay.unreachable(url: relayUrl);
     }
   }
+}
+
+final class RankedRelay {
+  const RankedRelay({
+    required this.url,
+    required this.latency,
+  });
+
+  const RankedRelay.unreachable({
+    required this.url,
+  }) : latency = -1;
+
+  final String url;
+  final int latency;
+
+  bool get isReachable => latency >= 0;
 }
