@@ -12,7 +12,6 @@ import 'package:ion/app/features/chat/community/providers/community_admins_provi
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.r.dart';
 import 'package:ion/app/features/chat/community/providers/invite_to_community_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_response.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.m.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.m.dart';
@@ -61,14 +60,14 @@ class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
 
       final patchCommunityEntity =
           CommunityUpdateData.fromCommunityDefinitionData(editedCommunityEntity);
-      final IonConnectSendResponse(data: patchCommunityResponse) =
+      final patchCommunityResult =
           await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(patchCommunityEntity);
 
-      final IonConnectSendResponse(data: editCommunityResponse) = await ref
+      final editCommunityResult = await ref
           .read(ionConnectNotifierProvider.notifier)
           .sendEntityData<CommunityDefinitionEntity>(editedCommunityEntity);
 
-      if (patchCommunityResponse == null || editCommunityResponse == null) {
+      if (patchCommunityResult == null || editCommunityResult == null) {
         throw FailedToEditCommunityException();
       }
 
@@ -94,7 +93,7 @@ class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
 
       ref.invalidate(communityMetadataProvider(community.uuid));
 
-      return editCommunityResponse.data;
+      return editCommunityResult.data;
     });
   }
 

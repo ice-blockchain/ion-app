@@ -49,10 +49,10 @@ class CurrentUserInterestsSet extends _$CurrentUserInterestsSet {
 
     state = await AsyncValue.guard(() async {
       final data = InterestSetData(type: type, hashtags: hashtags);
-      final response = await ref
+      final entity = await ref
           .read(ionConnectNotifierProvider.notifier)
           .sendEntityData<InterestSetEntity>(data);
-      return response.data;
+      return entity;
     });
   }
 }

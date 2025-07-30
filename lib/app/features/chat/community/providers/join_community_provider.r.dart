@@ -53,11 +53,11 @@ class JoinCommunityNotifier extends _$JoinCommunityNotifier {
         joinData = joinData.copyWith(auth: jsonEncode(invitationEvent.toJson().last));
       }
 
-      final response = await ref
+      final result = await ref
           .read(ionConnectNotifierProvider.notifier)
           .sendEntityData(joinData, actionSource: ActionSourceUser(community.ownerPubkey));
 
-      if (response.data == null) {
+      if (result == null) {
         throw FailedToJoinCommunityException();
       }
 

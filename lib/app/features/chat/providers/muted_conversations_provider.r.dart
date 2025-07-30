@@ -61,12 +61,12 @@ class MutedConversations extends _$MutedConversations {
         );
       }
 
-      final response =
+      final muteSetEntity =
           await ref.read(ionConnectNotifierProvider.notifier).sendEntityData<MuteSetEntity>(
                 muteSetData,
               );
 
-      return response.data;
+      return muteSetEntity;
     });
   }
 }
