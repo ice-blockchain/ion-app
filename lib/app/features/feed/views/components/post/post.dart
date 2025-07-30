@@ -91,35 +91,27 @@ class Post extends ConsumerWidget {
 
     final isParentShown = displayParent && parentEventReference != null;
 
-    final body = PostBody(
-      entity: entity,
-      maxLines: bodyMaxLines,
-      onVideoTap: onVideoTap,
-      accentTheme: accentTheme,
-      videoAutoplay: videoAutoplay,
-      isTextSelectable: isTextSelectable,
-      framedEventReference: repostEventReference ?? quotedEventReference,
-    );
-
     final content = Column(
       children: [
         SizedBox(height: headerOffset ?? 10.0.s),
-        if (displayQuote && quotedEventReference != null) ...[
+        PostBody(
+          entity: entity,
+          maxLines: bodyMaxLines,
+          onVideoTap: onVideoTap,
+          accentTheme: accentTheme,
+          videoAutoplay: videoAutoplay,
+          isTextSelectable: isTextSelectable,
+          framedEventReference: repostEventReference ?? quotedEventReference,
+        ),
+        if (displayQuote && quotedEventReference != null)
           ScreenSideOffset.small(
-            child: Column(
-              children: [
-                body,
-                _QuotedEvent(
-                  accentTheme: accentTheme,
-                  eventReference: quotedEventReference,
-                  header: accentTheme && header != null ? header : null,
-                  footer: quotedEventFooter,
-                ),
-              ],
+            child: _QuotedEvent(
+              accentTheme: accentTheme,
+              eventReference: quotedEventReference,
+              header: accentTheme && header != null ? header : null,
+              footer: quotedEventFooter,
             ),
           ),
-        ] else
-          body,
         footer ?? CounterItemsFooter(eventReference: eventReference),
       ],
     );
