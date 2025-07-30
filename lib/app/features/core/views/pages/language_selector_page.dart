@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
@@ -12,6 +13,7 @@ import 'package:ion/app/features/auth/views/pages/select_languages/language_list
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.r.dart';
 import 'package:ion/app/hooks/use_languages.dart';
+import 'package:ion/app/hooks/use_measured_widget_height.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -44,10 +46,14 @@ class LanguageSelectorPage extends HookConsumerWidget {
     final languages = useLanguages(query: searchQuery.value, preferredLangs: preferredLangs);
 
     final mayContinue = selectedLanguages.isNotEmpty;
+    final renderBottomBar = mayContinue && continueButton != null;
+
+    final (bottomBarKey, bottomBarHeight) = useMeasuredWidgetHeight(enabled: renderBottomBar);
 
     return SheetContent(
-      bottomBar: mayContinue && continueButton != null
+      bottomBar: renderBottomBar
           ? ColoredBox(
+              key: bottomBarKey,
               color: context.theme.appColors.onPrimaryAccent,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -100,7 +106,8 @@ class LanguageSelectorPage extends HookConsumerWidget {
           ),
           SliverPadding(
             padding: EdgeInsetsDirectional.only(
-              bottom: 16.0.s + (mayContinue ? 0 : MediaQuery.paddingOf(context).bottom),
+              bottom: 16.0.s +
+                  (renderBottomBar ? bottomBarHeight : MediaQuery.paddingOf(context).bottom),
             ),
           ),
         ],

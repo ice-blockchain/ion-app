@@ -74,8 +74,7 @@ enum Language {
   urdu(name: 'Urdu', localName: 'اردو', flag: '🇵🇰', isoCode: 'ur'),
   uyghur(name: 'Uyghur', localName: 'ئۇيغۇرچە', flag: '🇨🇳', isoCode: 'ug'),
   vietnamese(name: 'Vietnamese', localName: 'Tiếng Việt', flag: '🇻🇳', isoCode: 'vi'),
-  welsh(name: 'Welsh', localName: 'Cymraeg', flag: '🏴', isoCode: 'cy'),
-  other(name: 'Other', flag: '🌍', isoCode: 'other');
+  welsh(name: 'Welsh', localName: 'Cymraeg', flag: '🏴', isoCode: 'cy');
 
   const Language({
     required this.name,

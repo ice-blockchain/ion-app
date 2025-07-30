@@ -540,11 +540,20 @@ class AppConfigNotFoundException extends IONException {
 }
 
 class AppConfigException extends IONException {
-  AppConfigException(dynamic error, {String? configName, String? errorMessage})
-      : super(
+  AppConfigException(
+    dynamic error, {
+    String? configName,
+    String? errorMessage,
+  })  : _originalError = error,
+        super(
           10109,
           'App config exception: $error, configName: $configName, errorMessage: $errorMessage',
         );
+
+  /// The underlying error that triggered this exception.
+  final dynamic _originalError;
+
+  dynamic get originalError => _originalError;
 }
 
 class InappropriateTransferStatusException extends IONException {

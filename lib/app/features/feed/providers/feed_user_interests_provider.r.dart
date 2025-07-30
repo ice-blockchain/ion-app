@@ -3,6 +3,8 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:dio/dio.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.m.dart';
 import 'package:ion/app/features/config/data/models/app_config_cache_strategy.dart';
 import 'package:ion/app/features/config/providers/config_repository.r.dart';
@@ -74,13 +76,30 @@ class FeedUserInterests extends _$FeedUserInterests {
     final locale = ref.read(appLocaleProvider).languageCode;
     final type = _getConfigTopicsContentType(feedType);
 
-    return repository.getConfig<FeedInterests>(
-      'content-topics_${type}_$locale',
-      cacheStrategy: AppConfigCacheStrategy.file,
-      refreshInterval: force ? Duration.zero : null,
-      parser: (data) => FeedInterests.fromJson(jsonDecode(data) as Map<String, dynamic>),
-      checkVersion: true,
-    );
+    Future<FeedInterests> fetchFor(String locale) {
+      return repository.getConfig<FeedInterests>(
+        'content-topics_${type}_$locale',
+        cacheStrategy: AppConfigCacheStrategy.file,
+        refreshInterval: force ? Duration.zero : null,
+        parser: (data) => FeedInterests.fromJson(
+          jsonDecode(data) as Map<String, dynamic>,
+        ),
+        checkVersion: true,
+      );
+    }
+
+    try {
+      return await fetchFor(locale);
+    } on AppConfigException catch (e) {
+      const defaultLocale = 'en';
+      if (e.originalError is DioException &&
+          (e.originalError as DioException).response?.statusCode == 404 &&
+          locale != defaultLocale) {
+        // Retry with en locale on 404
+        return fetchFor(defaultLocale);
+      }
+      rethrow;
+    }
   }
 
   String _getConfigTopicsContentType(FeedType feedType) => switch (feedType) {
