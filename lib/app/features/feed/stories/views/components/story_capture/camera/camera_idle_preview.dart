@@ -39,7 +39,14 @@ class CameraIdlePreview extends ConsumerWidget {
           end: 10.0.s,
           child: StoryControlButton(
             icon: Assets.svg.iconSheetClose.icon(color: context.theme.appColors.onPrimaryAccent),
-            onPressed: () => context.pop(),
+            onPressed: () {
+              context.pop();
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted && GoRouter.of(context).canPop()) {
+                  context.pop();
+                }
+              });
+            },
           ),
         ),
         PositionedDirectional(

@@ -59,7 +59,20 @@ class StoryPreviewPage extends HookConsumerWidget {
         createPostNotifierProvider(CreatePostOption.story),
         (_) {
           if (context.mounted) {
-            context.pop(const StoryPreviewResult.published());
+            context.pop();
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (context.mounted) {
+                // Close StoryRecordPage
+                context.pop();
+                
+                // Close main modal after StoryRecordPage is closed
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (context.mounted && GoRouter.of(context).canPop()) {
+                    context.pop();
+                  }
+                });
+              }
+            });
           }
         },
       );

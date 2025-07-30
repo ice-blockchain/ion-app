@@ -21,8 +21,6 @@ class FeedRoutes {
     TypedGoRoute<ArticlesFromAuthorRoute>(path: 'articles/author/:pubkey'),
     TypedGoRoute<FeedSimpleSearchRoute>(path: 'feed-simple-search'),
     TypedGoRoute<FeedAdvancedSearchRoute>(path: 'feed-advanced-search'),
-    TypedGoRoute<StoryRecordRoute>(path: 'story-record-fullstack'),
-    TypedGoRoute<StoryPreviewRoute>(path: 'story-preview-fullstack/:path'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<FeedVisibleArticleCategoriesRoute>(path: 'feed-visible-article-categories'),
@@ -365,10 +363,12 @@ class FeedSearchFiltersRoute extends BaseRouteData with _$FeedSearchFiltersRoute
         );
 }
 
+@TypedGoRoute<StoryRecordRoute>(path: '/story-record')
 class StoryRecordRoute extends BaseRouteData with _$StoryRecordRoute {
   StoryRecordRoute() : super(child: const StoryRecordPage());
 }
 
+@TypedGoRoute<StoryPreviewRoute>(path: '/story-preview/:path')
 class StoryPreviewRoute extends BaseRouteData with _$StoryPreviewRoute {
   StoryPreviewRoute({
     required this.path,
