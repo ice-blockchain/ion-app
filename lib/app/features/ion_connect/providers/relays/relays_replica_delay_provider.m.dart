@@ -59,7 +59,7 @@ class RelaysReplicaDelayState with _$RelaysReplicaDelayState {
   factory RelaysReplicaDelayState.fromJson(Map<String, dynamic> json) =>
       _$RelaysReplicaDelayStateFromJson(json);
 
-  RelaysReplicaDelayState._();
+  const RelaysReplicaDelayState._();
 
   bool get isDelayed {
     return delay != null && delay!.isAfter(DateTime.now());

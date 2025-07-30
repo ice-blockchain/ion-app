@@ -11,6 +11,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvent
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/auth_event.f.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
+import 'package:ion/app/features/ion_connect/providers/relays/relays_replica_delay_provider.m.dart';
 import 'package:ion/app/features/user/providers/relays/user_relays_manager.r.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.r.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,15 +33,19 @@ class RelayAuth extends _$RelayAuth {
         final delegation = await ref.read(currentUserCachedDelegationProvider.future);
         final userRelays = await ref.read(currentUserRelaysProvider.future);
         final userAgent = await ref.read(currentUserAgentProvider.future);
+        final relaysReplicaDelay = ref.read(relaysReplicaDelayProvider);
 
         final isRelayInUserRelays = userRelays?.urls.contains(relay.url) ?? false;
+        final attachDelegation = delegationComplete.falseOrValue &&
+            (!isRelayInUserRelays || relaysReplicaDelay.isDelayed);
+        final attachUserRelays = isRelayInUserRelays && relaysReplicaDelay.isDelayed;
 
         final authEvent = AuthEvent(
           challenge: challenge,
           relay: relayUrl,
           userAgent: userAgent,
-          userDelegation:
-              (delegationComplete.falseOrValue && !isRelayInUserRelays) ? delegation : null,
+          userDelegation: attachDelegation ? delegation : null,
+          userRelays: attachUserRelays ? userRelays : null,
         );
 
         return ref
