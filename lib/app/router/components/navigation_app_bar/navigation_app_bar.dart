@@ -88,6 +88,16 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: title!,
           )
         : null;
+
+    final effectiveTrailing = actions != null && actions!.isNotEmpty
+        ? Padding(
+            padding: EdgeInsetsDirectional.only(
+              end: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
+            ),
+            child: Row(mainAxisSize: MainAxisSize.min, children: actions!),
+          )
+        : null;
+
     final Widget appBarContent = NavigationToolbar(
       leading: leading ??
           (showBackButton
@@ -97,20 +107,13 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
                 )
               : null),
       middle: titleWidget,
-      trailing: actions != null && actions!.isNotEmpty
-          ? Row(mainAxisSize: MainAxisSize.min, children: actions!)
-          : null,
+      trailing: effectiveTrailing,
     );
 
     final Widget appBar = Container(
       color: backgroundColor ?? context.theme.appColors.secondaryBackground,
       height: useScreenTopOffset ? screenHeaderHeight : modalHeaderHeight,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
-        ),
-        child: appBarContent,
-      ),
+      child: appBarContent,
     );
 
     return useScreenTopOffset
