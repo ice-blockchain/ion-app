@@ -51,6 +51,12 @@ class RankedCurrentUserRelays extends _$RankedCurrentUserRelays {
     yield* controller.stream;
   }
 
+  void reportUnreachableRelay(String relayUrl) {
+    Logger.log('[RELAY] Reporting unreachable relay: $relayUrl');
+    final updatedRelays = state.valueOrNull?.where((relay) => relay.url != relayUrl).toList() ?? [];
+    state = AsyncValue.data(updatedRelays);
+  }
+
   Stream<List<UserRelay>> _rank(
     List<UserRelay> relays, {
     required CancelToken cancelToken,

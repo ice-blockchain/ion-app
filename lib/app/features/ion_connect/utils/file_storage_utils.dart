@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -61,6 +62,18 @@ Future<String> getFileStorageApiUrl(
     ).apiUrl;
     return metadataUri.replace(path: path).toString();
   } catch (error) {
+    if (_isRelayDead(error)) {
+      ref.read(rankedCurrentUserRelaysProvider.notifier).reportUnreachableRelay(relayUrl);
+      return getFileStorageApiUrl(
+        ref,
+        cancelToken: cancelToken,
+      );
+    }
     throw GetFileStorageUrlException(error);
   }
+}
+
+bool _isRelayDead(Object error) {
+  // To be adjusted
+  return true;
 }
