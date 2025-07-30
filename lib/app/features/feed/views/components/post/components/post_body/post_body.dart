@@ -137,12 +137,15 @@ class PostBody extends HookConsumerWidget {
                         tagsColor: accentTheme ? context.theme.appColors.anakiwa : null,
                       ),
                     if (hasOverflow)
-                      Text(
-                        context.i18n.common_show_more,
-                        style: context.theme.appTextThemes.body2.copyWith(
-                          color: accentTheme
-                              ? context.theme.appColors.primaryBackground
-                              : context.theme.appColors.darkBlue,
+                      Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Text(
+                          context.i18n.common_show_more,
+                          style: context.theme.appTextThemes.body2.copyWith(
+                            color: accentTheme
+                                ? context.theme.appColors.primaryBackground
+                                : context.theme.appColors.darkBlue,
+                          ),
                         ),
                       ),
                     if (pollData != null)
