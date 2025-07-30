@@ -28,7 +28,6 @@ class NftCollectionSyncService {
     String targetCollectionName = ionContentNftCollectionName,
   }) async {
     var offset = 0;
-    const limit = 10;
     var hasMore = true;
 
     while (hasMore) {
@@ -43,10 +42,10 @@ class NftCollectionSyncService {
         return foundCollection;
       }
 
-      if (response.nftCollections.length < limit) {
+      if (response.nftCollections.length < defaultNftCollectionsLimit) {
         hasMore = false;
       } else {
-        offset += limit;
+        offset += defaultNftCollectionsLimit;
       }
     }
     return null;
