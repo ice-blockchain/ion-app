@@ -15,24 +15,26 @@ class CameraPreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        FittedBox(
-          fit: BoxFit.cover,
-          child: SizedBox(
-            width: controller.value.previewSize?.height,
-            height: controller.value.previewSize?.width,
-            child: CameraPreview(controller),
+    return ClipRRect(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          FittedBox(
+            fit: BoxFit.cover,
+            child: SizedBox(
+              width: controller.value.previewSize?.height,
+              height: controller.value.previewSize?.width,
+              child: CameraPreview(controller),
+            ),
           ),
-        ),
-        Center(
-          child: Assets.svg.iconCameraOpen.icon(
-            size: 40.0.s,
-            color: context.theme.appColors.onPrimaryAccent,
+          Center(
+            child: Assets.svg.iconCameraOpen.icon(
+              size: 40.0.s,
+              color: context.theme.appColors.onPrimaryAccent,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
