@@ -66,9 +66,9 @@ class RepliesCounterButton extends HookConsumerWidget {
           activeTextColor: context.theme.appColors.primaryAccent,
           disabledIcon: Assets.svg.iconBlockComment.icon(
             size: 16.0.s,
-            color: context.theme.appColors.tertararyText,
+            color: context.theme.appColors.tertiaryText,
           ),
-          disabledTextColor: context.theme.appColors.tertararyText,
+          disabledTextColor: context.theme.appColors.tertiaryText,
           value: formatDoubleCompact(repliesCount),
           state: switch ((canReply, isReplied)) {
             (false, _) => TextActionButtonState.disabled,

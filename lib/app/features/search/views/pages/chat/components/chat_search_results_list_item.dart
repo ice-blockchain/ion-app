@@ -79,7 +79,7 @@ class ChatSearchResultListItem extends ConsumerWidget {
           leadingPadding: EdgeInsetsDirectional.only(end: 12.0.s),
           trailing: Assets.svg.iconArrowRight.icon(
             size: 24.0.s,
-            color: context.theme.appColors.tertararyText,
+            color: context.theme.appColors.tertiaryText,
           ),
         ),
       ),

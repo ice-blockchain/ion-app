@@ -54,7 +54,7 @@ class ArticlesCarouselItem extends ConsumerWidget {
                         Text(
                           context.i18n.article_page_in_topic(topicsNames.first),
                           style: context.theme.appTextThemes.caption2.copyWith(
-                            color: context.theme.appColors.tertararyText,
+                            color: context.theme.appColors.tertiaryText,
                           ),
                           maxLines: 2,
                         ),

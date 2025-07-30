@@ -59,7 +59,7 @@ class DeleteAdminButton extends ConsumerWidget {
         trailing: Padding(
           padding: EdgeInsets.all(8.0.s),
           child: Assets.svg.iconArrowRight.icon(
-            color: colors.tertararyText,
+            color: colors.tertiaryText,
           ),
         ),
       ),

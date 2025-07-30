@@ -34,7 +34,7 @@ class BookmarksFilterTile extends ConsumerWidget {
     final borderColor =
         isActive ? context.theme.appColors.primaryAccent : context.theme.appColors.onTertiaryFill;
     final color =
-        isActive ? context.theme.appColors.primaryAccent : context.theme.appColors.tertararyText;
+        isActive ? context.theme.appColors.primaryAccent : context.theme.appColors.tertiaryText;
     return GestureDetector(
       onTap: onTap,
       child: Container(

@@ -150,7 +150,7 @@ class AccountNotificationsModal extends HookConsumerWidget {
                           color: colors.success,
                         )
                       : Assets.svg.iconBlockCheckboxOff.icon(
-                          color: colors.tertararyText,
+                          color: colors.tertiaryText,
                         ),
                 ),
                 const HorizontalSeparator(),

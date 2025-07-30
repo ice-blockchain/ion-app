@@ -46,7 +46,7 @@ class ConversationUnarchiveButton extends ConsumerWidget {
           Assets.svg.iconChatArchive.icon(
             color: conversationsToManage.isNotEmpty
                 ? context.theme.appColors.primaryAccent
-                : context.theme.appColors.tertararyText,
+                : context.theme.appColors.tertiaryText,
             size: 20.0.s,
           ),
           SizedBox(width: 4.0.s),
@@ -60,7 +60,7 @@ class ConversationUnarchiveButton extends ConsumerWidget {
               style: context.theme.appTextThemes.body2.copyWith(
                 color: conversationsToManage.isNotEmpty
                     ? context.theme.appColors.primaryAccent
-                    : context.theme.appColors.tertararyText,
+                    : context.theme.appColors.tertiaryText,
               ),
             ),
           ),

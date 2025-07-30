@@ -48,7 +48,7 @@ class ManageWalletTile extends ConsumerWidget {
         subtitle: Text(
           formatToCurrency(walletData.usdBalance),
           style: context.theme.appTextThemes.caption3.copyWith(
-            color: context.theme.appColors.tertararyText,
+            color: context.theme.appColors.tertiaryText,
           ),
         ),
         trailing: Assets.svg.iconArrowRight.icon(),

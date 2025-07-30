@@ -90,7 +90,7 @@ class GridItem extends HookWidget {
                           child: Text(
                             formatDouble(dAppData.value!),
                             style: context.theme.appTextThemes.caption3.copyWith(
-                              color: context.theme.appColors.tertararyText,
+                              color: context.theme.appColors.tertiaryText,
                             ),
                           ),
                         ),

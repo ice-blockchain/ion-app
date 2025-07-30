@@ -100,7 +100,7 @@ class _EmptyState extends StatelessWidget {
         SizedBox(height: 8.0.s),
         Text(
           context.i18n.core_empty_search,
-          style: textStyles.caption2.copyWith(color: colors.tertararyText),
+          style: textStyles.caption2.copyWith(color: colors.tertiaryText),
         ),
       ],
     );

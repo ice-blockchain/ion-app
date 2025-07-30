@@ -8,7 +8,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.primaryAccent,
     required this.primaryText,
     required this.secondaryText,
-    required this.tertararyText,
+    required this.tertiaryText,
     required this.sharkText,
     required this.primaryBackground,
     required this.secondaryBackground,
@@ -41,7 +41,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       primaryAccent: templateColors.primaryAccent,
       primaryText: templateColors.primaryText,
       secondaryText: templateColors.secondaryText,
-      tertararyText: templateColors.tertararyText,
+      tertiaryText: templateColors.tertararyText,
       sharkText: templateColors.sharkText,
       primaryBackground: templateColors.primaryBackground,
       secondaryBackground: templateColors.secondaryBackground,
@@ -75,7 +75,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       primaryAccent: const Color(0xFF0166FF),
       primaryText: const Color(0xFF0E0E0E),
       secondaryText: const Color(0xFF494949),
-      tertararyText: const Color(0xFF9A9A9A),
+      tertiaryText: const Color(0xFF9A9A9A),
       sharkText: const Color(0xFF333436),
       primaryBackground: const Color(0xFFF5F7FF),
       secondaryBackground: const Color(0xFFFFFFFF),
@@ -107,7 +107,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color primaryAccent;
   final Color primaryText;
   final Color secondaryText;
-  final Color tertararyText;
+  final Color tertiaryText;
   final Color sharkText;
   final Color primaryBackground;
   final Color secondaryBackground;
@@ -170,7 +170,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       primaryAccent: primaryAccent ?? this.primaryAccent,
       primaryText: primaryText ?? this.primaryText,
       secondaryText: secondaryText ?? this.secondaryText,
-      tertararyText: tertararyText ?? this.tertararyText,
+      tertiaryText: tertararyText ?? this.tertiaryText,
       sharkText: sharkText ?? this.sharkText,
       primaryBackground: primaryBackground ?? this.primaryBackground,
       secondaryBackground: secondaryBackground ?? this.secondaryBackground,
@@ -212,7 +212,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       primaryAccent: Color.lerp(primaryAccent, other.primaryAccent, t)!,
       primaryText: Color.lerp(primaryText, other.primaryText, t)!,
       secondaryText: Color.lerp(secondaryText, other.secondaryText, t)!,
-      tertararyText: Color.lerp(tertararyText, other.tertararyText, t)!,
+      tertiaryText: Color.lerp(tertiaryText, other.tertiaryText, t)!,
       sharkText: Color.lerp(sharkText, other.sharkText, t)!,
       primaryBackground: Color.lerp(primaryBackground, other.primaryBackground, t)!,
       secondaryBackground: Color.lerp(secondaryBackground, other.secondaryBackground, t)!,

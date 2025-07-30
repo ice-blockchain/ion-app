@@ -43,7 +43,7 @@ class CodeBlockTypeItem extends StatelessWidget {
               style: context.theme.appTextThemes.caption.copyWith(
                 color: isSelected
                     ? context.theme.appColors.primaryAccent
-                    : context.theme.appColors.tertararyText,
+                    : context.theme.appColors.tertiaryText,
               ),
             ),
             if (isSelected) ...[

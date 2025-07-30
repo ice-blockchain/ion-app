@@ -46,7 +46,7 @@ class EditMessageInfo extends HookConsumerWidget {
               onTap: ref.read(selectedEditMessageProvider.notifier).clear,
               child: Assets.svg.iconSheetClose.icon(
                 size: 20.0.s,
-                color: context.theme.appColors.tertararyText,
+                color: context.theme.appColors.tertiaryText,
               ),
             ),
           ],

@@ -45,8 +45,10 @@ class AdvancedSearchGroupListItem extends ConsumerWidget {
               ],
             ),
           ),
-          Assets.svg.iconArrowRight
-              .icon(size: 24.0.s, color: context.theme.appColors.tertararyText),
+          Assets.svg.iconArrowRight.icon(
+            size: 24.0.s,
+            color: context.theme.appColors.tertiaryText,
+          ),
         ],
       ),
     );

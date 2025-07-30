@@ -57,7 +57,7 @@ class SelectionListItem extends ConsumerWidget {
                 color: colors.success,
               )
             : Assets.svg.iconBlockCheckboxOff.icon(
-                color: colors.tertararyText,
+                color: colors.tertiaryText,
               ),
       ),
     );

@@ -84,12 +84,12 @@ class _CategoryButton extends StatelessWidget {
       leadingIconOffset: 6.0.s,
       leadingIcon: NetworkIconWidget(
         imageUrl: category.iconUrl ?? '',
-        color: isSelected ? colors.primaryAccent : colors.tertararyText,
+        color: isSelected ? colors.primaryAccent : colors.tertiaryText,
       ),
       label: Text(
         category.display,
         style: context.theme.appTextThemes.caption.copyWith(
-          color: isSelected ? colors.primaryAccent : colors.tertararyText,
+          color: isSelected ? colors.primaryAccent : colors.tertiaryText,
         ),
       ),
       onPressed: () => onToggle(categoryKey),

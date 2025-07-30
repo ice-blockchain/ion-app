@@ -51,7 +51,7 @@ class FeedSearchFilterSourceSection extends StatelessWidget {
             ),
             trailing: selectedFilter == filter
                 ? Assets.svg.iconBlockCheckboxOn.icon(color: context.theme.appColors.success)
-                : Assets.svg.iconblockRadiooff.icon(color: context.theme.appColors.tertararyText),
+                : Assets.svg.iconblockRadiooff.icon(color: context.theme.appColors.tertiaryText),
             title: Text(filter.getLabel(context)),
             backgroundColor: context.theme.appColors.secondaryBackground,
             contentPadding: EdgeInsets.zero,
