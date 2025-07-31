@@ -28,7 +28,7 @@ class RecordingOverlay extends ConsumerWidget {
         child: Container(
           width: 32.0.s,
           decoration: BoxDecoration(
-            color: context.theme.appColors.onTertararyFill,
+            color: context.theme.appColors.onTerararyFill,
             borderRadius: BorderRadius.all(
               Radius.circular(20.0.s),
             ),

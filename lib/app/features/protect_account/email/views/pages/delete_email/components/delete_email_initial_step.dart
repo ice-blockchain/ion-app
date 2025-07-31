@@ -84,7 +84,7 @@ class _EditEmailButton extends StatelessWidget {
       label: Text(locale.two_fa_edit_email_title),
       minimumSize: Size(0.0.s, 44.0.s),
       leadingIcon: Assets.svg.iconEditLink.icon(size: 24.0.s),
-      borderColor: colors.onTertararyFill,
+      borderColor: colors.onTerararyFill,
       onPressed: () => EmailEditRoute().push<void>(context),
     );
   }

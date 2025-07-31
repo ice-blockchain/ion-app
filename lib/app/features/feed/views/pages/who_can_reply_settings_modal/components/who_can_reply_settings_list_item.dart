@@ -39,7 +39,7 @@ class WhoCanReplySettingsListItem extends ConsumerWidget {
           borderRadius: BorderRadius.all(Radius.circular(10.0.s)),
           border: Border.all(
             width: 1.0.s,
-            color: context.theme.appColors.onTertararyFill,
+            color: context.theme.appColors.onTerararyFill,
           ),
         ),
         child: option.getIcon(context),

@@ -29,11 +29,11 @@ class CodeBlockTypeItem extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: isSelected
-              ? context.theme.appColors.onTertararyFill
+              ? context.theme.appColors.onTerararyFill
               : context.theme.appColors.tertararyBackground,
           borderRadius: BorderRadius.circular(12.0.s),
           border: Border.all(
-            color: context.theme.appColors.onTertararyFill,
+            color: context.theme.appColors.onTerararyFill,
           ),
         ),
         child: Row(

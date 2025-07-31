@@ -33,7 +33,7 @@ class RecoveryKeyOption extends StatelessWidget {
       ),
       copiedIcon: Assets.svg.iconBlockCheckGreen.icon(size: 16.0.s),
       defaultText: title,
-      defaultBorderColor: context.theme.appColors.onTertararyFill,
+      defaultBorderColor: context.theme.appColors.onTerararyFill,
       builder: (context, onCopy, content) {
         return GestureDetector(
           onTap: enabled

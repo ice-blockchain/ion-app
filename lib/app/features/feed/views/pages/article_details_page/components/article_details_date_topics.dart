@@ -39,7 +39,7 @@ class ArticleDetailsDateTopics extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 1.0.s, horizontal: 7.0.s),
                   decoration: BoxDecoration(
-                    color: context.theme.appColors.onTertararyFill,
+                    color: context.theme.appColors.onTerararyFill,
                     borderRadius: BorderRadius.circular(12.0.s),
                   ),
                   child: Text(

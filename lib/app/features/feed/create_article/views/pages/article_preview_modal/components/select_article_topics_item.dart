@@ -76,7 +76,7 @@ class SelectArticleTopicsItem extends HookConsumerWidget {
                   borderRadius: BorderRadius.all(Radius.circular(10.0.s)),
                   border: Border.all(
                     width: 1.0.s,
-                    color: context.theme.appColors.onTertararyFill,
+                    color: context.theme.appColors.onTerararyFill,
                   ),
                 ),
                 child: Assets.svg.walletChannelPrivate

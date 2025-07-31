@@ -21,7 +21,7 @@ class TransactionListHeaderItem extends StatelessWidget {
   Color _getBorderColor(BuildContext context) {
     return isSelected
         ? context.theme.appColors.primaryAccent
-        : context.theme.appColors.onTertararyFill;
+        : context.theme.appColors.onTerararyFill;
   }
 
   Color _getTextColor(BuildContext context) {

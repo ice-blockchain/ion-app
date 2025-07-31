@@ -38,7 +38,7 @@ class HeaderAction extends StatelessWidget {
       opacity,
     )!;
     final interpolatedBorderColor = Color.lerp(
-      context.theme.appColors.onTertararyFill,
+      context.theme.appColors.onTerararyFill,
       context.theme.appColors.secondaryBackground,
       opacity,
     )!;

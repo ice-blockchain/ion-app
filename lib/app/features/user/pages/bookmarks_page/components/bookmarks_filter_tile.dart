@@ -32,7 +32,7 @@ class BookmarksFilterTile extends ConsumerWidget {
       return const SizedBox();
     }
     final borderColor =
-        isActive ? context.theme.appColors.primaryAccent : context.theme.appColors.onTertararyFill;
+        isActive ? context.theme.appColors.primaryAccent : context.theme.appColors.onTerararyFill;
     final color =
         isActive ? context.theme.appColors.primaryAccent : context.theme.appColors.tertararyText;
     return GestureDetector(

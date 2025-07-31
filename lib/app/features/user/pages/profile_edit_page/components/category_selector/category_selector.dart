@@ -44,7 +44,7 @@ class CategorySelector extends HookConsumerWidget {
           color: context.theme.appColors.secondaryText,
         ),
         border: Border.fromBorderSide(
-          BorderSide(color: context.theme.appColors.onTertararyFill, width: 1.0.s),
+          BorderSide(color: context.theme.appColors.onTerararyFill, width: 1.0.s),
         ),
       ),
       label: SizedBox(

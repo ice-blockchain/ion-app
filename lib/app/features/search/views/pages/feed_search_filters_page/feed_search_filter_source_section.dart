@@ -44,7 +44,7 @@ class FeedSearchFilterSourceSection extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(10.0.s)),
                 border: Border.all(
                   width: 1.0.s,
-                  color: context.theme.appColors.onTertararyFill,
+                  color: context.theme.appColors.onTerararyFill,
                 ),
               ),
               child: filter.getIcon(context).icon(color: context.theme.appColors.primaryAccent),

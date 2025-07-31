@@ -47,7 +47,7 @@ class NotEnoughMoneyForNetworkFeeMessage extends HookConsumerWidget {
         borderRadius: BorderRadius.circular(16.0.s),
         border: Border.fromBorderSide(
           BorderSide(
-            color: colors.onTertararyFill,
+            color: colors.onTerararyFill,
             width: 1.0.s,
           ),
         ),

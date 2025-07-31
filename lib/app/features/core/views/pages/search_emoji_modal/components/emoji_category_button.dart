@@ -19,7 +19,7 @@ class _EmojiCategoryButton extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(8.0.s),
         decoration: BoxDecoration(
-          color: isActive ? context.theme.appColors.onTertararyFill : Colors.transparent,
+          color: isActive ? context.theme.appColors.onTerararyFill : Colors.transparent,
           borderRadius: BorderRadius.circular(30.0.s),
         ),
         child: category.getIcon(context).icon(

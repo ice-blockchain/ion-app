@@ -56,7 +56,7 @@ class BalanceActions extends HookConsumerWidget {
               backgroundColor: WidgetStateProperty.all(context.theme.appColors.tertararyBackground),
               side: WidgetStateProperty.all(
                 BorderSide(
-                  color: context.theme.appColors.onTertararyFill,
+                  color: context.theme.appColors.onTerararyFill,
                   width: 1.0.s,
                 ),
               ),

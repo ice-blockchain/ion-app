@@ -16,7 +16,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.backgroundSheet,
     required this.onPrimaryAccent,
     required this.onTertararyBackground,
-    required this.onTertararyFill,
+    required this.onTerararyFill,
     required this.onSecondaryBackground,
     required this.strokeElements,
     required this.sheetLine,
@@ -50,7 +50,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       backgroundSheet: templateColors.backgroundSheet,
       onPrimaryAccent: templateColors.onPrimaryAccent,
       onTertararyBackground: templateColors.onTertararyBackground,
-      onTertararyFill: templateColors.onTerararyFill,
+      onTerararyFill: templateColors.onTerararyFill,
       onSecondaryBackground: templateColors.onSecondaryBackground,
       strokeElements: templateColors.strokeElements,
       sheetLine: templateColors.sheetLine,
@@ -85,7 +85,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       backgroundSheet: const Color(0x32081532),
       onPrimaryAccent: const Color(0xFFFFFFFF),
       onTertararyBackground: const Color(0xFF5A5E66),
-      onTertararyFill: const Color(0xFFE1EAF8),
+      onTerararyFill: const Color(0xFFE1EAF8),
       onSecondaryBackground: const Color(0xFFF5F7FF),
       strokeElements: const Color(0xFFCCCCCC),
       sheetLine: const Color(0xFFB8BCCA),
@@ -118,7 +118,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color backgroundSheet;
   final Color onPrimaryAccent;
   final Color onTertararyBackground;
-  final Color onTertararyFill;
+  final Color onTerararyFill;
   final Color onSecondaryBackground;
   final Color strokeElements;
   final Color sheetLine;
@@ -183,7 +183,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       backgroundSheet: backgroundSheet ?? this.backgroundSheet,
       onPrimaryAccent: onPrimaryAccent ?? this.onPrimaryAccent,
       onTertararyBackground: onTertararyBackground ?? this.this.onTertararyBackground,
-      onTertararyFill: onTerararyFill ?? this.this.onTerararyFill,
+      onTerararyFill: onTerararyFill ?? this.this.onTerararyFill,
       onSecondaryBackground: onSecondaryBackground ?? this.onSecondaryBackground,
       strokeElements: strokeElements ?? this.strokeElements,
       sheetLine: sheetLine ?? this.sheetLine,
@@ -226,7 +226,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       backgroundSheet: Color.lerp(backgroundSheet, other.backgroundSheet, t)!,
       onPrimaryAccent: Color.lerp(onPrimaryAccent, other.onPrimaryAccent, t)!,
       onTertararyBackground: Color.lerp(onTertararyBackground, other.onTertararyBackground, t)!,
-      onTertararyFill: Color.lerp(onTertararyFill, other.onTertararyFill, t)!,
+      onTerararyFill: Color.lerp(onTerararyFill, other.onTerararyFill, t)!,
       onSecondaryBackground: Color.lerp(onSecondaryBackground, other.onSecondaryBackground, t)!,
       strokeElements: Color.lerp(strokeElements, other.strokeElements, t)!,
       sheetLine: Color.lerp(sheetLine, other.sheetLine, t)!,

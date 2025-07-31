@@ -107,7 +107,7 @@ class _FeedFilterItem extends ConsumerWidget {
       isSelected: isSelected,
       icon: ButtonIconFrame(
         color: colors.tertararyBackground,
-        border: Border.all(color: colors.onTertararyFill),
+        border: Border.all(color: colors.onTerararyFill),
         icon: filter.getIcon(context),
       ),
       label: filter.getLabel(context),
