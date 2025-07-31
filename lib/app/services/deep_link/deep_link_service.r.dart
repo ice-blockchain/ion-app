@@ -151,7 +151,13 @@ final class DeepLinkService {
     _appsflyerSdk
       ..onDeepLinking((link) {
         final path = link.deepLink?.deepLinkValue;
-        if (path == null) {
+        if (path != null) {
+          if (link.status == Status.FOUND) {
+            if (path.isEmpty) return;
+
+            return onDeeplink(path);
+          }
+        } else {
           final clickEvent = link.deepLink?.clickEvent;
           final host = clickEvent?['host'] as String?;
           if (host == _brandDomain) {
@@ -161,15 +167,8 @@ final class DeepLinkService {
               return;
             }
           }
-        } else {
-          if (link.status == Status.FOUND) {
-            if (path.isEmpty) return;
-
-            return onDeeplink(path);
-          }
-
-          onDeeplink(_fallbackUrl);
         }
+        onDeeplink(_fallbackUrl);
       })
       ..stop(true);
 
