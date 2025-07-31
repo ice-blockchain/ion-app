@@ -45,7 +45,14 @@ class DeeplinkPath extends _$DeeplinkPath {
 DeepLinkService deepLinkService(Ref ref) {
   final env = ref.read(envProvider.notifier);
   final templateId = env.get<String>(EnvVariable.AF_ONE_LINK_TEMPLATE_ID);
-  return DeepLinkService(ref.watch(appsflyerSdkProvider), templateId);
+  final brandDomain = env.get<String>(EnvVariable.AF_BRAND_DOMAIN);
+  final baseHost = env.get<String>(EnvVariable.AF_BASE_HOST);
+  return DeepLinkService(
+    ref.watch(appsflyerSdkProvider),
+    templateId: templateId,
+    brandDomain: brandDomain,
+    baseHost: baseHost,
+  );
 }
 
 @riverpod
@@ -113,19 +120,28 @@ AppsflyerSdk appsflyerSdk(Ref ref) {
 }
 
 final class DeepLinkService {
-  DeepLinkService(this._appsflyerSdk, this._templateId);
+  DeepLinkService(
+    this._appsflyerSdk, {
+    required String templateId,
+    required String brandDomain,
+    required String baseHost,
+  })  : _templateId = templateId,
+        _brandDomain = brandDomain,
+        _baseHost = baseHost;
 
   final AppsflyerSdk _appsflyerSdk;
 
   final String _templateId;
+  final String _brandDomain;
+  final String _baseHost;
 
-  static final oneLinkUrlRegex = RegExp(r'@?(https://ion\.onelink\.me/[A-Za-z0-9\-_/\?&%=#]*)');
-
-  static const _baseUrl = 'https://ion.onelink.me';
+  static final oneLinkUrlRegex = RegExp(
+    r'@?(https://(ion\.onelink\.me|app\.online\.io|testnet\.app\.online\.io)/[A-Za-z0-9\-_/\?&%=#]*)',
+  );
 
   // Defined on AppsFlyer portal for each template.
   // Used in case if generateInviteLink fails.
-  String get _fallbackUrl => '$_baseUrl/$_templateId/feed';
+  String get _fallbackUrl => 'https://$_baseHost/$_templateId/feed';
 
   static const Duration _linkGenerationTimeout = Duration(seconds: 10);
 
@@ -134,7 +150,16 @@ final class DeepLinkService {
   Future<void> init({required void Function(String path) onDeeplink}) async {
     _appsflyerSdk
       ..onDeepLinking((link) {
-        Logger.log('onDeepLinking $link');
+        final clickEvent = link.deepLink?.clickEvent;
+        final host = clickEvent?['host'] as String?;
+        if (host == _brandDomain) {
+          final url = clickEvent?['link'] as String?;
+          if (url != null) {
+            _appsflyerSdk.resolveOneLinkUrl(url.replaceAll(_brandDomain, _baseHost));
+            return;
+          }
+        }
+
         if (link.status == Status.FOUND) {
           final path = link.deepLink?.deepLinkValue;
           if (path == null || path.isEmpty) return;
@@ -184,7 +209,10 @@ final class DeepLinkService {
 
     try {
       _appsflyerSdk.generateInviteLink(
-        AppsFlyerInviteLinkParams(customParams: {'deep_link_value': path}),
+        AppsFlyerInviteLinkParams(
+          brandDomain: _brandDomain,
+          customParams: {'deep_link_value': path},
+        ),
         (dynamic data) => _handleInviteLinkSuccess(data, completer),
         (dynamic error) => _handleInviteLinkError(error, completer, 'SDK callback error'),
       );
