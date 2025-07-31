@@ -44,9 +44,13 @@ class SearchedUsers extends ConsumerWidget {
       itemCount: searchedUsers.length,
       itemBuilder: (BuildContext context, int index) {
         final user = searchedUsers.elementAt(index);
-        final canSendMessage = controlChatPrivacy &&
-            (ref.watch(canSendMessageProvider(user.masterPubkey)).valueOrNull ?? false);
-
+        final bool canSendMessage;
+        if (controlChatPrivacy) {
+          canSendMessage =
+              ref.watch(canSendMessageProvider(user.masterPubkey)).valueOrNull ?? false;
+        } else {
+          canSendMessage = true;
+        }
         return SelectableUserListItem(
           pubkey: user.pubkey,
           selectable: selectable,
