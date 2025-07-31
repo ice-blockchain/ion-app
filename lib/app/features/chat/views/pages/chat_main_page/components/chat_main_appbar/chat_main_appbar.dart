@@ -28,7 +28,7 @@ class ChatMainAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
     return NavigationAppBar.screen(
       leading: Padding(
-        padding: EdgeInsets.only(left: UiConstants.hitSlop),
+        padding: EdgeInsetsDirectional.only(start: UiConstants.hitSlop),
         child: NavigationTextButton(
           label: editMode ? context.i18n.core_done : context.i18n.button_edit,
           textStyle: context.theme.appTextThemes.subtitle2.copyWith(
