@@ -31,23 +31,20 @@ class ProfileActions extends ConsumerWidget {
       orElse: () => false,
     );
 
-    final walletsState =
-        ref.watch(userMetadataProvider(pubkey).select((state) => state.value?.data.wallets));
+    final walletsState = ref.watch(userMetadataProvider(pubkey).select((state) => state.value?.data.wallets));
     final hasPrivateWallets = walletsState == null;
     final following = ref.watch(isCurrentUserFollowingSelectorProvider(pubkey));
-    final canSendMessage =
-        ref.watch(canSendMessageProvider(pubkey, cache: false)).valueOrNull ?? false;
+    final canSendMessage = ref.watch(canSendMessageProvider(pubkey, cache: false)).valueOrNull ?? false;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         FollowUserButton(pubkey: pubkey),
+        SizedBox(width: 8.0.s),
         if (!hasPrivateWallets && canSendMessage) ...[
-          SizedBox(width: 8.0.s),
           ProfileAction(
             onPressed: () async {
-              final needToEnable2FA =
-                  await PaymentSelectionProfileRoute(pubkey: pubkey).push<bool>(context);
+              final needToEnable2FA = await PaymentSelectionProfileRoute(pubkey: pubkey).push<bool>(context);
               if (needToEnable2FA != null && needToEnable2FA && context.mounted) {
                 await SecureAccountModalRoute().push<void>(context);
               }
@@ -56,7 +53,6 @@ class ProfileActions extends ConsumerWidget {
           ),
         ],
         if (canSendMessage) ...[
-          SizedBox(width: 8.0.s),
           ProfileAction(
             onPressed: () {
               ConversationRoute(receiverMasterPubkey: pubkey).push<void>(context);
@@ -76,9 +72,8 @@ class ProfileActions extends ConsumerWidget {
               );
             },
             isAccent: notificationsEnabled,
-            assetName: notificationsEnabled
-                ? Assets.svg.iconProfileNotificationOn
-                : Assets.svg.iconProfileNotificationOff,
+            assetName:
+                notificationsEnabled ? Assets.svg.iconProfileNotificationOn : Assets.svg.iconProfileNotificationOff,
           ),
       ],
     );
