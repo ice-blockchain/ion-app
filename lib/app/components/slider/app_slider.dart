@@ -90,7 +90,7 @@ class AppSlider extends HookWidget {
               children: [
                 TrackBar.inactive(
                   trackBarHeight: trackBarHeight,
-                  color: context.theme.appColors.onTerararyFill,
+                  color: context.theme.appColors.onTertararyFill,
                 ),
                 AnimatedBuilder(
                   animation: animationController,

@@ -23,7 +23,7 @@ class NavigationCloseButton extends StatelessWidget {
           vertical: UiConstants.hitSlop * 2,
         ),
         child: Assets.svg.iconSheetClose.icon(
-          color: context.theme.appColors.terararyText,
+          color: context.theme.appColors.tertararyText,
         ),
       ),
     );

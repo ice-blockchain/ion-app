@@ -52,7 +52,7 @@ class PollResultItem extends HookWidget {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? context.theme.appColors.primaryAccent.withValues(alpha: 0.3)
-                      : context.theme.appColors.onTerararyFill,
+                      : context.theme.appColors.onTertararyFill,
                   borderRadius: BorderRadius.circular(12.0.s),
                 ),
               ),
@@ -71,7 +71,7 @@ class PollResultItem extends HookWidget {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? context.theme.appColors.primaryAccent.withValues(alpha: 0.3)
-                        : context.theme.appColors.onTerararyFill,
+                        : context.theme.appColors.onTertararyFill,
                     borderRadius: BorderRadius.circular(12.0.s),
                   ),
                 ),

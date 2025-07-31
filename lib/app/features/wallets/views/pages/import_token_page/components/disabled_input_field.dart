@@ -32,9 +32,9 @@ class DisabledTextInput extends ConsumerWidget {
             )
           : null,
       enabled: false,
-      color: context.theme.appColors.onTerararyBackground,
+      color: context.theme.appColors.onTertararyBackground,
       disabledBorder: TextInputBorder(
-        borderSide: BorderSide(color: context.theme.appColors.onTerararyFill),
+        borderSide: BorderSide(color: context.theme.appColors.onTertararyFill),
       ),
       fillColor: context.theme.appColors.secondaryBackground,
       labelColor: context.theme.appColors.sheetLine,

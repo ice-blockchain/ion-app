@@ -40,7 +40,7 @@ class ProfileTabButton extends ConsumerWidget {
               width: 1.2.s,
               color: isSelected
                   ? context.theme.appColors.primaryAccent
-                  : context.theme.appColors.terararyText,
+                  : context.theme.appColors.tertararyText,
             ),
             borderRadius: BorderRadius.circular(6.0.s),
           ),

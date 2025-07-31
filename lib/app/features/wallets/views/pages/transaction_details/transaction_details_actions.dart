@@ -34,7 +34,7 @@ class TransactionDetailsActions extends StatelessWidget {
             ),
             onPressed: onViewOnExplorer,
             backgroundColor: disableExplorer ? null : context.theme.appColors.tertararyBackground,
-            borderColor: disableExplorer ? null : context.theme.appColors.onTerararyFill,
+            borderColor: disableExplorer ? null : context.theme.appColors.onTertararyFill,
           ),
         ),
         SizedBox(
@@ -45,7 +45,7 @@ class TransactionDetailsActions extends StatelessWidget {
           type: ButtonType.outlined,
           onPressed: onShare,
           backgroundColor: context.theme.appColors.tertararyBackground,
-          borderColor: context.theme.appColors.onTerararyFill,
+          borderColor: context.theme.appColors.onTertararyFill,
         ),
       ],
     );

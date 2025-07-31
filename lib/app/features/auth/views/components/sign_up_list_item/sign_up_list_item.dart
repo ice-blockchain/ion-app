@@ -25,7 +25,7 @@ class SignUpListItem extends StatelessWidget {
       subtitle: Text(
         subtitle,
         overflow: TextOverflow.visible,
-        style: TextStyle(color: context.theme.appColors.terararyText),
+        style: TextStyle(color: context.theme.appColors.tertararyText),
       ),
       backgroundColor: context.theme.appColors.secondaryBackground,
       leading: Container(

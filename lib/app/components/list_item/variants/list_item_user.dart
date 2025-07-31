@@ -81,7 +81,7 @@ class _ListItemUser extends ListItem {
     return context.theme.appTextThemes.caption.copyWith(
       color: (isSelected ?? false)
           ? context.theme.appColors.onPrimaryAccent
-          : context.theme.appColors.terararyText,
+          : context.theme.appColors.tertararyText,
     );
   }
 }

@@ -44,14 +44,14 @@ class FeedSearchFilterSourceSection extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(10.0.s)),
                 border: Border.all(
                   width: 1.0.s,
-                  color: context.theme.appColors.onTerararyFill,
+                  color: context.theme.appColors.onTertararyFill,
                 ),
               ),
               child: filter.getIcon(context).icon(color: context.theme.appColors.primaryAccent),
             ),
             trailing: selectedFilter == filter
                 ? Assets.svg.iconBlockCheckboxOn.icon(color: context.theme.appColors.success)
-                : Assets.svg.iconblockRadiooff.icon(color: context.theme.appColors.terararyText),
+                : Assets.svg.iconblockRadiooff.icon(color: context.theme.appColors.tertararyText),
             title: Text(filter.getLabel(context)),
             backgroundColor: context.theme.appColors.secondaryBackground,
             contentPadding: EdgeInsets.zero,

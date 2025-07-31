@@ -45,7 +45,7 @@ class NetworkFeeOptionWidget extends StatelessWidget {
               ),
               child: Assets.svg.iconBlockInformation.icon(
                 size: 16.0.s,
-                color: context.theme.appColors.terararyText,
+                color: context.theme.appColors.tertararyText,
               ),
             ),
           ),

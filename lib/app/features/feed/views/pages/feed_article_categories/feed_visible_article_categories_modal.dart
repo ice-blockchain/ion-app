@@ -78,7 +78,7 @@ class FeedVisibleArticleCategoriesModal extends HookConsumerWidget {
                   child: Text(
                     context.i18n.feed_article_categories_add_min(minCategories),
                     style: context.theme.appTextThemes.body.copyWith(
-                      color: context.theme.appColors.terararyText,
+                      color: context.theme.appColors.tertararyText,
                     ),
                   ),
                 ),
@@ -107,7 +107,7 @@ class FeedVisibleArticleCategoriesModal extends HookConsumerWidget {
                   backgroundColor: colors.secondaryBackground,
                   trailing: isSelected
                       ? Assets.svg.iconBlockCheckboxOnblue.icon(color: colors.success)
-                      : Assets.svg.iconBlockCheckboxOff.icon(color: colors.terararyText),
+                      : Assets.svg.iconBlockCheckboxOff.icon(color: colors.tertararyText),
                   title: Text(subcategory.value.display, style: textStyles.body),
                 );
               },

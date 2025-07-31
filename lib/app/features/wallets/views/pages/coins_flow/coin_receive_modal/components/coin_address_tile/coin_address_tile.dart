@@ -78,7 +78,7 @@ class CoinAddressTile extends HookConsumerWidget {
                 Text(
                   shortenAddress(address),
                   style: context.theme.appTextThemes.caption.copyWith(
-                    color: context.theme.appColors.terararyText,
+                    color: context.theme.appColors.tertararyText,
                   ),
                 ),
               ],

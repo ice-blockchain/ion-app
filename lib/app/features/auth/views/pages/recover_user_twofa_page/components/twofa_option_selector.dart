@@ -35,7 +35,7 @@ class TwoFaOptionSelector extends HookWidget {
 
     final isOpened = useState(false);
     final iconBorderSize = Border.fromBorderSide(
-      BorderSide(color: colors.onTerararyFill, width: 1.0.s),
+      BorderSide(color: colors.onTertararyFill, width: 1.0.s),
     );
 
     final optionsOrdered = availableOptions.sorted(_sortAvailableFirst);

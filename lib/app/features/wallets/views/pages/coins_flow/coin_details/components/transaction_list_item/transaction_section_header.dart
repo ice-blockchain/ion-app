@@ -23,7 +23,7 @@ class TransactionSectionHeader extends StatelessWidget {
       child: Text(
         date,
         style: context.theme.appTextThemes.caption3.copyWith(
-          color: context.theme.appColors.terararyText,
+          color: context.theme.appColors.tertararyText,
         ),
       ),
     );

@@ -86,7 +86,7 @@ class CategorySelectModal extends HookConsumerWidget {
                           color: context.theme.appColors.success,
                         )
                       : Assets.svg.iconBlockCheckboxOff.icon(
-                          color: context.theme.appColors.terararyText,
+                          color: context.theme.appColors.tertararyText,
                         ),
                 );
               },

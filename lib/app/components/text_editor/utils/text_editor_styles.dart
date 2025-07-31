@@ -27,7 +27,7 @@ DefaultStyles textEditorStyles(BuildContext context, {Color? color}) {
     ),
     placeHolder: DefaultTextBlockStyle(
       context.theme.appTextThemes.body2.copyWith(
-        color: context.theme.appColors.terararyText,
+        color: context.theme.appColors.tertararyText,
       ),
       HorizontalSpacing.zero,
       VerticalSpacing.zero,

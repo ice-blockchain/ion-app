@@ -21,13 +21,13 @@ class TransactionListHeaderItem extends StatelessWidget {
   Color _getBorderColor(BuildContext context) {
     return isSelected
         ? context.theme.appColors.primaryAccent
-        : context.theme.appColors.onTerararyFill;
+        : context.theme.appColors.onTertararyFill;
   }
 
   Color _getTextColor(BuildContext context) {
     return isSelected
         ? context.theme.appColors.primaryText
-        : context.theme.appColors.onTerararyBackground;
+        : context.theme.appColors.onTertararyBackground;
   }
 
   @override

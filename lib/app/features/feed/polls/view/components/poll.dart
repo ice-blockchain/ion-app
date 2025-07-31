@@ -37,7 +37,7 @@ class Poll extends ConsumerWidget {
                 color: context.theme.appColors.onPrimaryAccent,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: context.theme.appColors.onTerararyFill,
+                  color: context.theme.appColors.onTertararyFill,
                 ),
               ),
               child: Padding(

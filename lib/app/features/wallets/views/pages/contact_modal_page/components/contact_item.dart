@@ -38,7 +38,7 @@ class ContactItem extends StatelessWidget {
           Text(
             prefixUsername(username: userMetadata.data.name, context: context),
             style: context.theme.appTextThemes.caption
-                .copyWith(color: context.theme.appColors.terararyText),
+                .copyWith(color: context.theme.appColors.tertararyText),
           ),
         ],
       ),

@@ -45,7 +45,7 @@ class RecentChatsEmptyPage extends ConsumerWidget {
                             child: Text(
                               context.i18n.chat_empty_description,
                               style: context.theme.appTextThemes.caption2.copyWith(
-                                color: context.theme.appColors.onTerararyBackground,
+                                color: context.theme.appColors.onTertararyBackground,
                               ),
                               textAlign: TextAlign.center,
                             ),

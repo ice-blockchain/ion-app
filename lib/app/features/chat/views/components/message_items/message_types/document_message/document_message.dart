@@ -192,7 +192,7 @@ class _DocumentIcon extends StatelessWidget {
         color: context.theme.appColors.tertararyBackground,
         borderRadius: BorderRadius.circular(12.0.s),
         border: Border.all(
-          color: context.theme.appColors.onTerararyFill,
+          color: context.theme.appColors.onTertararyFill,
           width: 1.0.s,
         ),
       ),

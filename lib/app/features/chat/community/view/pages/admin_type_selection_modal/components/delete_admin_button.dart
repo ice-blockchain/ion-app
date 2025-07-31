@@ -53,13 +53,13 @@ class DeleteAdminButton extends ConsumerWidget {
             color: colors.attentionRed,
           ),
           border: Border.fromBorderSide(
-            BorderSide(color: colors.onTerararyFill, width: 1.0.s),
+            BorderSide(color: colors.onTertararyFill, width: 1.0.s),
           ),
         ),
         trailing: Padding(
           padding: EdgeInsets.all(8.0.s),
           child: Assets.svg.iconArrowRight.icon(
-            color: colors.terararyText,
+            color: colors.tertararyText,
           ),
         ),
       ),

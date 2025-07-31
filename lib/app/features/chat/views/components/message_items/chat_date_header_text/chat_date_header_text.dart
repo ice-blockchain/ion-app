@@ -30,7 +30,7 @@ class ChatDateHeaderText extends StatelessWidget {
           dateFormat: DateFormat.MMMMd(),
         ),
         style: context.theme.appTextThemes.caption3.copyWith(
-          color: context.theme.appColors.onTerararyBackground,
+          color: context.theme.appColors.onTertararyBackground,
         ),
       ),
     );

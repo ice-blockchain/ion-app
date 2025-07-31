@@ -35,7 +35,7 @@ class ArticleCategoriesRow extends StatelessWidget {
             padding: EdgeInsetsDirectional.only(end: 12.0.s),
             child: Button.icon(
               borderRadius: BorderRadius.circular(12.0.s),
-              borderColor: colors.onTerararyFill,
+              borderColor: colors.onTertararyFill,
               size: 40.0.s,
               type: ButtonType.secondary,
               icon: Assets.svg.iconPlusCreatechannel.icon(
@@ -84,12 +84,12 @@ class _CategoryButton extends StatelessWidget {
       leadingIconOffset: 6.0.s,
       leadingIcon: NetworkIconWidget(
         imageUrl: category.iconUrl ?? '',
-        color: isSelected ? colors.primaryAccent : colors.terararyText,
+        color: isSelected ? colors.primaryAccent : colors.tertararyText,
       ),
       label: Text(
         category.display,
         style: context.theme.appTextThemes.caption.copyWith(
-          color: isSelected ? colors.primaryAccent : colors.terararyText,
+          color: isSelected ? colors.primaryAccent : colors.tertararyText,
         ),
       ),
       onPressed: () => onToggle(categoryKey),
@@ -99,7 +99,7 @@ class _CategoryButton extends StatelessWidget {
           vertical: 8.0.s,
         ),
         side: BorderSide(
-          color: isSelected ? colors.primaryAccent : colors.onTerararyFill,
+          color: isSelected ? colors.primaryAccent : colors.onTertararyFill,
         ),
       ),
     );

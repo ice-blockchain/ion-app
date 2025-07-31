@@ -88,7 +88,7 @@ class PollAnswerItem extends HookConsumerWidget {
                         remainingCharacters.toString(),
                         style: textThemes.caption2.copyWith(
                           color:
-                              remainingCharacters < 0 ? colors.attentionRed : colors.terararyText,
+                              remainingCharacters < 0 ? colors.attentionRed : colors.tertararyText,
                         ),
                       ),
                   ],

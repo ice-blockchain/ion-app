@@ -44,7 +44,7 @@ class ReadTimeTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.theme.appColors.tertararyBackground,
         border: Border.all(
-          color: context.theme.appColors.onTerararyFill,
+          color: context.theme.appColors.onTertararyFill,
         ),
         borderRadius: _getOverlayBorderRadius(alignment),
       ),

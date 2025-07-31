@@ -23,7 +23,7 @@ class AdvancedSearchTabBar extends StatelessWidget {
       isScrollable: true,
       labelPadding: EdgeInsets.symmetric(horizontal: _tabItemHorizontalGap / 2),
       labelColor: context.theme.appColors.primaryAccent,
-      unselectedLabelColor: context.theme.appColors.terararyText,
+      unselectedLabelColor: context.theme.appColors.tertararyText,
       tabs: categories.map((category) {
         return AdvancedSearchTab(category: category);
       }).toList(),

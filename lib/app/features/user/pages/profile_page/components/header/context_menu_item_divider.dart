@@ -11,7 +11,7 @@ class ContextMenuItemDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Divider(
-      color: context.theme.appColors.onTerararyFill,
+      color: context.theme.appColors.onTertararyFill,
       thickness: 0.5.s,
       height: 0.5.s,
     );

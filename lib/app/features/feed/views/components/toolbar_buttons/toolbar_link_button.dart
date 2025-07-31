@@ -95,7 +95,7 @@ class ToolbarLinkButton extends HookWidget {
                 focusNode: linkFocusNode,
                 placeholder: dialogContext.i18n.toolbar_link_placeholder,
                 placeholderStyle: dialogContext.theme.appTextThemes.body2.copyWith(
-                  color: dialogContext.theme.appColors.terararyText,
+                  color: dialogContext.theme.appColors.tertararyText,
                 ),
                 style: dialogContext.theme.appTextThemes.body2.copyWith(
                   color: dialogContext.theme.appColors.primaryText,

@@ -47,7 +47,7 @@ class WalletTile extends ConsumerWidget {
           style: context.theme.appTextThemes.caption3.copyWith(
             color: isSelected
                 ? context.theme.appColors.onPrimaryAccent
-                : context.theme.appColors.terararyText,
+                : context.theme.appColors.tertararyText,
           ),
         ),
         trailing: isSelected == true ? Assets.svg.iconBlockCheckboxOn.icon() : null,

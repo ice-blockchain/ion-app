@@ -8,15 +8,15 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.primaryAccent,
     required this.primaryText,
     required this.secondaryText,
-    required this.terararyText,
+    required this.tertararyText,
     required this.sharkText,
     required this.primaryBackground,
     required this.secondaryBackground,
     required this.tertararyBackground,
     required this.backgroundSheet,
     required this.onPrimaryAccent,
-    required this.onTerararyBackground,
-    required this.onTerararyFill,
+    required this.onTertararyBackground,
+    required this.onTertararyFill,
     required this.onSecondaryBackground,
     required this.strokeElements,
     required this.sheetLine,
@@ -42,15 +42,15 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       primaryAccent: templateColors.primaryAccent,
       primaryText: templateColors.primaryText,
       secondaryText: templateColors.secondaryText,
-      terararyText: templateColors.tertararyText,
+      tertararyText: templateColors.tertararyText,
       sharkText: templateColors.sharkText,
       primaryBackground: templateColors.primaryBackground,
       secondaryBackground: templateColors.secondaryBackground,
       tertararyBackground: templateColors.tertararyBackground,
       backgroundSheet: templateColors.backgroundSheet,
       onPrimaryAccent: templateColors.onPrimaryAccent,
-      onTerararyBackground: templateColors.onTertararyBackground,
-      onTerararyFill: templateColors.onTerararyFill,
+      onTertararyBackground: templateColors.onTertararyBackground,
+      onTertararyFill: templateColors.onTerararyFill,
       onSecondaryBackground: templateColors.onSecondaryBackground,
       strokeElements: templateColors.strokeElements,
       sheetLine: templateColors.sheetLine,
@@ -77,15 +77,15 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       primaryAccent: const Color(0xFF0166FF),
       primaryText: const Color(0xFF0E0E0E),
       secondaryText: const Color(0xFF494949),
-      terararyText: const Color(0xFF9A9A9A),
+      tertararyText: const Color(0xFF9A9A9A),
       sharkText: const Color(0xFF333436),
       primaryBackground: const Color(0xFFF5F7FF),
       secondaryBackground: const Color(0xFFFFFFFF),
       tertararyBackground: const Color(0xFFFAFBFF),
       backgroundSheet: const Color(0x32081532),
       onPrimaryAccent: const Color(0xFFFFFFFF),
-      onTerararyBackground: const Color(0xFF5A5E66),
-      onTerararyFill: const Color(0xFFE1EAF8),
+      onTertararyBackground: const Color(0xFF5A5E66),
+      onTertararyFill: const Color(0xFFE1EAF8),
       onSecondaryBackground: const Color(0xFFF5F7FF),
       strokeElements: const Color(0xFFCCCCCC),
       sheetLine: const Color(0xFFB8BCCA),
@@ -110,15 +110,15 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color primaryAccent;
   final Color primaryText;
   final Color secondaryText;
-  final Color terararyText;
+  final Color tertararyText;
   final Color sharkText;
   final Color primaryBackground;
   final Color secondaryBackground;
   final Color tertararyBackground;
   final Color backgroundSheet;
   final Color onPrimaryAccent;
-  final Color onTerararyBackground;
-  final Color onTerararyFill;
+  final Color onTertararyBackground;
+  final Color onTertararyFill;
   final Color onSecondaryBackground;
   final Color strokeElements;
   final Color sheetLine;
@@ -175,15 +175,15 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       primaryAccent: primaryAccent ?? this.primaryAccent,
       primaryText: primaryText ?? this.primaryText,
       secondaryText: secondaryText ?? this.secondaryText,
-      terararyText: tertararyText ?? this.terararyText,
+      tertararyText: tertararyText ?? this.this.tertararyText,
       sharkText: sharkText ?? this.sharkText,
       primaryBackground: primaryBackground ?? this.primaryBackground,
       secondaryBackground: secondaryBackground ?? this.secondaryBackground,
       tertararyBackground: tertararyBackground ?? this.this.tertararyBackground,
       backgroundSheet: backgroundSheet ?? this.backgroundSheet,
       onPrimaryAccent: onPrimaryAccent ?? this.onPrimaryAccent,
-      onTerararyBackground: onTertararyBackground ?? this.onTerararyBackground,
-      onTerararyFill: onTerararyFill ?? this.this.onTerararyFill,
+      onTertararyBackground: onTertararyBackground ?? this.this.onTertararyBackground,
+      onTertararyFill: onTerararyFill ?? this.this.onTerararyFill,
       onSecondaryBackground: onSecondaryBackground ?? this.onSecondaryBackground,
       strokeElements: strokeElements ?? this.strokeElements,
       sheetLine: sheetLine ?? this.sheetLine,
@@ -218,15 +218,15 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       primaryAccent: Color.lerp(primaryAccent, other.primaryAccent, t)!,
       primaryText: Color.lerp(primaryText, other.primaryText, t)!,
       secondaryText: Color.lerp(secondaryText, other.secondaryText, t)!,
-      terararyText: Color.lerp(terararyText, other.terararyText, t)!,
+      tertararyText: Color.lerp(tertararyText, other.tertararyText, t)!,
       sharkText: Color.lerp(sharkText, other.sharkText, t)!,
       primaryBackground: Color.lerp(primaryBackground, other.primaryBackground, t)!,
       secondaryBackground: Color.lerp(secondaryBackground, other.secondaryBackground, t)!,
       tertararyBackground: Color.lerp(tertararyBackground, other.tertararyBackground, t)!,
       backgroundSheet: Color.lerp(backgroundSheet, other.backgroundSheet, t)!,
       onPrimaryAccent: Color.lerp(onPrimaryAccent, other.onPrimaryAccent, t)!,
-      onTerararyBackground: Color.lerp(onTerararyBackground, other.onTerararyBackground, t)!,
-      onTerararyFill: Color.lerp(onTerararyFill, other.onTerararyFill, t)!,
+      onTertararyBackground: Color.lerp(onTertararyBackground, other.onTertararyBackground, t)!,
+      onTertararyFill: Color.lerp(onTertararyFill, other.onTertararyFill, t)!,
       onSecondaryBackground: Color.lerp(onSecondaryBackground, other.onSecondaryBackground, t)!,
       strokeElements: Color.lerp(strokeElements, other.strokeElements, t)!,
       sheetLine: Color.lerp(sheetLine, other.sheetLine, t)!,

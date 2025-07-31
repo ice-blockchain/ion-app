@@ -165,7 +165,7 @@ class _DevicePermissionButton extends StatelessWidget {
               ),
               leading: Button.icon(
                 backgroundColor: context.theme.appColors.secondaryBackground,
-                borderColor: context.theme.appColors.onTerararyFill,
+                borderColor: context.theme.appColors.onTertararyFill,
                 borderRadius: BorderRadius.all(
                   Radius.circular(10.0.s),
                 ),

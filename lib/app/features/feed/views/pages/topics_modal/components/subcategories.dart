@@ -35,7 +35,7 @@ class Subcategories extends StatelessWidget {
             backgroundColor: colors.secondaryBackground,
             trailing: isSelected
                 ? Assets.svg.iconBlockCheckboxOnblue.icon(color: colors.success)
-                : Assets.svg.iconBlockCheckboxOff.icon(color: colors.terararyText),
+                : Assets.svg.iconBlockCheckboxOff.icon(color: colors.tertararyText),
             title: Text(subcategoryEntry.value.display.toTitleCase(), style: textStyles.body),
           );
         },

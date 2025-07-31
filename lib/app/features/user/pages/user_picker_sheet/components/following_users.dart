@@ -78,7 +78,7 @@ class _NoUserView extends StatelessWidget {
               child: Text(
                 context.i18n.users_search,
                 style: context.theme.appTextThemes.caption2.copyWith(
-                  color: context.theme.appColors.onTerararyBackground,
+                  color: context.theme.appColors.onTertararyBackground,
                 ),
                 textAlign: TextAlign.center,
               ),

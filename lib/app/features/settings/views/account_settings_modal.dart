@@ -125,7 +125,7 @@ class _RemainingLanguagesLabel extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: EdgeInsets.symmetric(horizontal: 6.0.s),
         decoration: BoxDecoration(
-          color: context.theme.appColors.onTerararyFill,
+          color: context.theme.appColors.onTertararyFill,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(

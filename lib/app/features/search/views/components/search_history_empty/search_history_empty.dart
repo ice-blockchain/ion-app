@@ -23,7 +23,7 @@ class SearchHistoryEmpty extends StatelessWidget {
               title,
               textAlign: TextAlign.center,
               style: context.theme.appTextThemes.body2.copyWith(
-                color: context.theme.appColors.terararyText,
+                color: context.theme.appColors.tertararyText,
               ),
             ),
           ],

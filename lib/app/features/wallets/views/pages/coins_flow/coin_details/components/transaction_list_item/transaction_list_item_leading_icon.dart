@@ -22,7 +22,7 @@ class TransactionListItemLeadingIcon extends StatelessWidget {
   Color _getBorderColor(BuildContext context) {
     return switch (type) {
       TransactionType.receive => context.theme.appColors.success,
-      TransactionType.send => context.theme.appColors.onTerararyFill,
+      TransactionType.send => context.theme.appColors.onTertararyFill,
     };
   }
 

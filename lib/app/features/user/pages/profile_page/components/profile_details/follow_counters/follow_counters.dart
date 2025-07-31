@@ -52,7 +52,7 @@ class FollowCounters extends ConsumerWidget {
             thickness: 0.5.s,
             indent: 8.0.s,
             endIndent: 8.0.s,
-            color: context.theme.appColors.onTerararyFill,
+            color: context.theme.appColors.onTertararyFill,
           ),
           Expanded(
             child: bothAvailable

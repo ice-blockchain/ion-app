@@ -97,7 +97,7 @@ final class BackupWithCloudPasswordInputBody extends HookConsumerWidget {
                   SizedBox(height: 8.0.s),
                   WarningCard(
                     text: context.i18n.backup_cloud_page_password_warning,
-                    borderColor: context.theme.appColors.onTerararyFill,
+                    borderColor: context.theme.appColors.onTertararyFill,
                     backgroundColor: context.theme.appColors.secondaryBackground,
                   ),
                   ConstrainedBox(constraints: BoxConstraints(minHeight: 16.0.s)),

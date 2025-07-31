@@ -55,7 +55,7 @@ class FollowCountersCell extends StatelessWidget {
             Text(
               followType.getTitle(context),
               style: context.theme.appTextThemes.body2.copyWith(
-                color: context.theme.appColors.terararyText,
+                color: context.theme.appColors.tertararyText,
               ),
             ),
           ],

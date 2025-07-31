@@ -34,7 +34,7 @@ class ChannelDetailListTile extends ConsumerWidget {
       title: Text(
         title,
         style: context.theme.appTextThemes.caption2.copyWith(
-          color: context.theme.appColors.terararyText,
+          color: context.theme.appColors.tertararyText,
         ),
       ),
       subtitle: Text(

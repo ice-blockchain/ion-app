@@ -21,7 +21,7 @@ class ProfileTabsHeader extends ConsumerWidget {
       isScrollable: true,
       labelPadding: EdgeInsets.symmetric(horizontal: 10.0.s),
       labelColor: context.theme.appColors.primaryAccent,
-      unselectedLabelColor: context.theme.appColors.terararyText,
+      unselectedLabelColor: context.theme.appColors.tertararyText,
       tabs: UserContentType.values.map((tabType) {
         return ProfileTabsHeaderTab(
           tabType: tabType,

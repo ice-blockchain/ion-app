@@ -32,13 +32,13 @@ class CopyKeyCard extends ConsumerWidget {
             children: [
               Assets.svg.iconFieldIdentitykey.icon(
                 size: 16.0.s,
-                color: context.theme.appColors.onTerararyBackground,
+                color: context.theme.appColors.onTertararyBackground,
               ),
               SizedBox(width: 6.0.s),
               Text(
                 locale.authenticator_setup_key,
                 style: textTheme.caption2.copyWith(
-                  color: context.theme.appColors.onTerararyBackground,
+                  color: context.theme.appColors.onTertararyBackground,
                 ),
               ),
             ],

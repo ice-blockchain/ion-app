@@ -40,7 +40,7 @@ class GeneralSelectionButton extends StatelessWidget {
         title: Text(
           title,
           style: textTheme.body
-              .copyWith(color: hasSelection ? colors.primaryText : colors.terararyText),
+              .copyWith(color: hasSelection ? colors.primaryText : colors.tertararyText),
         ),
         backgroundColor: Colors.transparent,
         leading: TextInputIcons(

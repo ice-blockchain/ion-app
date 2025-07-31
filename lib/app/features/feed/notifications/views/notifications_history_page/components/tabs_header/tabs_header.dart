@@ -21,7 +21,7 @@ class NotificationsHistoryTabsHeader extends ConsumerWidget {
       isScrollable: true,
       labelPadding: EdgeInsets.symmetric(horizontal: 10.0.s),
       labelColor: context.theme.appColors.primaryAccent,
-      unselectedLabelColor: context.theme.appColors.terararyText,
+      unselectedLabelColor: context.theme.appColors.tertararyText,
       tabs: NotificationsTabType.values.map((tabType) {
         return NotificationsHistoryTab(
           tabType: tabType,

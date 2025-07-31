@@ -55,7 +55,7 @@ class TextInputDecoration extends InputDecoration {
                     : context.theme.appColors.secondaryBackground;
               }),
           labelStyle: context.theme.appTextThemes.body.copyWith(
-            color: labelColor ?? context.theme.appColors.terararyText,
+            color: labelColor ?? context.theme.appColors.tertararyText,
           ),
           prefixStyle: context.theme.appTextThemes.body.copyWith(
             color: context.theme.appColors.primaryText,
@@ -68,7 +68,7 @@ class TextInputDecoration extends InputDecoration {
                       ? context.theme.appColors.attentionRed
                       : states.contains(WidgetState.focused) && !verified
                           ? context.theme.appColors.primaryAccent
-                          : context.theme.appColors.terararyText),
+                          : context.theme.appColors.tertararyText),
               height: 1,
             );
           }),

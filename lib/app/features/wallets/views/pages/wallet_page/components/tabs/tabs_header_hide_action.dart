@@ -22,7 +22,7 @@ class WalletTabsHeaderHideAction extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isZeroValueAssetsVisible = ref.watch(isZeroValueAssetsVisibleSelectorProvider);
-    final actionColor = context.theme.appColors.terararyText;
+    final actionColor = context.theme.appColors.tertararyText;
     final asset =
         isZeroValueAssetsVisible ? Assets.svg.iconCheckboxOff : Assets.svg.iconBlockCheckboxOnblue;
 

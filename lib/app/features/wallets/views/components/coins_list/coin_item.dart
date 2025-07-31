@@ -77,7 +77,7 @@ class CoinsGroupItemPlaceholder extends StatelessWidget {
       title: ContainerSkeleton(
         height: 16.0.s,
         width: 101.0.s,
-        skeletonBaseColor: context.theme.appColors.onTerararyFill,
+        skeletonBaseColor: context.theme.appColors.onTertararyFill,
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,7 +86,7 @@ class CoinsGroupItemPlaceholder extends StatelessWidget {
           ContainerSkeleton(
             height: 12.0.s,
             width: 55.0.s,
-            skeletonBaseColor: context.theme.appColors.onTerararyFill,
+            skeletonBaseColor: context.theme.appColors.onTertararyFill,
           ),
         ],
       ),
@@ -98,13 +98,13 @@ class CoinsGroupItemPlaceholder extends StatelessWidget {
           ContainerSkeleton(
             height: 16.0.s,
             width: 40.0.s,
-            skeletonBaseColor: context.theme.appColors.onTerararyFill,
+            skeletonBaseColor: context.theme.appColors.onTertararyFill,
           ),
           SizedBox(height: 6.0.s),
           ContainerSkeleton(
             height: 12.0.s,
             width: 30.0.s,
-            skeletonBaseColor: context.theme.appColors.onTerararyFill,
+            skeletonBaseColor: context.theme.appColors.onTertararyFill,
           ),
         ],
       ),

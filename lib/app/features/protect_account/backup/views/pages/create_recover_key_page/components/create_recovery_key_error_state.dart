@@ -28,7 +28,7 @@ class CreateRecoveryKeyErrorState extends ConsumerWidget {
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: colors.tertararyBackground,
-                    border: Border.all(color: colors.onTerararyFill),
+                    border: Border.all(color: colors.onTertararyFill),
                     borderRadius: BorderRadius.circular(16.0.s),
                   ),
                   child: Padding(
@@ -42,7 +42,7 @@ class CreateRecoveryKeyErrorState extends ConsumerWidget {
                         Text(
                           locale.protect_account_create_recovery_error,
                           style: context.theme.appTextThemes.caption2
-                              .copyWith(color: colors.onTerararyBackground),
+                              .copyWith(color: colors.onTertararyBackground),
                           textAlign: TextAlign.center,
                         ),
                       ],

@@ -60,7 +60,7 @@ class _UserListItem extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: context.theme.appTextThemes.caption3.copyWith(
-                  color: context.theme.appColors.terararyText,
+                  color: context.theme.appColors.tertararyText,
                 ),
               ),
             ],

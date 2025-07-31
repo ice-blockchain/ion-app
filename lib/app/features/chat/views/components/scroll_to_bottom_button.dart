@@ -76,7 +76,7 @@ class _ScrollButton extends StatelessWidget {
           color: context.theme.appColors.tertararyBackground,
           borderRadius: BorderRadiusDirectional.circular(20.s),
           border: Border.all(
-            color: context.theme.appColors.onTerararyFill,
+            color: context.theme.appColors.onTertararyFill,
             width: 1.s,
           ),
         ),

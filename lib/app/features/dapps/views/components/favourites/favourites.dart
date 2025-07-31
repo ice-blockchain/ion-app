@@ -39,7 +39,7 @@ class Favourites extends StatelessWidget {
               borderRadius: BorderRadius.circular(16.0.s),
               color: context.theme.appColors.tertararyBackground,
               border: Border.all(
-                color: context.theme.appColors.onTerararyFill,
+                color: context.theme.appColors.onTertararyFill,
               ),
             ),
             child: Row(

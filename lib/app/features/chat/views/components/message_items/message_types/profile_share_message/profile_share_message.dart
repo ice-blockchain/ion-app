@@ -147,7 +147,7 @@ class _ProfileSummary extends StatelessWidget {
           style: context.theme.appTextThemes.body2.copyWith(
             color: isMe
                 ? context.theme.appColors.onPrimaryAccent
-                : context.theme.appColors.onTerararyBackground,
+                : context.theme.appColors.onTertararyBackground,
           ),
         ),
         pubkey: userMetadata.masterPubkey,

@@ -79,7 +79,7 @@ class CategoriesCollection extends StatelessWidget {
                   size: itemWidth,
                   type: ButtonType.outlined,
                   backgroundColor: context.theme.appColors.tertararyBackground,
-                  borderColor: context.theme.appColors.onTerararyFill,
+                  borderColor: context.theme.appColors.onTertararyFill,
                   borderRadius: BorderRadius.circular(12.0.s),
                 ),
                 Text(
