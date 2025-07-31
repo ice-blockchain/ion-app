@@ -32,7 +32,9 @@ class ChatMainAppBar extends ConsumerWidget implements PreferredSizeWidget {
         child: NavigationTextButton(
           label: editMode ? context.i18n.core_done : context.i18n.button_edit,
           textStyle: context.theme.appTextThemes.subtitle2.copyWith(
-            color: hasConversations ? context.theme.appColors.primaryAccent : context.theme.appColors.sheetLine,
+            color: hasConversations
+                ? context.theme.appColors.primaryAccent
+                : context.theme.appColors.sheetLine,
           ),
           onPressed: hasConversations
               ? () {
