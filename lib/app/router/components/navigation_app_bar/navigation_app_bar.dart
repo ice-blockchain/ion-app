@@ -102,7 +102,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: leading ??
           (showBackButton
               ? NavigationBackButton(
-                  onBackPress ?? context.pop,
+                  () => (onBackPress ?? context.pop)(),
                   hideKeyboardOnBack: hideKeyboardOnBack,
                 )
               : null),
