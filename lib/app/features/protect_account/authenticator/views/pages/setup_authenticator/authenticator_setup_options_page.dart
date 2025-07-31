@@ -64,13 +64,15 @@ class AuthenticatorSetupOptionsPage extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final type = authenticatorTypes[index];
 
-                            return Padding(
-                              padding: EdgeInsetsDirectional.only(bottom: 12.0.s),
-                              child: SecureAccountOption(
-                                isEnabled: false,
-                                title: type.getDisplayName(context),
-                                icon: type.iconAsset.icon(),
-                                onTap: () => _onOptionTap(type),
+                            return ScreenSideOffset.small(
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.only(bottom: 12.0.s),
+                                child: SecureAccountOption(
+                                  isEnabled: false,
+                                  title: type.getDisplayName(context),
+                                  icon: type.iconAsset.icon(),
+                                  onTap: () => _onOptionTap(type),
+                                ),
                               ),
                             );
                           },
