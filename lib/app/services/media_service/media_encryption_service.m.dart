@@ -14,6 +14,7 @@ import 'package:ion/app/features/core/providers/ion_connect_media_url_fallback_p
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/services/compressors/brotli_compressor.r.dart';
 import 'package:ion/app/services/file_cache/ion_file_cache_manager.r.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.m.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -77,8 +78,6 @@ class MediaEncryptionService {
 
         final fileExtension = attachment.mimeType.split('/').last;
 
-        //remove the file from storage
-        await file.delete();
         await fileCacheService.removeFile(url);
 
         if (attachment.mediaType == MediaType.unknown) {
@@ -100,9 +99,11 @@ class MediaEncryptionService {
           return decryptedFile;
         }
       } else {
+        Logger.error('Media does not have a valid encryption prop');
         throw FailedToDecryptFileException();
       }
-    } catch (e) {
+    } catch (e, st) {
+      Logger.error(e, stackTrace: st);
       throw FailedToDecryptFileException();
     }
   }
