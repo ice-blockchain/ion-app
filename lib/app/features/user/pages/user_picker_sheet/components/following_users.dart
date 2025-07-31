@@ -36,8 +36,12 @@ class FollowingUsers extends ConsumerWidget {
         return SliverList.builder(
           itemBuilder: (context, index) {
             final masterPubkey = pubkeys.elementAt(index);
-            final canSendMessage = controlChatPrivacy &&
-                (ref.watch(canSendMessageProvider(masterPubkey)).valueOrNull ?? false);
+            final bool canSendMessage;
+            if (controlChatPrivacy) {
+              canSendMessage = ref.watch(canSendMessageProvider(masterPubkey)).valueOrNull ?? false;
+            } else {
+              canSendMessage = true;
+            }
 
             return SelectableUserListItem(
               selectable: selectable,
