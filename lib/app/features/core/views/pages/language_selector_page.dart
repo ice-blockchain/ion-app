@@ -64,7 +64,7 @@ class LanguageSelectorPage extends HookConsumerWidget {
                   ScreenSideOffset.small(
                     child: continueButton!,
                   ),
-                  SizedBox(height: 8.0.s + MediaQuery.paddingOf(context).bottom),
+                  SizedBox(height: 28.0.s + MediaQuery.paddingOf(context).bottom),
                 ],
               ),
             )
@@ -106,8 +106,7 @@ class LanguageSelectorPage extends HookConsumerWidget {
           ),
           SliverPadding(
             padding: EdgeInsetsDirectional.only(
-              bottom: 16.0.s +
-                  (renderBottomBar ? bottomBarHeight : MediaQuery.paddingOf(context).bottom),
+              bottom: 16.0.s + (renderBottomBar ? bottomBarHeight : MediaQuery.paddingOf(context).bottom),
             ),
           ),
         ],
