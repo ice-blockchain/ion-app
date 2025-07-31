@@ -74,6 +74,8 @@ class ModifiablePostEntity
   static const contentCharacterLimit = 4000;
   static const contentMediaLimit = 10;
 
+  bool get isStory => data.expiration != null;
+
   @override
   FutureOr<EventMessage> toEntityEventMessage() => toEventMessage(data);
 }

@@ -11,6 +11,7 @@ import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.f.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.f.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.f.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.r.dart';
 import 'package:ion/app/features/user/model/user_metadata.f.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -51,13 +52,33 @@ DeepLinkService deepLinkService(Ref ref) {
 Future<void> deeplinkInitializer(Ref ref) async {
   final service = ref.read(deepLinkServiceProvider);
 
+  Future<String?> handlePostDeepLink(
+    EventReference event,
+    String eventReference,
+  ) async {
+    final entity = await ref.read(ionConnectEntityProvider(eventReference: event).future);
+
+    if (entity is ModifiablePostEntity) {
+      if (entity.isStory) {
+        return StoryViewerRoute(
+          pubkey: entity.masterPubkey,
+          initialStoryReference: eventReference,
+        ).location;
+      }
+
+      return PostDetailsRoute(eventReference: eventReference).location;
+    }
+
+    return null;
+  }
+
   await service.init(
-    onDeeplink: (eventReference) {
+    onDeeplink: (eventReference) async {
       final event = EventReference.fromEncoded(eventReference);
 
       if (event is ReplaceableEventReference) {
         final location = switch (event.kind) {
-          ModifiablePostEntity.kind => PostDetailsRoute(eventReference: eventReference).location,
+          ModifiablePostEntity.kind => await handlePostDeepLink(event, eventReference),
           ArticleEntity.kind => ArticleDetailsRoute(eventReference: eventReference).location,
           UserMetadataEntity.kind => ProfileRoute(pubkey: event.masterPubkey).location,
           _ => null,
