@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
-import 'dart:math' show max;
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +55,6 @@ class ChatInputBar extends HookConsumerWidget {
     final isTextLimitReached = useState<bool>(false);
     final hasText = useState<bool>(false);
     final isKeyboardVisible = useState(false);
-    final cachePadding = useState<double>(0);
 
     useOnInit(
       () {
@@ -83,10 +81,7 @@ class ChatInputBar extends HookConsumerWidget {
         }
 
         textFieldController.addListener(onTextChanged);
-
-        return () {
-          textFieldController.removeListener(onTextChanged);
-        };
+        return () => textFieldController.removeListener(onTextChanged);
       },
       [textFieldController, conversationId],
     );
@@ -116,80 +111,54 @@ class ChatInputBar extends HookConsumerWidget {
 
     useEffect(
       () {
-        final keyboardVisibilitySubscription =
-            KeyboardVisibilityController().onChange.listen((visible) {
+        final sub = KeyboardVisibilityController().onChange.listen((visible) {
           isKeyboardVisible.value = visible;
         });
-        return keyboardVisibilitySubscription.cancel;
+        return sub.cancel;
       },
       [],
     );
 
+    final hideAttachMenu = useCallback(
+      () async {
+        isTogglingBottomView.value = true;
+        isAttachMenuShown.value = false;
+        await Future<void>.delayed(const Duration(milliseconds: 300));
+        textFieldFocusNode.requestFocus();
+        isTogglingBottomView.value = false;
+      },
+      [isAttachMenuShown, textFieldFocusNode],
+    );
+
+    final showAttachMenu = useCallback(
+      () async {
+        textFieldFocusNode.unfocus();
+        if (isKeyboardVisible.value) {
+          await Future<void>.delayed(const Duration(milliseconds: 300));
+        }
+        isAttachMenuShown.value = true;
+      },
+      [isAttachMenuShown.value, textFieldFocusNode, isKeyboardVisible.value],
+    );
+
     useEffect(
       () {
-        void textFieldFocusListener() {
+        Future<void> textFieldFocusListener() async {
           if (isTogglingBottomView.value) return;
-
-          if (textFieldFocusNode.hasFocus) {
-            if (isAttachMenuShown.value) {
-              isAttachMenuShown.value = false;
-            }
-          } else {
-            if (isKeyboardVisible.value) {
-              cachePadding.value = 0;
-              isAttachMenuShown.value = false;
-            }
+          if (textFieldFocusNode.hasFocus && isAttachMenuShown.value) {
+            await hideAttachMenu();
           }
         }
 
         textFieldFocusNode.addListener(textFieldFocusListener);
         return () => textFieldFocusNode.removeListener(textFieldFocusListener);
       },
-      [textFieldFocusNode, isAttachMenuShown, isKeyboardVisible.value, isTogglingBottomView],
+      [textFieldFocusNode, isAttachMenuShown.value, isTogglingBottomView],
     );
 
     if (isBlocked) {
-      return ChatBlockedUserBar(
-        receiverMasterPubkey: receiverMasterPubkey,
-      );
+      return ChatBlockedUserBar(receiverMasterPubkey: receiverMasterPubkey);
     }
-
-    final double bottomPadding = max(
-      MediaQuery.viewInsetsOf(context).bottom - MediaQuery.viewPaddingOf(context).bottom,
-      0,
-    );
-
-    final bottomViewInset = (cachePadding.value > 0
-        ? cachePadding.value
-        : bottomPadding > 0
-            ? bottomPadding
-            : isAttachMenuShown.value
-                ? ChatAttachMenu.moreContentHeight.s
-                : 0.0);
-
-    final showAttachMenu = useCallback(
-      () {
-        if (isAttachMenuShown.value) return;
-
-        textFieldFocusNode.unfocus();
-        cachePadding.value = bottomPadding;
-        isAttachMenuShown.value = true;
-      },
-      [isAttachMenuShown, textFieldFocusNode, bottomPadding],
-    );
-
-    final hideAttachMenu = useCallback(
-      () {
-        if (!isAttachMenuShown.value) return;
-        isAttachMenuShown.value = false;
-        textFieldFocusNode.requestFocus();
-
-        Future<void>.delayed(const Duration(milliseconds: 600)).then((_) {
-          if (!isAttachMenuShown.value) cachePadding.value = 0;
-        });
-      },
-      [isAttachMenuShown, textFieldFocusNode],
-    );
 
     return Padding(
       padding: EdgeInsetsDirectional.all(8.s),
@@ -203,21 +172,34 @@ class ChatInputBar extends HookConsumerWidget {
                   ChatAttachmentMenuSwitchButton(
                     isAttachMenuShown: isAttachMenuShown.value,
                     onTap: () async {
-                      isTogglingBottomView.value = true;
+                      if (isTogglingBottomView.value) return;
                       if (isAttachMenuShown.value) {
-                        hideAttachMenu();
+                        await hideAttachMenu();
                       } else {
-                        showAttachMenu();
-                        await Future<void>.delayed(const Duration(milliseconds: 600));
+                        await showAttachMenu();
                       }
-                      isTogglingBottomView.value = false;
                     },
                   ),
                   SizedBox(width: 6.s),
-                  ChatTextField(
-                    textFieldController: textFieldController,
-                    textFieldFocusNode: textFieldFocusNode,
-                    onSubmitted: onSubmitted,
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () async {
+                        if (isAttachMenuShown.value) {
+                          await hideAttachMenu();
+                          await Future<void>.delayed(const Duration(milliseconds: 300));
+                        }
+
+                        textFieldFocusNode.requestFocus();
+                      },
+                      child: AbsorbPointer(
+                        absorbing: isAttachMenuShown.value,
+                        child: ChatTextField(
+                          textFieldController: textFieldController,
+                          textFieldFocusNode: textFieldFocusNode,
+                          onSubmitted: onSubmitted,
+                        ),
+                      ),
+                    ),
                   ),
                   if (!hasText.value) ChatInputBarCameraButton(onSubmitted: onSubmitted),
                   ActionButton(
@@ -267,10 +249,17 @@ class ChatInputBar extends HookConsumerWidget {
           ),
           SizedBox(
             width: double.infinity,
-            height: bottomViewInset,
-            child: ChatAttachMenu(
-              onSubmitted: onSubmitted,
-              receiverPubKey: receiverMasterPubkey,
+            child: AnimatedSize(
+              duration: const Duration(milliseconds: 200),
+              child: !isKeyboardVisible.value && isAttachMenuShown.value
+                  ? SizedBox(
+                      width: double.infinity,
+                      child: ChatAttachMenu(
+                        onSubmitted: onSubmitted,
+                        receiverPubKey: receiverMasterPubkey,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
             ),
           ),
         ],
