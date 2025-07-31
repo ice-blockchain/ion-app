@@ -150,24 +150,26 @@ final class DeepLinkService {
   Future<void> init({required void Function(String path) onDeeplink}) async {
     _appsflyerSdk
       ..onDeepLinking((link) {
-        final clickEvent = link.deepLink?.clickEvent;
-        final host = clickEvent?['host'] as String?;
-        if (host == _brandDomain) {
-          final url = clickEvent?['link'] as String?;
-          if (url != null) {
-            _appsflyerSdk.resolveOneLinkUrl(url.replaceAll(_brandDomain, _baseHost));
-            return;
+        final path = link.deepLink?.deepLinkValue;
+        if (path == null) {
+          final clickEvent = link.deepLink?.clickEvent;
+          final host = clickEvent?['host'] as String?;
+          if (host == _brandDomain) {
+            final url = clickEvent?['link'] as String?;
+            if (url != null) {
+              _appsflyerSdk.resolveOneLinkUrl(url.replaceAll(_brandDomain, _baseHost));
+              return;
+            }
           }
+        } else {
+          if (link.status == Status.FOUND) {
+            if (path.isEmpty) return;
+
+            return onDeeplink(path);
+          }
+
+          onDeeplink(_fallbackUrl);
         }
-
-        if (link.status == Status.FOUND) {
-          final path = link.deepLink?.deepLinkValue;
-          if (path == null || path.isEmpty) return;
-
-          return onDeeplink(path);
-        }
-
-        onDeeplink(_fallbackUrl);
       })
       ..stop(true);
 
