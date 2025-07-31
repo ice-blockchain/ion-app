@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/protect_account/secure_account/data/models/security_methods.f.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/recovery_credentials_enabled_notifier.r.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/user_details_provider.r.dart';
-import 'package:ion/app/features/user/providers/user_verify_identity_provider.r.dart';
 import 'package:ion/app/utils/predicates.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -34,9 +33,7 @@ Future<bool> is2FAEnabledForCurrentUser(Ref ref) async {
 }
 
 @riverpod
-Future<bool> needToEnable2faForCurrentUser(Ref ref) async {
-  final is2FAEnabledForCurrentUser = await ref.watch(is2FAEnabledForCurrentUserProvider.future);
-  final isPasswordFlowUser = await ref.watch(isPasswordFlowUserProvider.future);
-
-  return isPasswordFlowUser && !is2FAEnabledForCurrentUser;
+Future<bool> isBackupEnabledForCurrentUser(Ref ref) async {
+  final securityMethodsState = await ref.watch(securityAccountControllerProvider.future);
+  return securityMethodsState.isBackupEnabled;
 }
