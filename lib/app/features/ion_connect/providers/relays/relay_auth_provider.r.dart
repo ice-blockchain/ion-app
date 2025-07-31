@@ -52,6 +52,15 @@ class RelayAuth extends _$RelayAuth {
             .read(ionConnectNotifierProvider.notifier)
             .sign(authEvent, includeMasterPubkey: delegationComplete.falseOrValue);
       },
+      onError: (error) async {
+        // In case of relay not authoritative error, we set the replica delay to attach
+        // current user 10100 and 10002 events to the Auth event and attempting to re-authenticate.
+        if (RelayAuthService.isRelayNotAuthoritativeError(error)) {
+          ref.read(relaysReplicaDelayProvider.notifier).setDelay();
+          return true;
+        }
+        return false;
+      },
     );
 
     final authMessageSubscription = relay.messages.listen((message) {
@@ -69,6 +78,7 @@ class RelayAuthService {
   RelayAuthService({
     required this.relay,
     required this.createAuthEvent,
+    required this.onError,
     this.completer,
   });
 
@@ -76,6 +86,8 @@ class RelayAuthService {
 
   final Future<EventMessage> Function({required String challenge, required String relayUrl})
       createAuthEvent;
+
+  final Future<bool> Function(Object? error) onError;
 
   Completer<void>? completer;
 
@@ -118,7 +130,7 @@ class RelayAuthService {
     }
   }
 
-  Future<void> authenticateRelay() async {
+  Future<void> authenticateRelay({bool isRetry = false}) async {
     if (challenge == null || challenge!.isEmpty) throw AuthChallengeIsEmptyException();
 
     // Cases when we need to re-authenticate the relay:
@@ -151,6 +163,10 @@ class RelayAuthService {
 
       completer?.complete();
     } catch (error) {
+      final shouldRetry = await onError(error);
+      if (shouldRetry && !isRetry) {
+        return authenticateRelay(isRetry: true);
+      }
       completer?.completeError(error);
     }
   }
@@ -162,5 +178,9 @@ class RelayAuthService {
     final isSendEventAuthRequired =
         error is SendEventException && error.code.startsWith('auth-required');
     return isSubscriptionAuthRequired || isSendEventAuthRequired;
+  }
+
+  static bool isRelayNotAuthoritativeError(Object? error) {
+    return error is SendEventException && error.code.startsWith('relay-is-not-authoritative');
   }
 }
