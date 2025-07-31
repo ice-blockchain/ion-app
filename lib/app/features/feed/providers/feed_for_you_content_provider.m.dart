@@ -286,14 +286,19 @@ class FeedForYouContent extends _$FeedForYouContent implements PagedNotifier {
   }
 
   Future<List<String>> _getDataSourceRelays() {
-    return ref.read(relevantCurrentUserRelaysProvider.future);
+    return ref.read(rankedRelevantCurrentUserRelaysUrlsProvider.future);
   }
 
+  /// Refreshes the pagination state for the given modifier.
+  ///
+  /// This is used to ensure that the pagination state is up-to-date before making requests.
+  ///
+  /// Data source relays are changed dynamically depending on the ping responses
+  ///   of the current user relevant relays and runtime conditions.
+  /// For the articles, user can select and unselect the interested categories.
+  ///
+  /// This method must be called on every request iteration.
   Future<void> _refreshModifierPagination({required FeedModifier modifier}) async {
-    // For any other feed type except articles, pagination can't be changed.
-    // For Articles, user can select or unselect some topics, so we need to refresh the pagination
-    if (feedType != FeedType.article && state.modifiersPagination[modifier] != null) return;
-
     final dataSourceRelays = await _getDataSourceRelays();
 
     final interests = await _getInterestsForModifier(modifier);
