@@ -54,9 +54,11 @@ class AttachedMediaPreview extends StatelessWidget {
             return _PreviewItem.url(
               url: mediaAttachment.thumb ?? mediaAttachment.image ?? mediaAttachment.url,
               onRemove: () {
-                final updatedMap = Map<String, MediaAttachment>.from(attachedMediaLinksNotifier.value);
-                final keyToRemove =
-                    attachedMediaLinksNotifier.value.entries.firstWhere((entry) => entry.value == mediaAttachment).key;
+                final updatedMap =
+                    Map<String, MediaAttachment>.from(attachedMediaLinksNotifier.value);
+                final keyToRemove = attachedMediaLinksNotifier.value.entries
+                    .firstWhere((entry) => entry.value == mediaAttachment)
+                    .key;
                 updatedMap.remove(keyToRemove);
                 attachedMediaLinksNotifier.value = updatedMap;
               },

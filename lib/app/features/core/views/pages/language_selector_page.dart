@@ -106,7 +106,8 @@ class LanguageSelectorPage extends HookConsumerWidget {
           ),
           SliverPadding(
             padding: EdgeInsetsDirectional.only(
-              bottom: 16.0.s + (renderBottomBar ? bottomBarHeight : MediaQuery.paddingOf(context).bottom),
+              bottom: 16.0.s +
+                  (renderBottomBar ? bottomBarHeight : MediaQuery.paddingOf(context).bottom),
             ),
           ),
         ],
