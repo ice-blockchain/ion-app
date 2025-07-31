@@ -18,6 +18,9 @@ class LinksHandler extends TextEditorTypingListener {
   bool _isFormatting = false;
   Timer? _debounceTimer;
 
+  static const _autoLinkAttr = Attribute('autoLink', AttributeScope.inline, true);
+  static const _clearAutoLinkAttr = Attribute('autoLink', AttributeScope.inline, null);
+
   @override
   void onTextChanged(
     String text,
@@ -33,10 +36,7 @@ class LinksHandler extends TextEditorTypingListener {
   }
 
   @override
-  void onFocusLost() {
-    if (_isFormatting) return;
-    _formatLinks(controller.document.toPlainText());
-  }
+  void onFocusLost() {}
 
   void _formatLinks(String text) {
     _isFormatting = true;
@@ -46,13 +46,19 @@ class LinksHandler extends TextEditorTypingListener {
     for (final op in deltaOps) {
       final attrs = op.attributes;
       final len = op.data is String ? (op.data! as String).length : 1;
-      if (attrs != null && attrs.containsKey(Attribute.link.key)) {
-        // Unset link attribute without affecting other attributes
-        controller.formatText(
-          offset,
-          len,
-          Attribute.clone(Attribute.link, null),
-        );
+      // Remove only auto-detected links (marked by autoLink) so manual links assigned with add link flow stay intact
+      if (attrs != null && attrs.containsKey(Attribute.link.key) && attrs.containsKey('autoLink')) {
+        controller
+          ..formatText(
+            offset,
+            len,
+            Attribute.clone(Attribute.link, null),
+          )
+          ..formatText(
+            offset,
+            len,
+            _clearAutoLinkAttr,
+          );
       }
       offset += len;
     }
@@ -61,7 +67,13 @@ class LinksHandler extends TextEditorTypingListener {
     for (final match in matches) {
       final url = match.group(0);
       if (url == null) continue;
-      controller.formatText(match.start, match.end - match.start, LinkAttribute(url));
+      controller
+        ..formatText(match.start, match.end - match.start, LinkAttribute(url))
+        ..formatText(
+          match.start,
+          match.end - match.start,
+          _autoLinkAttr,
+        );
     }
     _isFormatting = false;
   }
