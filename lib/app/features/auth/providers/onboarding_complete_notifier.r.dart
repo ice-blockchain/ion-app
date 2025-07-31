@@ -11,6 +11,7 @@ import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.m.dart';
+import 'package:ion/app/features/ion_connect/providers/relays/relays_replica_delay_provider.m.dart';
 import 'package:ion/app/features/user/model/badges/profile_badges.f.dart';
 import 'package:ion/app/features/user/model/follow_list.f.dart';
 import 'package:ion/app/features/user/model/interest_set.f.dart';
@@ -47,6 +48,8 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         try {
           final userDelegationEvent =
               await _buildUserDelegation(onVerifyIdentity: onVerifyIdentity);
+          // Set delay to attach published 10100 and 10002 during the connection authorization
+          ref.read(relaysReplicaDelayProvider.notifier).setDelay();
           await ref
               .read(ionConnectNotifierProvider.notifier)
               .sendEvents([userDelegationEvent, userRelaysEvent]);
