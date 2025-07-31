@@ -95,9 +95,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 
     return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
-      resizeToAvoidBottomInset: false,
       body: SafeArea(
-        maintainBottomViewPadding: true,
         child: Column(
           children: [
             _Header(
