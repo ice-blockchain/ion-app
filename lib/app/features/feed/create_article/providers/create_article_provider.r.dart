@@ -300,17 +300,16 @@ class CreateArticle extends _$CreateArticle {
 
     final articleEvent = await ionNotifier.sign(articleData);
     final fileEvents = await Future.wait(files.map(ionNotifier.sign));
-    final eventsToPublish = [...fileEvents, articleEvent];
 
     final pubkeysToPublish = mentions.map((mention) => mention.value).toSet();
 
     final userEventsMetadataBuilder = await ref.read(userEventsMetadataBuilderProvider.future);
 
     await Future.wait([
-      ionNotifier.sendEvents(eventsToPublish),
+      ionNotifier.sendEvents([...fileEvents, articleEvent]),
       for (final pubkey in pubkeysToPublish)
-        ionNotifier.sendEvents(
-          eventsToPublish,
+        ionNotifier.sendEvent(
+          articleEvent,
           actionSource: ActionSourceUser(pubkey),
           metadataBuilders: [userEventsMetadataBuilder],
           cache: false,

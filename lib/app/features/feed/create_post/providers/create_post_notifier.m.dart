@@ -286,7 +286,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
     final postEvent = await ionNotifier.sign(postData);
     final fileEvents = await Future.wait(files.map(ionNotifier.sign));
-    final eventsToPublish = [...fileEvents, postEvent];
 
     final pubkeysToPublish = mentions.map((mention) => mention.value).toSet();
     final metadataBuilders = <EventsMetadataBuilder>[];
@@ -318,10 +317,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     metadataBuilders.add(userEventsMetadataBuilder);
 
     await Future.wait([
-      ionNotifier.sendEvents(eventsToPublish),
+      ionNotifier.sendEvents([...fileEvents, postEvent]),
       for (final pubkey in pubkeysToPublish)
-        ref.read(ionConnectNotifierProvider.notifier).sendEvents(
-              eventsToPublish,
+        ref.read(ionConnectNotifierProvider.notifier).sendEvent(
+              postEvent,
               actionSource: ActionSourceUser(pubkey),
               metadataBuilders: metadataBuilders,
               cache: false,
