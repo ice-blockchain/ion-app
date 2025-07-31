@@ -42,7 +42,7 @@ class ReadTimeTile extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 7.0.s, vertical: 4.0.s),
       decoration: BoxDecoration(
-        color: context.theme.appColors.terararyBackground,
+        color: context.theme.appColors.tertararyBackground,
         border: Border.all(
           color: context.theme.appColors.onTerararyFill,
         ),

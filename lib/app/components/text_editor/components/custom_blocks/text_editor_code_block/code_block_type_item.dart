@@ -30,7 +30,7 @@ class CodeBlockTypeItem extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? context.theme.appColors.onTerararyFill
-              : context.theme.appColors.terararyBackground,
+              : context.theme.appColors.tertararyBackground,
           borderRadius: BorderRadius.circular(12.0.s),
           border: Border.all(
             color: context.theme.appColors.onTerararyFill,

@@ -79,7 +79,7 @@ class _CategoryButton extends StatelessWidget {
     final colors = context.theme.appColors;
 
     return Button.compact(
-      backgroundColor: colors.terararyBackground,
+      backgroundColor: colors.tertararyBackground,
       type: ButtonType.outlined,
       leadingIconOffset: 6.0.s,
       leadingIcon: NetworkIconWidget(

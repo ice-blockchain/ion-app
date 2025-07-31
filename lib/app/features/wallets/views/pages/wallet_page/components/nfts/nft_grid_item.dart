@@ -39,7 +39,7 @@ class NftGridItem extends StatelessWidget {
         padding: EdgeInsets.all(NftConstants.cellPadding),
         decoration: BoxDecoration(
           borderRadius: borderRadius,
-          color: context.theme.appColors.terararyBackground,
+          color: context.theme.appColors.tertararyBackground,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

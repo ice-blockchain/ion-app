@@ -74,7 +74,7 @@ class BookmarksCollectionTile extends ConsumerWidget {
             )
           : BookmarksCollectionTileEditAction(data: entity.data),
       contentPadding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 12.0.s),
-      backgroundColor: context.theme.appColors.terararyBackground,
+      backgroundColor: context.theme.appColors.tertararyBackground,
     );
   }
 }

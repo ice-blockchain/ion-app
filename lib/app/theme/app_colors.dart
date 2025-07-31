@@ -12,7 +12,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.sharkText,
     required this.primaryBackground,
     required this.secondaryBackground,
-    required this.terararyBackground,
+    required this.tertararyBackground,
     required this.backgroundSheet,
     required this.onPrimaryAccent,
     required this.onTerararyBackground,
@@ -46,7 +46,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       sharkText: templateColors.sharkText,
       primaryBackground: templateColors.primaryBackground,
       secondaryBackground: templateColors.secondaryBackground,
-      terararyBackground: templateColors.tertararyBackground,
+      tertararyBackground: templateColors.tertararyBackground,
       backgroundSheet: templateColors.backgroundSheet,
       onPrimaryAccent: templateColors.onPrimaryAccent,
       onTerararyBackground: templateColors.onTertararyBackground,
@@ -81,7 +81,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       sharkText: const Color(0xFF333436),
       primaryBackground: const Color(0xFFF5F7FF),
       secondaryBackground: const Color(0xFFFFFFFF),
-      terararyBackground: const Color(0xFFFAFBFF),
+      tertararyBackground: const Color(0xFFFAFBFF),
       backgroundSheet: const Color(0x32081532),
       onPrimaryAccent: const Color(0xFFFFFFFF),
       onTerararyBackground: const Color(0xFF5A5E66),
@@ -114,7 +114,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color sharkText;
   final Color primaryBackground;
   final Color secondaryBackground;
-  final Color terararyBackground;
+  final Color tertararyBackground;
   final Color backgroundSheet;
   final Color onPrimaryAccent;
   final Color onTerararyBackground;
@@ -179,7 +179,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       sharkText: sharkText ?? this.sharkText,
       primaryBackground: primaryBackground ?? this.primaryBackground,
       secondaryBackground: secondaryBackground ?? this.secondaryBackground,
-      terararyBackground: tertararyBackground ?? this.terararyBackground,
+      tertararyBackground: tertararyBackground ?? this.this.tertararyBackground,
       backgroundSheet: backgroundSheet ?? this.backgroundSheet,
       onPrimaryAccent: onPrimaryAccent ?? this.onPrimaryAccent,
       onTerararyBackground: onTertararyBackground ?? this.onTerararyBackground,
@@ -222,7 +222,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       sharkText: Color.lerp(sharkText, other.sharkText, t)!,
       primaryBackground: Color.lerp(primaryBackground, other.primaryBackground, t)!,
       secondaryBackground: Color.lerp(secondaryBackground, other.secondaryBackground, t)!,
-      terararyBackground: Color.lerp(terararyBackground, other.terararyBackground, t)!,
+      tertararyBackground: Color.lerp(tertararyBackground, other.tertararyBackground, t)!,
       backgroundSheet: Color.lerp(backgroundSheet, other.backgroundSheet, t)!,
       onPrimaryAccent: Color.lerp(onPrimaryAccent, other.onPrimaryAccent, t)!,
       onTerararyBackground: Color.lerp(onTerararyBackground, other.onTerararyBackground, t)!,

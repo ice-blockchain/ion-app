@@ -42,7 +42,7 @@ class BookmarksFilterTile extends ConsumerWidget {
         padding: EdgeInsets.symmetric(horizontal: 10.0.s),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: context.theme.appColors.terararyBackground,
+          color: context.theme.appColors.tertararyBackground,
           borderRadius: BorderRadius.circular(12.0.s),
           border: Border.all(color: borderColor),
         ),

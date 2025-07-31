@@ -32,7 +32,7 @@ class CreatorListItem extends ConsumerWidget {
         title: Text(userMetadataEntity.data.displayName),
         subtitle: Text(prefixUsername(username: userMetadataEntity.data.name, context: context)),
         pubkey: userMetadataEntity.masterPubkey,
-        backgroundColor: context.theme.appColors.terararyBackground,
+        backgroundColor: context.theme.appColors.tertararyBackground,
         contentPadding: EdgeInsets.all(12.0.s),
         borderRadius: BorderRadius.circular(16.0.s),
         trailing: FollowButton(onPressed: onPressed, following: selected),

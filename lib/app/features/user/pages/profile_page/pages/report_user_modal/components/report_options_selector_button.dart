@@ -32,7 +32,7 @@ class ReportOptionsSelectorButton extends StatelessWidget {
           ? context.theme.appColors.attentionRed
           : context.theme.appColors.strokeElements,
       leadingIcon: ButtonIconFrame(
-        color: context.theme.appColors.terararyBackground,
+        color: context.theme.appColors.tertararyBackground,
         icon: (state.value?.iconAsset ?? Assets.svg.iconSelect2).icon(
           size: 20.0.s,
           color: context.theme.appColors.secondaryText,

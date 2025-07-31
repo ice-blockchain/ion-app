@@ -33,7 +33,7 @@ class CoinsGroupItem extends HookConsumerWidget {
       key: Key(coinsGroup.symbolGroup),
       title: Text(coinsGroup.name),
       subtitle: Text(coinsGroup.abbreviation),
-      backgroundColor: context.theme.appColors.terararyBackground,
+      backgroundColor: context.theme.appColors.tertararyBackground,
       leading: CoinIconWidget.big(coinsGroup.iconUrl),
       onTap: onTap,
       trailing: Column(

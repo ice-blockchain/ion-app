@@ -26,7 +26,7 @@ class ManageNftNetworkItem extends ConsumerWidget {
 
         return ListItem(
           title: Text(networkData?.displayName ?? ''),
-          backgroundColor: context.theme.appColors.terararyBackground,
+          backgroundColor: context.theme.appColors.tertararyBackground,
           leading: NetworkIconWidget(
             size: 40.0.s,
             imageUrl: networkData?.image ?? '',

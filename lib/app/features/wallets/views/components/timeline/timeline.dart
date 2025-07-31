@@ -17,7 +17,7 @@ class Timeline extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.0.s),
-        color: context.theme.appColors.terararyBackground,
+        color: context.theme.appColors.tertararyBackground,
       ),
       padding: EdgeInsets.all(12.0.s),
       child: Column(

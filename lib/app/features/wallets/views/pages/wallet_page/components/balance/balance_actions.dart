@@ -53,7 +53,7 @@ class BalanceActions extends HookConsumerWidget {
               context.i18n.wallet_receive,
             ),
             style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(context.theme.appColors.terararyBackground),
+              backgroundColor: WidgetStateProperty.all(context.theme.appColors.tertararyBackground),
               side: WidgetStateProperty.all(
                 BorderSide(
                   color: context.theme.appColors.onTerararyFill,

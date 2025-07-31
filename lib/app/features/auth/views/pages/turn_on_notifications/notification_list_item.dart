@@ -48,7 +48,7 @@ class NotificationListItem extends StatelessWidget {
         trailing: Text(
           time,
           style: context.theme.appTextThemes.caption3.copyWith(
-            color: context.theme.appColors.terararyBackground,
+            color: context.theme.appColors.tertararyBackground,
           ),
         ),
         trailingPadding: EdgeInsetsDirectional.only(start: 6.0.s),

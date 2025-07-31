@@ -29,7 +29,7 @@ class ProfileAction extends StatelessWidget {
       fixedSize: Size(36.0.s, 24.0.s),
       borderRadius: BorderRadius.circular(20.0.s),
       borderColor: colors.onTerararyFill,
-      backgroundColor: colors.terararyBackground,
+      backgroundColor: colors.tertararyBackground,
       tintColor: colors.primaryText,
       icon: assetName.icon(
         size: iconSize,

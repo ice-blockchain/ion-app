@@ -72,7 +72,7 @@ class SelectArticleTopicsItem extends HookConsumerWidget {
                 height: 36.0.s,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: context.theme.appColors.terararyBackground,
+                  color: context.theme.appColors.tertararyBackground,
                   borderRadius: BorderRadius.all(Radius.circular(10.0.s)),
                   border: Border.all(
                     width: 1.0.s,

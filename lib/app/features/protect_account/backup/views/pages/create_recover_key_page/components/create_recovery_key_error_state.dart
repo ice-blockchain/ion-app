@@ -27,7 +27,7 @@ class CreateRecoveryKeyErrorState extends ConsumerWidget {
                 padding: EdgeInsets.symmetric(vertical: 62.0.s),
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: colors.terararyBackground,
+                    color: colors.tertararyBackground,
                     border: Border.all(color: colors.onTerararyFill),
                     borderRadius: BorderRadius.circular(16.0.s),
                   ),

@@ -41,7 +41,7 @@ class NetworkItem extends ConsumerWidget {
         ],
       ),
       subtitle: Text(coinInWallet.coin.abbreviation),
-      backgroundColor: context.theme.appColors.terararyBackground,
+      backgroundColor: context.theme.appColors.tertararyBackground,
       leading: CoinIconWithNetwork.small(
         coinInWallet.coin.iconUrl,
         network: network,

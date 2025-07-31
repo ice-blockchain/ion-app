@@ -34,7 +34,7 @@ class DeleteAdminButton extends ConsumerWidget {
           context.i18n.channel_create_admin_type_remove,
           style: textStyles.body,
         ),
-        backgroundColor: colors.terararyBackground,
+        backgroundColor: colors.tertararyBackground,
         onTap: () async {
           final isDeleted = await showSimpleBottomSheet<bool>(
             context: context,

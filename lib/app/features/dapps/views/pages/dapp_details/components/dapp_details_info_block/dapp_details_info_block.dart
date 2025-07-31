@@ -29,7 +29,7 @@ class DappDetailsInfoBlock extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.0.s),
-          color: context.theme.appColors.terararyBackground,
+          color: context.theme.appColors.tertararyBackground,
         ),
         padding: EdgeInsets.symmetric(vertical: 8.0.s, horizontal: 12.0.s),
         child: Row(

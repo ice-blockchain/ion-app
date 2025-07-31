@@ -54,7 +54,7 @@ class _WalletSwitcherButton extends StatelessWidget {
       ),
       // leadingIconOffset: 6.0.s,
       // trailingIconOffset: 6.0.s,
-      backgroundColor: context.theme.appColors.terararyBackground,
+      backgroundColor: context.theme.appColors.tertararyBackground,
       label: Text(
         title,
         style: context.theme.appTextThemes.subtitle2.copyWith(

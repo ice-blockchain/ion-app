@@ -52,7 +52,7 @@ class WalletTile extends ConsumerWidget {
         ),
         trailing: isSelected == true ? Assets.svg.iconBlockCheckboxOn.icon() : null,
         contentPadding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 11.0.s),
-        backgroundColor: context.theme.appColors.terararyBackground,
+        backgroundColor: context.theme.appColors.tertararyBackground,
       ),
     );
   }

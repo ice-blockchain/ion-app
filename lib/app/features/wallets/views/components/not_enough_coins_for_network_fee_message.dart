@@ -51,7 +51,7 @@ class NotEnoughMoneyForNetworkFeeMessage extends HookConsumerWidget {
             width: 1.0.s,
           ),
         ),
-        color: colors.terararyBackground,
+        color: colors.tertararyBackground,
       ),
       child: RichText(
         text: TextSpan(

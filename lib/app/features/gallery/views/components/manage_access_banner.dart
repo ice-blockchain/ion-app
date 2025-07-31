@@ -26,7 +26,7 @@ class ManageAccessBanner extends ConsumerWidget {
     final appName = ref.watch(appInfoProvider).value?.appName ?? '';
 
     return ColoredBox(
-      color: appColors.terararyBackground,
+      color: appColors.tertararyBackground,
       child: Padding(
         padding: EdgeInsets.symmetric(
           vertical: 8.0.s,

@@ -51,7 +51,7 @@ class _AmountDisplay extends HookWidget {
         Container(
           decoration: BoxDecoration(
             color: isMe
-                ? context.theme.appColors.terararyBackground
+                ? context.theme.appColors.tertararyBackground
                 : context.theme.appColors.onSecondaryBackground,
             borderRadius: BorderRadius.circular(4.0.s),
           ),

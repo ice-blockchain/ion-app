@@ -41,7 +41,7 @@ class TransactionListHeaderItem extends StatelessWidget {
         child: Ink(
           height: TransactionListConstants.headerItemHeight,
           decoration: BoxDecoration(
-            color: context.theme.appColors.terararyBackground,
+            color: context.theme.appColors.tertararyBackground,
             borderRadius: borderRadius,
             border: Border.all(
               color: _getBorderColor(context),

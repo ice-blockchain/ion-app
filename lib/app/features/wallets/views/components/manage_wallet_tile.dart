@@ -58,7 +58,7 @@ class ManageWalletTile extends ConsumerWidget {
           bottom: 11.0.s,
           end: 12.0.s,
         ),
-        backgroundColor: context.theme.appColors.terararyBackground,
+        backgroundColor: context.theme.appColors.tertararyBackground,
       ),
     );
   }

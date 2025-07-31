@@ -85,7 +85,7 @@ class _CancelMoneyRequestButton extends ConsumerWidget {
       opacity: isDisabled ? 0.2 : 1.0,
       child: Button.compact(
         type: ButtonType.outlined,
-        backgroundColor: context.theme.appColors.terararyBackground,
+        backgroundColor: context.theme.appColors.tertararyBackground,
         minimumSize: RequestedMoneyMessageButton._defaultMinimumSize,
         disabled: isDisabled,
         label: isLoading

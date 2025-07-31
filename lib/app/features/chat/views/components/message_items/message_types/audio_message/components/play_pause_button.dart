@@ -25,7 +25,7 @@ class _PlayPauseButton extends ConsumerWidget {
       child: Container(
         padding: EdgeInsets.all(8.0.s),
         decoration: BoxDecoration(
-          color: context.theme.appColors.terararyBackground,
+          color: context.theme.appColors.tertararyBackground,
           borderRadius: BorderRadius.circular(12.0.s),
           border: Border.all(
             color: context.theme.appColors.onTerararyFill,

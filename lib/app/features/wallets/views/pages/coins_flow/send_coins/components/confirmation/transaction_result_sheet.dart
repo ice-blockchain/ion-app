@@ -89,7 +89,7 @@ class TransactionResultSheet extends ConsumerWidget {
                         leadingIcon: icons.iconButtonDetails.icon(
                           color: context.theme.appColors.secondaryText,
                         ),
-                        backgroundColor: context.theme.appColors.terararyBackground,
+                        backgroundColor: context.theme.appColors.tertararyBackground,
                         type: ButtonType.outlined,
                         mainAxisSize: MainAxisSize.max,
                         onPressed: () {
@@ -104,7 +104,7 @@ class TransactionResultSheet extends ConsumerWidget {
                         final transactionData = ref.read(transactionNotifierProvider)!;
                         shareContent(transactionData.transactionExplorerUrl);
                       },
-                      backgroundColor: context.theme.appColors.terararyBackground,
+                      backgroundColor: context.theme.appColors.tertararyBackground,
                       leadingIcon: icons.iconButtonShare.icon(),
                     ),
                   ],

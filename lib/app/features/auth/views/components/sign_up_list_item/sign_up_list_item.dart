@@ -33,7 +33,7 @@ class SignUpListItem extends StatelessWidget {
         width: 48.0.s,
         height: 68.0.s,
         decoration: ShapeDecoration(
-          color: context.theme.appColors.terararyBackground,
+          color: context.theme.appColors.tertararyBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusDirectional.only(
               topStart: Radius.circular(12.0.s),
