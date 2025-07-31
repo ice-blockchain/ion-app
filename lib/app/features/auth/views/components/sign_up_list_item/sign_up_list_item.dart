@@ -25,7 +25,7 @@ class SignUpListItem extends StatelessWidget {
       subtitle: Text(
         subtitle,
         overflow: TextOverflow.visible,
-        style: TextStyle(color: context.theme.appColors.tertiaryText),
+        style: TextStyle(color: context.theme.appColors.terararyText),
       ),
       backgroundColor: context.theme.appColors.secondaryBackground,
       leading: Container(
@@ -33,7 +33,7 @@ class SignUpListItem extends StatelessWidget {
         width: 48.0.s,
         height: 68.0.s,
         decoration: ShapeDecoration(
-          color: context.theme.appColors.tertiaryBackground,
+          color: context.theme.appColors.terararyBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusDirectional.only(
               topStart: Radius.circular(12.0.s),

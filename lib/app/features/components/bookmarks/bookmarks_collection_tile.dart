@@ -46,7 +46,7 @@ class BookmarksCollectionTile extends ConsumerWidget {
         containerSize: 36.0.s,
         color: context.theme.appColors.secondaryBackground,
         borderRadius: BorderRadius.circular(12.0.s),
-        border: Border.all(color: context.theme.appColors.onTertiaryFill),
+        border: Border.all(color: context.theme.appColors.onTerararyFill),
         icon: Assets.svg.iconFolderOpen.icon(color: context.theme.appColors.primaryAccent),
       ),
       title: Text(
@@ -74,7 +74,7 @@ class BookmarksCollectionTile extends ConsumerWidget {
             )
           : BookmarksCollectionTileEditAction(data: entity.data),
       contentPadding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 12.0.s),
-      backgroundColor: context.theme.appColors.tertiaryBackground,
+      backgroundColor: context.theme.appColors.terararyBackground,
     );
   }
 }

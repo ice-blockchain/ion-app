@@ -70,7 +70,7 @@ class _ListItemDApp extends ListItem {
     return context.theme.appTextThemes.caption.copyWith(
       color: (isSelected ?? false)
           ? context.theme.appColors.onPrimaryAccent
-          : context.theme.appColors.tertiaryText,
+          : context.theme.appColors.terararyText,
     );
   }
 }

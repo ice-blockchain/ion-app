@@ -37,7 +37,7 @@ class CoinAddressTile extends HookConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: context.theme.appColors.tertiaryBackground,
+        color: context.theme.appColors.terararyBackground,
         borderRadius: BorderRadius.circular(16.0.s),
       ),
       padding: EdgeInsets.symmetric(
@@ -78,7 +78,7 @@ class CoinAddressTile extends HookConsumerWidget {
                 Text(
                   shortenAddress(address),
                   style: context.theme.appTextThemes.caption.copyWith(
-                    color: context.theme.appColors.tertiaryText,
+                    color: context.theme.appColors.terararyText,
                   ),
                 ),
               ],

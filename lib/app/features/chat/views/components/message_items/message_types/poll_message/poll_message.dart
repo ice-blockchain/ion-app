@@ -79,7 +79,7 @@ class PollMessage extends HookWidget {
               final option = mockPoll.options[index];
               return Button.compact(
                 type: ButtonType.outlined,
-                backgroundColor: context.theme.appColors.tertiaryBackground,
+                backgroundColor: context.theme.appColors.terararyBackground,
                 label: Text(
                   option.option,
                   style: context.theme.appTextThemes.caption2

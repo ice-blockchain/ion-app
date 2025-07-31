@@ -37,9 +37,9 @@ class Favourites extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16.0.s),
-              color: context.theme.appColors.tertiaryBackground,
+              color: context.theme.appColors.terararyBackground,
               border: Border.all(
-                color: context.theme.appColors.onTertiaryFill,
+                color: context.theme.appColors.onTerararyFill,
               ),
             ),
             child: Row(

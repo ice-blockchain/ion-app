@@ -60,7 +60,7 @@ class CoinUsdAmount extends HookConsumerWidget {
         Text(
           displayOrder == BalanceDisplayOrder.coinUsd ? usdText : coinText,
           style: context.theme.appTextThemes.subtitle2.copyWith(
-            color: context.theme.appColors.onTertiaryBackground,
+            color: context.theme.appColors.onTerararyBackground,
           ),
         ),
       ],

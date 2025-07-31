@@ -20,7 +20,7 @@ class ChannelDetailTabsHeader extends ConsumerWidget {
       isScrollable: true,
       labelPadding: EdgeInsets.symmetric(horizontal: 10.0.s),
       labelColor: context.theme.appColors.primaryAccent,
-      unselectedLabelColor: context.theme.appColors.tertiaryText,
+      unselectedLabelColor: context.theme.appColors.terararyText,
       tabs: ChannelDetailTab.values.map((tabType) {
         return _TabHeaderItem(tabType: tabType);
       }).toList(),

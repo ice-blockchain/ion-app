@@ -10,7 +10,7 @@ class IonPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: context.theme.appColors.tertiaryBackground,
+      color: context.theme.appColors.terararyBackground,
       child: Center(
         child: Assets.svg.iconFeedUnavailable.icon(
           size: 40.0.s,

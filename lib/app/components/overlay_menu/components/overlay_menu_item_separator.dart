@@ -10,7 +10,7 @@ class OverlayMenuItemSeparator extends StatelessWidget {
     return Container(
       height: 0.5.s,
       width: double.infinity,
-      color: context.theme.appColors.onTertiaryFill,
+      color: context.theme.appColors.onTerararyFill,
     );
   }
 }

@@ -43,7 +43,7 @@ class ConversationArchiveButton extends ConsumerWidget {
           Assets.svg.iconChatArchive.icon(
             color: conversationsToManage.isNotEmpty
                 ? context.theme.appColors.primaryAccent
-                : context.theme.appColors.tertiaryText,
+                : context.theme.appColors.terararyText,
             size: 20.0.s,
           ),
           SizedBox(width: 4.0.s),
@@ -57,7 +57,7 @@ class ConversationArchiveButton extends ConsumerWidget {
               style: context.theme.appTextThemes.body2.copyWith(
                 color: conversationsToManage.isNotEmpty
                     ? context.theme.appColors.primaryAccent
-                    : context.theme.appColors.tertiaryText,
+                    : context.theme.appColors.terararyText,
               ),
             ),
           ),

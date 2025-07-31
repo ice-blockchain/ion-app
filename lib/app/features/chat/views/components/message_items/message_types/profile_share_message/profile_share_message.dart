@@ -87,7 +87,7 @@ class ProfileShareMessage extends HookConsumerWidget {
                           SizedBox(height: 8.0.s),
                           Button.compact(
                             type: ButtonType.outlined,
-                            backgroundColor: context.theme.appColors.tertiaryBackground,
+                            backgroundColor: context.theme.appColors.terararyBackground,
                             onPressed: () {
                               ProfileRoute(pubkey: profilePubkey).push<void>(context);
                             },
@@ -147,7 +147,7 @@ class _ProfileSummary extends StatelessWidget {
           style: context.theme.appTextThemes.body2.copyWith(
             color: isMe
                 ? context.theme.appColors.onPrimaryAccent
-                : context.theme.appColors.onTertiaryBackground,
+                : context.theme.appColors.onTerararyBackground,
           ),
         ),
         pubkey: userMetadata.masterPubkey,

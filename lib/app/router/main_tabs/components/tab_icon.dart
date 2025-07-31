@@ -22,7 +22,7 @@ class TabIcon extends StatelessWidget {
         fit: BoxFit.none,
         color: isSelected
             ? context.theme.appColors.primaryAccent
-            : context.theme.appColors.tertiaryText,
+            : context.theme.appColors.terararyText,
       ),
     );
   }

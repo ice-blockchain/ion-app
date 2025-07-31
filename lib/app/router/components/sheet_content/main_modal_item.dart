@@ -39,7 +39,7 @@ class MainModalItem extends StatelessWidget {
       subtitle: Text(
         item.getDescription(context),
         style: context.theme.appTextThemes.caption.copyWith(
-          color: context.theme.appColors.tertiaryText,
+          color: context.theme.appColors.terararyText,
         ),
         maxLines: 2,
       ),

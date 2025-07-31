@@ -78,8 +78,8 @@ class CategoriesCollection extends StatelessWidget {
                   icon: DAppsCategory.values[index].icon,
                   size: itemWidth,
                   type: ButtonType.outlined,
-                  backgroundColor: context.theme.appColors.tertiaryBackground,
-                  borderColor: context.theme.appColors.onTertiaryFill,
+                  backgroundColor: context.theme.appColors.terararyBackground,
+                  borderColor: context.theme.appColors.onTerararyFill,
                   borderRadius: BorderRadius.circular(12.0.s),
                 ),
                 Text(

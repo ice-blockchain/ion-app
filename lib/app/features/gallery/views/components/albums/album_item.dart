@@ -47,7 +47,7 @@ class AlbumItem extends StatelessWidget {
                     Text(
                       '$assetCount',
                       style: context.theme.appTextThemes.caption2.copyWith(
-                        color: context.theme.appColors.tertiaryText,
+                        color: context.theme.appColors.terararyText,
                       ),
                     ),
                   ],
@@ -56,7 +56,7 @@ class AlbumItem extends StatelessWidget {
               if (isSelected)
                 Assets.svg.iconBlockCheckboxOn.icon()
               else
-                Assets.svg.iconBlockCheckboxOff.icon(color: context.theme.appColors.onTertiaryFill),
+                Assets.svg.iconBlockCheckboxOff.icon(color: context.theme.appColors.onTerararyFill),
             ],
           ),
         ),

@@ -31,7 +31,7 @@ class TimeAgo extends ConsumerWidget {
       formattedTime,
       style: style ??
           context.theme.appTextThemes.caption.copyWith(
-            color: context.theme.appColors.tertiaryText,
+            color: context.theme.appColors.terararyText,
           ),
     );
   }

@@ -22,14 +22,14 @@ class SuggestionsContainerEmpty extends ConsumerWidget {
             Padding(
               padding: EdgeInsetsDirectional.only(end: 8.0.s),
               child: Assets.svg.iconFieldSearch.icon(
-                color: context.theme.appColors.tertiaryText,
+                color: context.theme.appColors.terararyText,
                 size: 18.0.s,
               ),
             ),
             Text(
               context.i18n.suggestions_empty_description,
               style: context.theme.appTextThemes.body2.copyWith(
-                color: context.theme.appColors.tertiaryText,
+                color: context.theme.appColors.terararyText,
               ),
             ),
           ],

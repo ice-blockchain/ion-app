@@ -32,8 +32,8 @@ class FavouriteIcon extends StatelessWidget {
       onPressed: () {
         onTap?.call();
       },
-      backgroundColor: context.theme.appColors.tertiaryBackground,
-      borderColor: context.theme.appColors.onTertiaryFill,
+      backgroundColor: context.theme.appColors.terararyBackground,
+      borderColor: context.theme.appColors.onTerararyFill,
       icon: SvgPicture.asset(
         iconPath,
         width: 24.0.s,

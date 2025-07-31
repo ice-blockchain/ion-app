@@ -29,11 +29,11 @@ class RecoveryKeyOption extends StatelessWidget {
     return CopyBuilder(
       defaultIcon: iconAsset.icon(
         size: 16.0.s,
-        color: context.theme.appColors.onTertiaryBackground,
+        color: context.theme.appColors.onTerararyBackground,
       ),
       copiedIcon: Assets.svg.iconBlockCheckGreen.icon(size: 16.0.s),
       defaultText: title,
-      defaultBorderColor: context.theme.appColors.onTertiaryFill,
+      defaultBorderColor: context.theme.appColors.onTerararyFill,
       builder: (context, onCopy, content) {
         return GestureDetector(
           onTap: enabled
@@ -57,7 +57,7 @@ class RecoveryKeyOption extends StatelessWidget {
                       Text(
                         content.text,
                         style: textTheme.caption2.copyWith(
-                          color: context.theme.appColors.onTertiaryBackground,
+                          color: context.theme.appColors.onTerararyBackground,
                         ),
                       ),
                     ],

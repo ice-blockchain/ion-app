@@ -118,7 +118,7 @@ class _StoringKeysWarning extends StatelessWidget {
     final locale = context.i18n;
 
     return RoundedCard.outlined(
-      backgroundColor: context.theme.appColors.onTertiaryFill,
+      backgroundColor: context.theme.appColors.onTerararyFill,
       child: ListItem(
         contentPadding: EdgeInsets.symmetric(horizontal: 10.0.s),
         backgroundColor: context.theme.appColors.secondaryBackground,

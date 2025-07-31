@@ -32,7 +32,7 @@ class ReceiveInfoCard extends StatelessWidget {
         Expanded(
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: context.theme.appColors.tertiaryBackground,
+              color: context.theme.appColors.terararyBackground,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(

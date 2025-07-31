@@ -189,10 +189,10 @@ class _DocumentIcon extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(8.0.s),
       decoration: BoxDecoration(
-        color: context.theme.appColors.tertiaryBackground,
+        color: context.theme.appColors.terararyBackground,
         borderRadius: BorderRadius.circular(12.0.s),
         border: Border.all(
-          color: context.theme.appColors.onTertiaryFill,
+          color: context.theme.appColors.onTerararyFill,
           width: 1.0.s,
         ),
       ),

@@ -209,7 +209,7 @@ class CommunityRecentChatTile extends ConsumerWidget {
         height: 40.0.s,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: context.theme.appColors.onTertiaryFill,
+          color: context.theme.appColors.onTerararyFill,
           borderRadius: BorderRadius.circular(12.0.s),
         ),
         child: Assets.svg.iconChannelEmptychannel.icon(

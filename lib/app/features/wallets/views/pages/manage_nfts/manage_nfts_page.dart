@@ -33,7 +33,7 @@ class ManageNftsPage extends HookConsumerWidget {
               IconButton(
                 icon: Assets.svg.iconSheetClose.icon(
                   size: NavigationAppBar.actionButtonSide,
-                  color: context.theme.appColors.tertiaryText,
+                  color: context.theme.appColors.terararyText,
                 ),
                 onPressed: context.pop,
               ),

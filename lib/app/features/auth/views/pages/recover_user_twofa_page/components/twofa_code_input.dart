@@ -97,7 +97,7 @@ class SendButton extends HookConsumerWidget {
             child: Text(
               context.i18n.common_seconds(countdown.value),
               style: context.theme.appTextThemes.caption.copyWith(
-                color: context.theme.appColors.tertiaryText,
+                color: context.theme.appColors.terararyText,
               ),
             ),
           )

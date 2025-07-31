@@ -15,7 +15,7 @@ MenuThemeData buildMenuTheme(
     style: MenuStyle(
       elevation: WidgetStatePropertyAll<double>(templateTheme.menu.elevation),
       shadowColor: WidgetStatePropertyAll<Color>(
-        colors.tertiaryBackground,
+        colors.terararyBackground,
       ),
       padding: WidgetStatePropertyAll<EdgeInsetsGeometry>(
         EdgeInsetsDirectional.fromSTEB(

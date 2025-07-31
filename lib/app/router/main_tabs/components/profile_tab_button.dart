@@ -35,12 +35,12 @@ class ProfileTabButton extends ConsumerWidget {
           height: avatarSize + 5.0.s,
           width: avatarSize + 5.0.s,
           decoration: BoxDecoration(
-            color: context.theme.appColors.tertiaryBackground,
+            color: context.theme.appColors.terararyBackground,
             border: Border.all(
               width: 1.2.s,
               color: isSelected
                   ? context.theme.appColors.primaryAccent
-                  : context.theme.appColors.tertiaryText,
+                  : context.theme.appColors.terararyText,
             ),
             borderRadius: BorderRadius.circular(6.0.s),
           ),

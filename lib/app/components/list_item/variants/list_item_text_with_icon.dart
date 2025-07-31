@@ -27,7 +27,7 @@ class _ListItemTextWithIcon extends ListItem {
 
   @override
   Color _getBackgroundColor(BuildContext context) {
-    return context.theme.appColors.tertiaryBackground;
+    return context.theme.appColors.terararyBackground;
   }
 
   @override

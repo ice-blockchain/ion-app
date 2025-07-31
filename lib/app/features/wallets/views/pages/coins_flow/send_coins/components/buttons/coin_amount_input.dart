@@ -94,7 +94,7 @@ class CoinAmountInput extends HookWidget {
                     formatUSD(balanceUSD!),
                   ),
                   style: textTheme.caption2.copyWith(
-                    color: colors.tertiaryText,
+                    color: colors.terararyText,
                   ),
                 ),
               ),

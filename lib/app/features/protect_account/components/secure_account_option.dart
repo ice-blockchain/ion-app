@@ -37,10 +37,10 @@ class SecureAccountOption extends ConsumerWidget {
 
     return ListItem(
       title: Text(title),
-      backgroundColor: context.theme.appColors.tertiaryBackground,
+      backgroundColor: context.theme.appColors.terararyBackground,
       leading: Button.icon(
         backgroundColor: context.theme.appColors.secondaryBackground,
-        borderColor: context.theme.appColors.onTertiaryFill,
+        borderColor: context.theme.appColors.onTerararyFill,
         borderRadius: BorderRadius.all(Radius.circular(12.0.s)),
         type: ButtonType.menuInactive,
         size: 36.0.s,

@@ -87,7 +87,7 @@ class _OptionItem extends StatelessWidget {
       backgroundColor: context.theme.appColors.secondaryBackground,
       leading: Button.icon(
         backgroundColor: context.theme.appColors.secondaryBackground,
-        borderColor: context.theme.appColors.onTertiaryFill,
+        borderColor: context.theme.appColors.onTerararyFill,
         borderRadius: BorderRadius.all(
           Radius.circular(10.0.s),
         ),

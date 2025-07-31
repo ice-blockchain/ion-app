@@ -29,11 +29,11 @@ class CodeBlockTypeItem extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: isSelected
-              ? context.theme.appColors.onTertiaryFill
-              : context.theme.appColors.tertiaryBackground,
+              ? context.theme.appColors.onTerararyFill
+              : context.theme.appColors.terararyBackground,
           borderRadius: BorderRadius.circular(12.0.s),
           border: Border.all(
-            color: context.theme.appColors.onTertiaryFill,
+            color: context.theme.appColors.onTerararyFill,
           ),
         ),
         child: Row(
@@ -43,7 +43,7 @@ class CodeBlockTypeItem extends StatelessWidget {
               style: context.theme.appTextThemes.caption.copyWith(
                 color: isSelected
                     ? context.theme.appColors.primaryAccent
-                    : context.theme.appColors.tertiaryText,
+                    : context.theme.appColors.terararyText,
               ),
             ),
             if (isSelected) ...[

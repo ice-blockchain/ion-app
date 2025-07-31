@@ -202,7 +202,7 @@ class _TextInputSection extends HookConsumerWidget {
                               child: Text(
                                 createOption.getPlaceholder(context),
                                 style: context.theme.appTextThemes.body2.copyWith(
-                                  color: context.theme.appColors.tertiaryText,
+                                  color: context.theme.appColors.terararyText,
                                 ),
                               ),
                             ),

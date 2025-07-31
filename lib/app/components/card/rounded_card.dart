@@ -51,7 +51,7 @@ class RoundedCard extends StatelessWidget {
       padding: padding ?? EdgeInsets.all(12.0.s),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.0.s),
-        color: backgroundColor ?? context.theme.appColors.tertiaryBackground,
+        color: backgroundColor ?? context.theme.appColors.terararyBackground,
         border: isOutlined
             ? Border.all(color: borderColor ?? context.theme.appColors.onSecondaryBackground)
             : null,

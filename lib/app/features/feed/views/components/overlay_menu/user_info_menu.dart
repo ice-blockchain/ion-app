@@ -53,7 +53,7 @@ class UserInfoMenu extends ConsumerWidget {
     ref.displayErrors(reportNotifierProvider);
 
     final icon = Assets.svg.iconMorePopup.icon(
-      color: iconColor ?? context.theme.appColors.onTertiaryBackground,
+      color: iconColor ?? context.theme.appColors.onTerararyBackground,
       size: iconSize,
     );
 
@@ -129,7 +129,7 @@ class _FollowUserMenuItem extends ConsumerWidget {
           : context.i18n.post_menu_follow_nickname(username),
       icon: Assets.svg.iconFollowuser.icon(
         size: UserInfoMenu.menuIconSize,
-        color: context.theme.appColors.onTertiaryBackground,
+        color: context.theme.appColors.onTerararyBackground,
       ),
       onPressed: () {
         closeMenu();

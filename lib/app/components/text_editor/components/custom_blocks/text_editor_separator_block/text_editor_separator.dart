@@ -52,7 +52,7 @@ class TextEditorSeparator extends HookWidget {
                     Container(
                       width: separatorWidth,
                       height: separatorHeight,
-                      color: context.theme.appColors.onTertiaryBackground,
+                      color: context.theme.appColors.onTerararyBackground,
                     ),
                     SizedBox(width: separatorsPadding),
                     TextEditorSeparatorDot(size: smallDotSize),
@@ -64,7 +64,7 @@ class TextEditorSeparator extends HookWidget {
                     Container(
                       width: separatorWidth,
                       height: separatorHeight,
-                      color: context.theme.appColors.onTertiaryBackground,
+                      color: context.theme.appColors.onTerararyBackground,
                     ),
                   ],
                 ),

@@ -36,7 +36,7 @@ class BackupOption extends StatelessWidget {
 
     return ListItem(
       title: Text(title),
-      backgroundColor: context.theme.appColors.tertiaryBackground,
+      backgroundColor: context.theme.appColors.terararyBackground,
       subtitle: Text(
         subtitle,
         maxLines: 2,

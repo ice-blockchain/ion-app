@@ -22,12 +22,12 @@ class PollCloseButton extends StatelessWidget {
           size: 14.4.s,
           color: context.theme.appColors.primaryText,
         ),
-        borderColor: context.theme.appColors.onTertiaryFill,
+        borderColor: context.theme.appColors.onTerararyFill,
         style: OutlinedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(9.6.s)),
           ),
-          backgroundColor: context.theme.appColors.tertiaryBackground,
+          backgroundColor: context.theme.appColors.terararyBackground,
         ),
         onPressed: onClosePress,
       ),

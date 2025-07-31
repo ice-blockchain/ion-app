@@ -42,7 +42,7 @@ class TextEditorCodeBuilder extends EmbedBuilder {
         color: context.theme.appColors.secondaryBackground,
         borderRadius: BorderRadius.circular(16.0.s),
         border: Border.all(
-          color: context.theme.appColors.onTertiaryFill,
+          color: context.theme.appColors.onTerararyFill,
         ),
       ),
       child: Column(

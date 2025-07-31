@@ -34,7 +34,7 @@ class EditMessageInfo extends HookConsumerWidget {
                   Text(
                     editMessage.contentDescription,
                     style: context.theme.appTextThemes.body2.copyWith(
-                      color: context.theme.appColors.onTertiaryBackground,
+                      color: context.theme.appColors.onTerararyBackground,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -46,7 +46,7 @@ class EditMessageInfo extends HookConsumerWidget {
               onTap: ref.read(selectedEditMessageProvider.notifier).clear,
               child: Assets.svg.iconSheetClose.icon(
                 size: 20.0.s,
-                color: context.theme.appColors.tertiaryText,
+                color: context.theme.appColors.terararyText,
               ),
             ),
           ],

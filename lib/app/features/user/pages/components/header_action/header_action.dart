@@ -33,12 +33,12 @@ class HeaderAction extends StatelessWidget {
   Widget build(BuildContext context) {
     final interpolatedButtonSize = lerpDouble(buttonSize, iconSize, opacity)!;
     final interpolatedBackgroundColor = Color.lerp(
-      context.theme.appColors.tertiaryBackground,
+      context.theme.appColors.terararyBackground,
       context.theme.appColors.secondaryBackground,
       opacity,
     )!;
     final interpolatedBorderColor = Color.lerp(
-      context.theme.appColors.onTertiaryFill,
+      context.theme.appColors.onTerararyFill,
       context.theme.appColors.secondaryBackground,
       opacity,
     )!;

@@ -22,7 +22,7 @@ class HorizontalSeparator extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               context.theme.appColors.secondaryBackground,
-              context.theme.appColors.onTertiaryFill,
+              context.theme.appColors.onTerararyFill,
               context.theme.appColors.secondaryBackground,
             ],
             stops: const [

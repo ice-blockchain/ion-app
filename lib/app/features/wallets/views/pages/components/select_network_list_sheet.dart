@@ -50,7 +50,7 @@ class SelectNetworkListSheet extends StatelessWidget {
                         imageUrl: network.image,
                       ),
                       title: Text(network.displayName),
-                      backgroundColor: context.theme.appColors.tertiaryBackground,
+                      backgroundColor: context.theme.appColors.terararyBackground,
                       onTap: () => onNetworkSelected(network),
                     );
                   },

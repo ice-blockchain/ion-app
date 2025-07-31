@@ -27,7 +27,7 @@ class TwoFaOptionsSelectorButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final iconBorderSize = Border.fromBorderSide(
-      BorderSide(color: context.theme.appColors.onTertiaryFill, width: 1.0.s),
+      BorderSide(color: context.theme.appColors.onTerararyFill, width: 1.0.s),
     );
 
     return Button.dropdown(
@@ -39,7 +39,7 @@ class TwoFaOptionsSelectorButton extends StatelessWidget {
           : context.theme.appColors.strokeElements,
       leadingIcon: ButtonIconFrame(
         containerSize: 30.0.s,
-        color: context.theme.appColors.tertiaryBackground,
+        color: context.theme.appColors.terararyBackground,
         icon: (state.value?.iconAsset ?? Assets.svg.iconSelect2).icon(
           size: 20.0.s,
           color: context.theme.appColors.secondaryText,

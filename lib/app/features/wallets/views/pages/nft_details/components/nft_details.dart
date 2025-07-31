@@ -52,7 +52,7 @@ class NftDetails extends ConsumerWidget {
               Text(
                 context.i18n.common_desc,
                 style: context.theme.appTextThemes.caption3.copyWith(
-                  color: context.theme.appColors.tertiaryText,
+                  color: context.theme.appColors.terararyText,
                 ),
               ),
               SizedBox(height: 4.0.s),

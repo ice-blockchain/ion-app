@@ -84,7 +84,7 @@ class _EditPhoneButton extends StatelessWidget {
       label: Text(locale.two_fa_edit_phone_button),
       minimumSize: Size(0.0.s, 44.0.s),
       leadingIcon: Assets.svg.iconEditLink.icon(size: 24.0.s),
-      borderColor: colors.onTertiaryFill,
+      borderColor: colors.onTerararyFill,
       onPressed: () => PhoneEditRoute().push<void>(context),
     );
   }

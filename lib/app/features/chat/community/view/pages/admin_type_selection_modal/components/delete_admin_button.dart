@@ -34,7 +34,7 @@ class DeleteAdminButton extends ConsumerWidget {
           context.i18n.channel_create_admin_type_remove,
           style: textStyles.body,
         ),
-        backgroundColor: colors.tertiaryBackground,
+        backgroundColor: colors.terararyBackground,
         onTap: () async {
           final isDeleted = await showSimpleBottomSheet<bool>(
             context: context,
@@ -53,13 +53,13 @@ class DeleteAdminButton extends ConsumerWidget {
             color: colors.attentionRed,
           ),
           border: Border.fromBorderSide(
-            BorderSide(color: colors.onTertiaryFill, width: 1.0.s),
+            BorderSide(color: colors.onTerararyFill, width: 1.0.s),
           ),
         ),
         trailing: Padding(
           padding: EdgeInsets.all(8.0.s),
           child: Assets.svg.iconArrowRight.icon(
-            color: colors.tertiaryText,
+            color: colors.terararyText,
           ),
         ),
       ),

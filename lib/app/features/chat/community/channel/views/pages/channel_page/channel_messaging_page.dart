@@ -85,7 +85,7 @@ class ChannelMessagingPage extends HookConsumerWidget {
                           Text(
                             context.i18n.channel_created_message,
                             style: context.theme.appTextThemes.caption2.copyWith(
-                              color: context.theme.appColors.tertiaryText,
+                              color: context.theme.appColors.terararyText,
                             ),
                           ),
                         ],

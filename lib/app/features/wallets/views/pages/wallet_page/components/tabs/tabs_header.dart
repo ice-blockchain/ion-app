@@ -83,7 +83,7 @@ class WalletTabsHeader extends ConsumerWidget {
             child: Padding(
               padding: EdgeInsets.all(UiConstants.hitSlop),
               child: Assets.svg.iconFieldSearch.icon(
-                color: context.theme.appColors.tertiaryText,
+                color: context.theme.appColors.terararyText,
                 size: 20.0.s,
               ),
             ),

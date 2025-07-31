@@ -31,14 +31,14 @@ class RepostAuthorHeader extends ConsumerWidget {
           children: [
             Assets.svg.iconFeedRepost.icon(
               size: 16.0.s,
-              color: context.theme.appColors.onTertiaryBackground,
+              color: context.theme.appColors.onTerararyBackground,
             ),
             SizedBox(width: 4.0.s),
             Flexible(
               child: Text(
                 context.i18n.feed_someone_reposted(name),
                 style: context.theme.appTextThemes.body2.copyWith(
-                  color: context.theme.appColors.onTertiaryBackground,
+                  color: context.theme.appColors.onTerararyBackground,
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,

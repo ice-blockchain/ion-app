@@ -31,7 +31,7 @@ class ModalActionButton extends StatelessWidget {
       onTap: onTap,
       leading: Button.icon(
         backgroundColor: context.theme.appColors.secondaryBackground,
-        borderColor: context.theme.appColors.onTertiaryFill,
+        borderColor: context.theme.appColors.onTerararyFill,
         borderRadius: BorderRadius.all(
           Radius.circular(10.0.s),
         ),
@@ -54,7 +54,7 @@ class ModalActionButton extends StatelessWidget {
         ],
       ),
       trailing: Assets.svg.iconArrowRight.icon(color: context.theme.appColors.primaryText),
-      backgroundColor: context.theme.appColors.tertiaryBackground,
+      backgroundColor: context.theme.appColors.terararyBackground,
     );
   }
 }

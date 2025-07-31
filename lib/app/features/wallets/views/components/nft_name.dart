@@ -34,7 +34,7 @@ class NftName extends StatelessWidget {
           Text(
             '#$rank',
             style: context.theme.appTextThemes.subtitle2.copyWith(
-              color: context.theme.appColors.tertiaryText,
+              color: context.theme.appColors.terararyText,
             ),
           ),
         ],

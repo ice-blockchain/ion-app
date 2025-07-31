@@ -33,7 +33,7 @@ class CoinsGroupItem extends HookConsumerWidget {
       key: Key(coinsGroup.symbolGroup),
       title: Text(coinsGroup.name),
       subtitle: Text(coinsGroup.abbreviation),
-      backgroundColor: context.theme.appColors.tertiaryBackground,
+      backgroundColor: context.theme.appColors.terararyBackground,
       leading: CoinIconWidget.big(coinsGroup.iconUrl),
       onTap: onTap,
       trailing: Column(
@@ -77,7 +77,7 @@ class CoinsGroupItemPlaceholder extends StatelessWidget {
       title: ContainerSkeleton(
         height: 16.0.s,
         width: 101.0.s,
-        skeletonBaseColor: context.theme.appColors.onTertiaryFill,
+        skeletonBaseColor: context.theme.appColors.onTerararyFill,
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,7 +86,7 @@ class CoinsGroupItemPlaceholder extends StatelessWidget {
           ContainerSkeleton(
             height: 12.0.s,
             width: 55.0.s,
-            skeletonBaseColor: context.theme.appColors.onTertiaryFill,
+            skeletonBaseColor: context.theme.appColors.onTerararyFill,
           ),
         ],
       ),
@@ -98,13 +98,13 @@ class CoinsGroupItemPlaceholder extends StatelessWidget {
           ContainerSkeleton(
             height: 16.0.s,
             width: 40.0.s,
-            skeletonBaseColor: context.theme.appColors.onTertiaryFill,
+            skeletonBaseColor: context.theme.appColors.onTerararyFill,
           ),
           SizedBox(height: 6.0.s),
           ContainerSkeleton(
             height: 12.0.s,
             width: 30.0.s,
-            skeletonBaseColor: context.theme.appColors.onTertiaryFill,
+            skeletonBaseColor: context.theme.appColors.onTerararyFill,
           ),
         ],
       ),

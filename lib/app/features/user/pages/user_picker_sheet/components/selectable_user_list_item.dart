@@ -56,7 +56,7 @@ class SelectableUserListItem extends ConsumerWidget {
                     color: context.theme.appColors.success,
                   )
                 : Assets.svg.iconBlockCheckboxOff.icon(
-                    color: context.theme.appColors.onTertiaryFill,
+                    color: context.theme.appColors.onTerararyFill,
                   )
             : null,
       ),

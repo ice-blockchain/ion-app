@@ -25,7 +25,7 @@ class PollVoteItem extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0.s),
           border: Border.all(
-            color: context.theme.appColors.onTertiaryFill,
+            color: context.theme.appColors.onTerararyFill,
           ),
           color: isSelected
               ? context.theme.appColors.secondaryBackground

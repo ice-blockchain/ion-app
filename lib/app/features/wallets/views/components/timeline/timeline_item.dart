@@ -39,7 +39,7 @@ class TimelineItem extends StatelessWidget {
                 colorFilter: ColorFilter.mode(
                   data.isDone
                       ? context.theme.appColors.success
-                      : context.theme.appColors.tertiaryText,
+                      : context.theme.appColors.terararyText,
                   BlendMode.srcIn,
                 ),
               ),
@@ -48,7 +48,7 @@ class TimelineItem extends StatelessWidget {
               TimelineSeparator(
                 color: isNextDone != null && isNextDone!
                     ? context.theme.appColors.success
-                    : context.theme.appColors.tertiaryText,
+                    : context.theme.appColors.terararyText,
               ),
           ],
         ),
@@ -62,7 +62,7 @@ class TimelineItem extends StatelessWidget {
                   style: context.theme.appTextThemes.caption.copyWith(
                     color: data.isDone
                         ? context.theme.appColors.primaryText
-                        : context.theme.appColors.tertiaryText,
+                        : context.theme.appColors.terararyText,
                   ),
                 ),
               ),
