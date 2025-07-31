@@ -56,9 +56,9 @@ class RepliesCounterButton extends HookConsumerWidget {
         child: TextActionButton(
           icon: Assets.svg.iconBlockComment.icon(
             size: 16.0.s,
-            color: color ?? context.theme.appColors.onTertararyBackground,
+            color: color ?? context.theme.appColors.onTertiaryBackground,
           ),
-          textColor: color ?? context.theme.appColors.onTertararyBackground,
+          textColor: color ?? context.theme.appColors.onTertiaryBackground,
           activeIcon: Assets.svg.iconBlockCommenton.icon(
             size: 16.0.s,
             color: context.theme.appColors.primaryAccent,
@@ -66,9 +66,9 @@ class RepliesCounterButton extends HookConsumerWidget {
           activeTextColor: context.theme.appColors.primaryAccent,
           disabledIcon: Assets.svg.iconBlockComment.icon(
             size: 16.0.s,
-            color: context.theme.appColors.tertararyText,
+            color: context.theme.appColors.tertiaryText,
           ),
-          disabledTextColor: context.theme.appColors.tertararyText,
+          disabledTextColor: context.theme.appColors.tertiaryText,
           value: formatDoubleCompact(repliesCount),
           state: switch ((canReply, isReplied)) {
             (false, _) => TextActionButtonState.disabled,

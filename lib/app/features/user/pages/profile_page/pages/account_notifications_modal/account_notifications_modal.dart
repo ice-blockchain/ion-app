@@ -142,7 +142,7 @@ class AccountNotificationsModal extends HookConsumerWidget {
                       color: colors.primaryAccent,
                     ),
                     border: Border.fromBorderSide(
-                      BorderSide(color: colors.onTerararyFill, width: 1.0.s),
+                      BorderSide(color: colors.onTertiaryFill, width: 1.0.s),
                     ),
                   ),
                   trailing: isSelected
@@ -150,7 +150,7 @@ class AccountNotificationsModal extends HookConsumerWidget {
                           color: colors.success,
                         )
                       : Assets.svg.iconBlockCheckboxOff.icon(
-                          color: colors.tertararyText,
+                          color: colors.tertiaryText,
                         ),
                 ),
                 const HorizontalSeparator(),

@@ -65,7 +65,7 @@ class RepliedMessageInfo extends HookConsumerWidget {
                   Text(
                     repliedMessage.contentDescription,
                     style: context.theme.appTextThemes.body2.copyWith(
-                      color: context.theme.appColors.onTertararyBackground,
+                      color: context.theme.appColors.onTertiaryBackground,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -77,7 +77,7 @@ class RepliedMessageInfo extends HookConsumerWidget {
               onTap: ref.read(selectedReplyMessageProvider.notifier).clear,
               child: Assets.svg.iconSheetClose.icon(
                 size: 20.0.s,
-                color: context.theme.appColors.tertararyText,
+                color: context.theme.appColors.tertiaryText,
               ),
             ),
           ],

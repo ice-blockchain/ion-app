@@ -54,7 +54,7 @@ class NftItem extends StatelessWidget {
             ),
         ],
       ),
-      backgroundColor: backgroundColor ?? context.theme.appColors.tertararyBackground,
+      backgroundColor: backgroundColor ?? context.theme.appColors.tertiaryBackground,
       leading: IonNetworkImage(
         imageUrl: nftData.tokenUri,
         width: imageWidth,

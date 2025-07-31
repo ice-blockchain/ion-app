@@ -62,7 +62,7 @@ class RestoreFromCloudVerifyStep extends HookConsumerWidget {
           icon: Assets.svg.iconLoginRestorecloud.icon(size: 36.0.s),
           titleStyle: context.theme.appTextThemes.headline2,
           descriptionStyle: context.theme.appTextThemes.body2.copyWith(
-            color: context.theme.appColors.tertararyText,
+            color: context.theme.appColors.tertiaryText,
           ),
           children: [
             Expanded(

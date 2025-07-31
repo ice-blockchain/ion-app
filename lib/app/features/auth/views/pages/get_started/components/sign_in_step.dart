@@ -101,7 +101,7 @@ class SignInStep extends HookConsumerWidget {
                   Text(
                     context.i18n.get_started_method_divider,
                     style: context.theme.appTextThemes.caption.copyWith(
-                      color: context.theme.appColors.tertararyText,
+                      color: context.theme.appColors.tertiaryText,
                     ),
                   ),
                   SizedBox(height: 14.0.s),

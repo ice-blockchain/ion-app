@@ -90,12 +90,12 @@ class SearchInput extends HookWidget {
                 ),
                 hintText: context.i18n.search_placeholder,
                 hintStyle: context.theme.appTextThemes.body.copyWith(
-                  color: context.theme.appColors.tertararyText,
+                  color: context.theme.appColors.tertiaryText,
                 ),
                 prefixIcon: Padding(
                   padding: EdgeInsetsDirectional.only(start: 12.0.s, end: 6.0.s),
                   child: Assets.svg.iconFieldSearch.icon(
-                    color: context.theme.appColors.tertararyText,
+                    color: context.theme.appColors.tertiaryText,
                     size: 18.0.s,
                   ),
                 ),

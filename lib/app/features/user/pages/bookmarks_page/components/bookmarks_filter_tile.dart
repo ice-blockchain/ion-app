@@ -32,9 +32,9 @@ class BookmarksFilterTile extends ConsumerWidget {
       return const SizedBox();
     }
     final borderColor =
-        isActive ? context.theme.appColors.primaryAccent : context.theme.appColors.onTerararyFill;
+        isActive ? context.theme.appColors.primaryAccent : context.theme.appColors.onTertiaryFill;
     final color =
-        isActive ? context.theme.appColors.primaryAccent : context.theme.appColors.tertararyText;
+        isActive ? context.theme.appColors.primaryAccent : context.theme.appColors.tertiaryText;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -42,7 +42,7 @@ class BookmarksFilterTile extends ConsumerWidget {
         padding: EdgeInsets.symmetric(horizontal: 10.0.s),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: context.theme.appColors.tertararyBackground,
+          color: context.theme.appColors.tertiaryBackground,
           borderRadius: BorderRadius.circular(12.0.s),
           border: Border.all(color: borderColor),
         ),

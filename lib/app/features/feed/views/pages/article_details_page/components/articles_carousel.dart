@@ -33,7 +33,7 @@ class ArticlesCarousel extends ConsumerWidget {
               borderRadius: BorderRadius.all(Radius.circular(16.0.s)),
               border: Border.all(
                 width: 1.0.s,
-                color: context.theme.appColors.onTerararyFill,
+                color: context.theme.appColors.onTertiaryFill,
               ),
             ),
             padding: EdgeInsets.all(12.0.s),

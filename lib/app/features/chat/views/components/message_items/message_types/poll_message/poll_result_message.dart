@@ -119,7 +119,7 @@ class _PollResultItem extends HookWidget {
             borderRadius: BorderRadius.circular(12.0.s),
             backgroundColor: Colors.transparent,
             valueColor: AlwaysStoppedAnimation<Color>(
-              isMe ? context.theme.appColors.darkBlue : context.theme.appColors.onTerararyFill,
+              isMe ? context.theme.appColors.darkBlue : context.theme.appColors.onTertiaryFill,
             ),
           ),
         ),

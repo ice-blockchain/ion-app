@@ -45,8 +45,7 @@ class AdvancedSearchGroupListItem extends ConsumerWidget {
               ],
             ),
           ),
-          Assets.svg.iconArrowRight
-              .icon(size: 24.0.s, color: context.theme.appColors.tertararyText),
+          Assets.svg.iconArrowRight.icon(size: 24.0.s, color: context.theme.appColors.tertiaryText),
         ],
       ),
     );
@@ -72,14 +71,14 @@ class GroupDescription extends StatelessWidget {
             padding: EdgeInsetsDirectional.only(end: 4.0.s),
             child: Assets.svg.iconChannelMembers.icon(
               size: 12.0.s,
-              color: context.theme.appColors.onTertararyBackground,
+              color: context.theme.appColors.onTertiaryBackground,
             ),
           ),
         Flexible(
           child: Text(
             message,
             style: context.theme.appTextThemes.body2.copyWith(
-              color: context.theme.appColors.onTertararyBackground,
+              color: context.theme.appColors.onTertiaryBackground,
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
