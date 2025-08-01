@@ -1924,26 +1924,34 @@ packages:
     dependency: transitive
     description:
       name: passkeys
-      sha256: "075a5dbaa16b76b10219cd1d9665bc9235d15eb218ac3c329560cf7b31d43640"
+      sha256: "5e42162262b804a119dd72693c5ec0fd6c4d68ddc7fce548f94f9ee562af48cb"
       url: "https://pub.dev"
     source: hosted
-    version: "2.8.2"
+    version: "2.11.0"
   passkeys_android:
     dependency: transitive
     description:
       name: passkeys_android
-      sha256: "112d23b6c5a01c00c5e9e63a2d2633368546c51f0bf3a061691b8b0d77913435"
+      sha256: e02c69a89634e1fcfae663ea4f7100a2bd8c3dd18ed1b06c5690ab58d6744c8d
       url: "https://pub.dev"
     source: hosted
-    version: "2.7.1"
+    version: "2.9.0"
+  passkeys_doctor:
+    dependency: transitive
+    description:
+      name: passkeys_doctor
+      sha256: e380712ec530d8c1fbaa6d64cdc390767a505864c5f653812df3fdb0ce54a22b
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   passkeys_ios:
     dependency: transitive
     description:
       name: passkeys_ios
-      sha256: cb5bfa4c739dbf6c2cae0d2c20642a1ed5226666d424a442166a91a1b4a204f4
+      sha256: ed7b95444c9032d2aa9df71fe358ae842ccb173d2eb5266aa25d178689d3e474
       url: "https://pub.dev"
     source: hosted
-    version: "2.6.1"
+    version: "2.7.0"
   passkeys_platform_interface:
     dependency: transitive
     description:
