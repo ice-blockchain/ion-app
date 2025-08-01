@@ -64,7 +64,7 @@ class LanguageSelectorPage extends HookConsumerWidget {
                   ScreenSideOffset.small(
                     child: continueButton!,
                   ),
-                  SizedBox(height: 8.0.s + MediaQuery.paddingOf(context).bottom),
+                  SizedBox(height: 28.0.s + MediaQuery.paddingOf(context).bottom),
                 ],
               ),
             )

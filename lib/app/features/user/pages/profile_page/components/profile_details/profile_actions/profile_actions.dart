@@ -42,8 +42,8 @@ class ProfileActions extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         FollowUserButton(pubkey: pubkey),
+        SizedBox(width: 8.0.s),
         if (!hasPrivateWallets && canSendMessage) ...[
-          SizedBox(width: 8.0.s),
           ProfileAction(
             onPressed: () async {
               final needToEnable2FA =
@@ -56,7 +56,6 @@ class ProfileActions extends ConsumerWidget {
           ),
         ],
         if (canSendMessage) ...[
-          SizedBox(width: 8.0.s),
           ProfileAction(
             onPressed: () {
               ConversationRoute(receiverMasterPubkey: pubkey).push<void>(context);

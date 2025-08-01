@@ -108,11 +108,11 @@ class _PreviewItem extends ConsumerWidget {
     }
 
     return SizedBox.square(
-      dimension: 50.0.s,
+      dimension: 62.0.s,
       child: Stack(
         children: [
           PositionedDirectional(
-            start: 0,
+            start: 12.0.s,
             bottom: 0,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.0.s),
