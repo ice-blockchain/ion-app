@@ -206,7 +206,8 @@ class PasskeysSigner {
     } else if (Platform.isAndroid) {
       // Android Platform
       final androidAvailability = await availability.android();
-      return androidAvailability.hasPasskeySupport;
+      return androidAvailability.hasPasskeySupport &&
+          true == androidAvailability.isUserVerifyingPlatformAuthenticatorAvailable;
     } else if (Platform.isIOS) {
       // iOS Platform
       final iosAvailability = await availability.iOS();
