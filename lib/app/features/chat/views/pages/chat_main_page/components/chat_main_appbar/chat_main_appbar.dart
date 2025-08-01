@@ -2,18 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/constants/ui.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.r.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.r.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.r.dart';
 import 'package:ion/app/router/app_routes.gr.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_text_button.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ChatMainAppBar extends ConsumerWidget implements PreferredSizeWidget {
-  const ChatMainAppBar({super.key});
+  const ChatMainAppBar({required this.scrollController, super.key});
+
+  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,21 +27,13 @@ class ChatMainAppBar extends ConsumerWidget implements PreferredSizeWidget {
         false;
 
     return NavigationAppBar.screen(
-      leading: Padding(
-        padding: EdgeInsetsDirectional.only(start: UiConstants.hitSlop),
-        child: NavigationTextButton(
-          label: editMode ? context.i18n.core_done : context.i18n.button_edit,
-          textStyle: context.theme.appTextThemes.subtitle2.copyWith(
-            color: hasConversations
-                ? context.theme.appColors.primaryAccent
-                : context.theme.appColors.sheetLine,
-          ),
-          onPressed: hasConversations
-              ? () {
-                  ref.read(conversationsEditModeProvider.notifier).editMode = !editMode;
-                  ref.read(selectedConversationsProvider.notifier).clear();
-                }
-              : null,
+      scrollController: scrollController,
+      leading: NavigationTextButton(
+        label: editMode ? context.i18n.core_done : context.i18n.button_edit,
+        textStyle: context.theme.appTextThemes.subtitle2.copyWith(
+          color: hasConversations
+              ? context.theme.appColors.primaryAccent
+              : context.theme.appColors.sheetLine,
         ),
       ),
       title: GestureDetector(
