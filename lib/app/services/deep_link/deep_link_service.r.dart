@@ -79,21 +79,41 @@ Future<void> deeplinkInitializer(Ref ref) async {
     return null;
   }
 
+  bool isFallbackUrl(String eventReference) {
+    final fallbackUri = Uri.parse(service._fallbackUrl);
+    final segments = fallbackUri.pathSegments;
+    if (segments.isNotEmpty) {
+      final lastSegment = segments.last;
+      return '/$lastSegment' == eventReference;
+    }
+
+    return false;
+  }
+
   await service.init(
     onDeeplink: (eventReference) async {
-      final event = EventReference.fromEncoded(eventReference);
-
-      if (event is ReplaceableEventReference) {
-        final location = switch (event.kind) {
-          ModifiablePostEntity.kind => await handlePostDeepLink(event, eventReference),
-          ArticleEntity.kind => ArticleDetailsRoute(eventReference: eventReference).location,
-          UserMetadataEntity.kind => ProfileRoute(pubkey: event.masterPubkey).location,
-          _ => null,
-        };
-
-        if (location != null) {
-          ref.read(deeplinkPathProvider.notifier).path = location;
+      try {
+        if (isFallbackUrl(eventReference)) {
+          // Just open the app in case of fallback url
+          return;
         }
+
+        final event = EventReference.fromEncoded(eventReference);
+
+        if (event is ReplaceableEventReference) {
+          final location = switch (event.kind) {
+            ModifiablePostEntity.kind => await handlePostDeepLink(event, eventReference),
+            ArticleEntity.kind => ArticleDetailsRoute(eventReference: eventReference).location,
+            UserMetadataEntity.kind => ProfileRoute(pubkey: event.masterPubkey).location,
+            _ => null,
+          };
+
+          if (location != null) {
+            ref.read(deeplinkPathProvider.notifier).path = location;
+          }
+        }
+      } catch (error) {
+        Logger.error('Deep link parsing error: $error');
       }
     },
   );
@@ -224,7 +244,7 @@ final class DeepLinkService {
     return completer.future.timeout(
       _linkGenerationTimeout,
       onTimeout: () {
-        Logger.log('Deep link generation timed out after ${_linkGenerationTimeout.inSeconds}s');
+        Logger.error('Deep link generation timed out after ${_linkGenerationTimeout.inSeconds}s');
         return _fallbackUrl;
       },
     );
@@ -240,11 +260,11 @@ final class DeepLinkService {
       if (link != null && link.isNotEmpty) {
         completer.complete(link);
       } else {
-        Logger.log('Deep link generation failed: empty or null URL in response');
+        Logger.error('Deep link generation failed: empty or null URL in response');
         completer.complete(_fallbackUrl);
       }
     } catch (error) {
-      Logger.log('Deep link parsing error', error: error);
+      Logger.error('Deep link parsing error: $error');
       completer.complete(_fallbackUrl);
     }
   }
@@ -254,7 +274,7 @@ final class DeepLinkService {
       return;
     }
 
-    Logger.log('AppsFlyer invite link generation error ($context)', error: error);
+    Logger.error('AppsFlyer invite link generation error ($context), $error');
     completer.complete(_fallbackUrl);
   }
 
