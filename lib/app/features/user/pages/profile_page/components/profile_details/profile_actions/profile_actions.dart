@@ -40,10 +40,10 @@ class ProfileActions extends ConsumerWidget {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
+      spacing: 8.0.s,
       children: [
         FollowUserButton(pubkey: pubkey),
-        if (!hasPrivateWallets && canSendMessage) ...[
-          SizedBox(width: 8.0.s),
+        if (!hasPrivateWallets && canSendMessage)
           ProfileAction(
             onPressed: () async {
               final needToEnable2FA =
@@ -54,18 +54,14 @@ class ProfileActions extends ConsumerWidget {
             },
             assetName: Assets.svg.iconProfileTips,
           ),
-        ],
-        if (canSendMessage) ...[
-          SizedBox(width: 8.0.s),
+        if (canSendMessage)
           ProfileAction(
             onPressed: () {
               ConversationRoute(receiverMasterPubkey: pubkey).push<void>(context);
             },
             assetName: Assets.svg.iconChatOff,
           ),
-        ],
-        if (following) ...[
-          SizedBox(width: 8.0.s),
+        if (following)
           ProfileAction(
             onPressed: () {
               showSimpleBottomSheet<void>(
@@ -80,7 +76,6 @@ class ProfileActions extends ConsumerWidget {
                 ? Assets.svg.iconProfileNotificationOn
                 : Assets.svg.iconProfileNotificationOff,
           ),
-        ],
       ],
     );
   }
