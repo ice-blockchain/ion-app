@@ -19,6 +19,7 @@ import 'package:ion/app/features/ion_connect/model/events_metadata_builder.dart'
 import 'package:ion/app/features/ion_connect/model/file_metadata.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.f.dart';
+import 'package:ion/app/features/ion_connect/providers/current_user_write_relay.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
@@ -66,6 +67,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         triedRelay = relay;
 
         Logger.log('[RELAY] ${relay.url} is chosen for sending events, $dislikedRelaysUrls');
+
+        _handleWriteRelay(actionSource, relay.url);
 
         await ref
             .read(relayAuthProvider(relay))
@@ -361,6 +364,12 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       content: '',
       sig: signature,
     );
+  }
+
+  void _handleWriteRelay(ActionSource actionSource, String writeRelayUrl) {
+    if (actionSource is ActionSourceCurrentUser) {
+      ref.read(currentUserWriteRelayProvider.notifier).relay = writeRelayUrl;
+    }
   }
 
   Future<List<EventMessage>> _buildMetadata({

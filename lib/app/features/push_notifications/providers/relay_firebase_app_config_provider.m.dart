@@ -9,6 +9,7 @@ import 'package:ion/app/features/core/providers/env_provider.r.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.f.dart';
 import 'package:ion/app/features/ion_connect/model/disliked_relay_urls_collection.f.dart';
 import 'package:ion/app/features/ion_connect/model/relay_info.f.dart';
+import 'package:ion/app/features/ion_connect/providers/current_user_write_relay.r.dart';
 import 'package:ion/app/features/ion_connect/providers/relays/relay_info_provider.r.dart';
 import 'package:ion/app/features/ion_connect/providers/relays/relay_picker_provider.r.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.r.dart';
@@ -34,10 +35,13 @@ class RelayFirebaseAppConfig extends _$RelayFirebaseAppConfig {
     }
 
     final savedConfig = ref.watch(savedRelayFirebaseAppConfigProvider);
+    final writeRelay = ref.watch(currentUserWriteRelayProvider);
 
     final relayUrls = [for (final userRelay in userRelays) userRelay.url];
 
-    if (savedConfig != null && relayUrls.contains(savedConfig.relayUrl)) {
+    if (savedConfig != null &&
+        relayUrls.contains(savedConfig.relayUrl) &&
+        writeRelay == savedConfig.relayUrl) {
       return savedConfig;
     }
 
