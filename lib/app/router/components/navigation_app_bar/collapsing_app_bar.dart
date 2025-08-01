@@ -43,8 +43,7 @@ class CollapsingAppBar extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             child: FlexibleSpaceBar(
               collapseMode: CollapseMode.pin,
-              background: //.child,
-                  Stack(
+              background: Stack(
                 clipBehavior: Clip.none,
                 children: [
                   Padding(
