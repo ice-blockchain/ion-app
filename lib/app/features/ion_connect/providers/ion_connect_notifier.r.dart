@@ -52,6 +52,9 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   }) async {
     _warnSendIssues(events);
 
+    final eventKinds = events.map((event) => event.kind).toSet();
+    Logger.log('[RELAY] Sending events with kinds: $eventKinds');
+
     final dislikedRelaysUrls = <String>{};
 
     IonConnectRelay? triedRelay;
@@ -77,7 +80,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         await relay.sendEvents(events).timeout(
               _defaultTimeout,
               onTimeout: () => throw TimeoutException(
-                'Sending events timed out after ${_defaultTimeout.inSeconds} seconds',
+                'Sending events {$eventKinds} timed out after ${_defaultTimeout.inSeconds} seconds',
               ),
             );
 
