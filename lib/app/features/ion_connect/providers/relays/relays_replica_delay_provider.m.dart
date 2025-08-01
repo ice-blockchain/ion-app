@@ -29,7 +29,7 @@ class RelaysReplicaDelay extends _$RelaysReplicaDelay {
     }
     ref
         .read(userPreferencesServiceProvider(identityKeyName: identityKeyName))
-        .setValue(_persistanceKey, json.encode(state.toJson()));
+        .setValue(_persistenceKey, json.encode(state.toJson()));
   }
 
   RelaysReplicaDelayState _loadSavedState() {
@@ -40,7 +40,7 @@ class RelaysReplicaDelay extends _$RelaysReplicaDelay {
 
     final userPreferencesService =
         ref.watch(userPreferencesServiceProvider(identityKeyName: identityKeyName));
-    final savedState = userPreferencesService.getValue<String>(_persistanceKey);
+    final savedState = userPreferencesService.getValue<String>(_persistenceKey);
 
     if (savedState == null) {
       return const RelaysReplicaDelayState();
@@ -49,7 +49,7 @@ class RelaysReplicaDelay extends _$RelaysReplicaDelay {
     return RelaysReplicaDelayState.fromJson(json.decode(savedState) as Map<String, dynamic>);
   }
 
-  static const _persistanceKey = 'relays_replica_delay';
+  static const _persistenceKey = 'relays_replica_delay';
 }
 
 @freezed
