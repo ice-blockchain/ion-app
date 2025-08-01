@@ -368,6 +368,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
   void _handleWriteRelay(ActionSource actionSource, String writeRelayUrl) {
     if (actionSource is ActionSourceCurrentUser) {
+      // Set current user write relay to get the correct firebase config
       ref.read(currentUserWriteRelayProvider.notifier).relay = writeRelayUrl;
     }
   }
