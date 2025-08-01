@@ -71,7 +71,7 @@ Some dependencies require Rust to be installed
 
 You should pass environment variables to Flutter compiler:
 ```
-asdf exec flutter run --dart-define-from-file=.app.env
+asdf exec flutter run --dart-define-from-file=.merged.app.env
 ```
 
 
