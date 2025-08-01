@@ -4,7 +4,6 @@ MATCH_GIT_URL = ENV["MATCH_GIT_URL"]
 APP_FLAVOR = ENV["APP_FLAVOR"]
 APP_ID = ENV["APP_ID"]
 APPLE_DEVELOPMENT_TEAM = ENV["APPLE_DEVELOPMENT_TEAM"]
-FIREBASE_DISTRIBUTION_TOKEN = ENV["FIREBASE_DISTRIBUTION_TOKEN"]
 FIREBASE_ANDROID_APP_ID = ENV["FIREBASE_ANDROID_APP_ID"]
 FIREBASE_IOS_APP_ID = ENV["FIREBASE_IOS_APP_ID"]
 
@@ -84,7 +83,7 @@ platform :ios do
                 firebase_app_distribution(
                     app: FIREBASE_IOS_APP_ID,
                     ipa_path: ipa_path,
-                    firebase_cli_token: FIREBASE_DISTRIBUTION_TOKEN,
+                    service_credentials_file: "./fastlane/keys/firebase-distribution.json",
                     release_notes: options[:release_notes] || git_branch,
                     groups: "Internal-testers",
                 )
@@ -124,7 +123,7 @@ platform :android do
                 # use bundles when the app is published
                 firebase_app_distribution(
                     app: FIREBASE_ANDROID_APP_ID,
-                    firebase_cli_token: FIREBASE_DISTRIBUTION_TOKEN,
+                    service_credentials_file: "./fastlane/keys/firebase-distribution.json",
                     android_artifact_type: "APK",
                     android_artifact_path: "build/app/outputs/flutter-apk/app-#{APP_FLAVOR}-release.apk",
                     release_notes: options[:release_notes] || git_branch,
