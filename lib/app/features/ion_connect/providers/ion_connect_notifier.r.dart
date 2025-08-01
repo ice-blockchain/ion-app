@@ -19,7 +19,6 @@ import 'package:ion/app/features/ion_connect/model/events_metadata_builder.dart'
 import 'package:ion/app/features/ion_connect/model/file_metadata.f.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_gift_wrap.f.dart';
-import 'package:ion/app/features/ion_connect/providers/current_user_write_relay.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.r.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.r.dart';
@@ -29,6 +28,7 @@ import 'package:ion/app/features/ion_connect/providers/relays/relay_picker_provi
 import 'package:ion/app/features/user/model/badges/badge_award.f.dart';
 import 'package:ion/app/features/user/model/badges/badge_definition.f.dart';
 import 'package:ion/app/features/user/model/user_delegation.f.dart';
+import 'package:ion/app/features/user/providers/relays/current_user_write_relay.r.dart';
 import 'package:ion/app/features/user/providers/relays/user_relays_manager.r.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
