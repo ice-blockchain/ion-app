@@ -271,6 +271,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.7"
+  device_info_plus:
+    dependency: transitive
+    description:
+      name: device_info_plus
+      sha256: "72d146c6d7098689ff5c5f66bcf593ac11efc530095385356e131070333e64da"
+      url: "https://pub.dev"
+    source: hosted
+    version: "11.3.0"
+  device_info_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: device_info_plus_platform_interface
+      sha256: e1ea89119e34903dca74b883d0dd78eb762814f97fb6c76f35e9ff74d261a18f
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.3"
   dio:
     dependency: "direct main"
     description:
@@ -482,10 +498,10 @@ packages:
     dependency: transitive
     description:
       name: http
-      sha256: b9c29a161230ee03d3ccf545097fccd9b87a5264228c5d348202e0f0c28f9010
+      sha256: "2c11f3f94c687ee9bad77c171151672986360b2b001d109814ee7140b2cf261b"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.2"
+    version: "1.4.0"
   http_multi_server:
     dependency: transitive
     description:
@@ -693,46 +709,70 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  package_info_plus:
+    dependency: transitive
+    description:
+      name: package_info_plus
+      sha256: "7976bfe4c583170d6cdc7077e3237560b364149fcd268b5f53d95a991963b191"
+      url: "https://pub.dev"
+    source: hosted
+    version: "8.3.0"
+  package_info_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: package_info_plus_platform_interface
+      sha256: "6c935fb612dff8e3cc9632c2b301720c77450a126114126ffaafe28d2e87956c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   passkeys:
     dependency: transitive
     description:
       name: passkeys
-      sha256: "76c8f7573e233d7bc7892dcf9e87afd60f79c1608731438378d2b14894f5d092"
+      sha256: "5e42162262b804a119dd72693c5ec0fd6c4d68ddc7fce548f94f9ee562af48cb"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.0"
+    version: "2.11.0"
   passkeys_android:
     dependency: transitive
     description:
       name: passkeys_android
-      sha256: "2a2480bc00d577c8c42f59d837ffab5a9561cdf4dd68e2726e64494681c0bff0"
+      sha256: e02c69a89634e1fcfae663ea4f7100a2bd8c3dd18ed1b06c5690ab58d6744c8d
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.0"
+    version: "2.9.0"
+  passkeys_doctor:
+    dependency: transitive
+    description:
+      name: passkeys_doctor
+      sha256: e380712ec530d8c1fbaa6d64cdc390767a505864c5f653812df3fdb0ce54a22b
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   passkeys_ios:
     dependency: transitive
     description:
       name: passkeys_ios
-      sha256: d94b0112f799ea8ac1ebd90ae6844293919173fef3b33e298dad8c34986b3bce
+      sha256: ed7b95444c9032d2aa9df71fe358ae842ccb173d2eb5266aa25d178689d3e474
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.0"
+    version: "2.7.0"
   passkeys_platform_interface:
     dependency: transitive
     description:
       name: passkeys_platform_interface
-      sha256: b22e91ca4d15cf02b374c2205d5e1cd99662fd95b09ce3b14fab1fe3e0924086
+      sha256: "6003fafa1da65b3d73c582fc7f7ada358d38f2d511b98f8b8fd3077786f4b71c"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.1"
+    version: "2.3.1"
   passkeys_web:
     dependency: transitive
     description:
       name: passkeys_web
-      sha256: a8849e633698d2915de56da82da5a2e474a6d5d72544d957d50d0eed39be5db3
+      sha256: "98d28223292738a9fbb24db33cdba00609675d54521694fdde45b7e5caf59b19"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "2.6.0"
   path:
     dependency: transitive
     description:
@@ -1062,10 +1102,10 @@ packages:
     dependency: transitive
     description:
       name: web
-      sha256: "97da13628db363c635202ad97068d47c5b8aa555808e7a9411963c533b449b27"
+      sha256: "868d88a33d8a87b18ffc05f9f030ba328ffefba92d6c127917a2ba740f9cfe4a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.1"
+    version: "1.1.1"
   web_socket:
     dependency: transitive
     description:
@@ -1090,6 +1130,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.5.5"
+  win32_registry:
+    dependency: transitive
+    description:
+      name: win32_registry
+      sha256: "21ec76dfc731550fd3e2ce7a33a9ea90b828fdf19a5c3bcf556fa992cfa99852"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.5"
   xdg_directories:
     dependency: transitive
     description:
@@ -1107,5 +1155,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.7.0-0 <4.0.0"
-  flutter: ">=3.24.0"
+  dart: ">=3.7.0 <4.0.0"
+  flutter: ">=3.29.0"
