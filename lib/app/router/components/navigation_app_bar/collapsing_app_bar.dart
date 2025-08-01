@@ -33,7 +33,7 @@ class CollapsingAppBar extends StatelessWidget {
       pinned: true,
       automaticallyImplyLeading: false,
       expandedHeight: height + topOffset + bottomOffset,
-      shadowColor: context.theme.appColors.onTertararyBackground.withValues(alpha: 0.05),
+      shadowColor: context.theme.appColors.onTertiaryBackground.withValues(alpha: 0.05),
       toolbarHeight: 0,
       backgroundColor: context.theme.appColors.onPrimaryAccent,
       surfaceTintColor: context.theme.appColors.onPrimaryAccent,

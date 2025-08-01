@@ -33,8 +33,8 @@ class TransactionDetailsActions extends StatelessWidget {
               color: disableExplorer ? context.theme.appColors.onPrimaryAccent : null,
             ),
             onPressed: onViewOnExplorer,
-            backgroundColor: disableExplorer ? null : context.theme.appColors.tertararyBackground,
-            borderColor: disableExplorer ? null : context.theme.appColors.onTerararyFill,
+            backgroundColor: disableExplorer ? null : context.theme.appColors.tertiaryBackground,
+            borderColor: disableExplorer ? null : context.theme.appColors.onTertiaryFill,
           ),
         ),
         SizedBox(
@@ -44,8 +44,8 @@ class TransactionDetailsActions extends StatelessWidget {
           icon: Assets.svg.iconButtonShare.icon(),
           type: ButtonType.outlined,
           onPressed: onShare,
-          backgroundColor: context.theme.appColors.tertararyBackground,
-          borderColor: context.theme.appColors.onTerararyFill,
+          backgroundColor: context.theme.appColors.tertiaryBackground,
+          borderColor: context.theme.appColors.onTertiaryFill,
         ),
       ],
     );

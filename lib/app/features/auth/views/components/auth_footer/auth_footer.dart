@@ -73,7 +73,7 @@ class AuthFooter extends HookWidget {
             termsPrivacyTextSpan,
             textAlign: TextAlign.center,
             style: context.theme.appTextThemes.caption3.copyWith(
-              color: context.theme.appColors.tertararyText,
+              color: context.theme.appColors.tertiaryText,
             ),
           ),
         ),

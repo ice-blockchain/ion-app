@@ -81,7 +81,7 @@ class PaymentSelectionModal extends HookConsumerWidget {
                       option.getDesc(context),
                       maxLines: 2,
                     ),
-                    backgroundColor: context.theme.appColors.tertararyBackground,
+                    backgroundColor: context.theme.appColors.tertiaryBackground,
                     leading: option.iconAsset.icon(size: 48.0.s),
                     onTap: () {
                       if (option == PaymentType.request) {

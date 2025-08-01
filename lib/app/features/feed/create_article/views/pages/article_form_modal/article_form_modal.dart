@@ -151,7 +151,7 @@ class ArticleFormModal extends HookConsumerWidget {
                           decoration: InputDecoration(
                             hintText: context.i18n.create_article_title_placeholder,
                             hintStyle: context.theme.appTextThemes.headline2.copyWith(
-                              color: context.theme.appColors.tertararyText,
+                              color: context.theme.appColors.tertiaryText,
                             ),
                             border: InputBorder.none,
                           ),

@@ -135,7 +135,7 @@ class OwnEntityMenu extends ConsumerWidget {
       child: Padding(
         padding: padding,
         child: Assets.svg.iconMorePopup.icon(
-          color: iconColor ?? context.theme.appColors.onTertararyBackground,
+          color: iconColor ?? context.theme.appColors.onTertiaryBackground,
         ),
       ),
     );

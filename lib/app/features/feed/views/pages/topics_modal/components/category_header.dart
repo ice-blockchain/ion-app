@@ -25,7 +25,7 @@ class CategoryHeader extends StatelessWidget {
       child: Text(
         categoryName.toUpperCase(),
         style: context.theme.appTextThemes.caption6.copyWith(
-          color: context.theme.appColors.tertararyText,
+          color: context.theme.appColors.tertiaryText,
         ),
       ),
     );

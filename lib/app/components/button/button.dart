@@ -178,12 +178,12 @@ class Button extends StatelessWidget {
     return backgroundColor ??
         switch (type) {
           ButtonType.primary => context.theme.appColors.primaryAccent,
-          ButtonType.secondary => context.theme.appColors.tertararyBackground,
+          ButtonType.secondary => context.theme.appColors.tertiaryBackground,
           ButtonType.outlined => Colors.transparent,
           ButtonType.disabled => context.theme.appColors.sheetLine,
-          ButtonType.menuInactive => context.theme.appColors.tertararyBackground,
+          ButtonType.menuInactive => context.theme.appColors.tertiaryBackground,
           ButtonType.menuActive => context.theme.appColors.secondaryBackground,
-          ButtonType.dropdown => context.theme.appColors.tertararyBackground,
+          ButtonType.dropdown => context.theme.appColors.tertiaryBackground,
         };
   }
 
@@ -192,12 +192,12 @@ class Button extends StatelessWidget {
         tintColor ??
         switch (type) {
           ButtonType.primary => context.theme.appColors.onPrimaryAccent,
-          ButtonType.secondary => context.theme.appColors.tertararyBackground,
+          ButtonType.secondary => context.theme.appColors.tertiaryBackground,
           ButtonType.outlined => context.theme.appColors.strokeElements,
           ButtonType.disabled => context.theme.appColors.sheetLine,
-          ButtonType.menuInactive => context.theme.appColors.onTerararyFill,
+          ButtonType.menuInactive => context.theme.appColors.onTertiaryFill,
           ButtonType.menuActive => context.theme.appColors.primaryAccent,
-          ButtonType.dropdown => context.theme.appColors.onTerararyFill,
+          ButtonType.dropdown => context.theme.appColors.onTertiaryFill,
         };
   }
 
@@ -208,7 +208,7 @@ class Button extends StatelessWidget {
           ButtonType.secondary => context.theme.appColors.primaryText,
           ButtonType.outlined => context.theme.appColors.secondaryText,
           ButtonType.disabled => context.theme.appColors.onPrimaryAccent,
-          ButtonType.menuInactive => context.theme.appColors.tertararyText,
+          ButtonType.menuInactive => context.theme.appColors.tertiaryText,
           ButtonType.menuActive => context.theme.appColors.primaryText,
           ButtonType.dropdown => context.theme.appColors.primaryText,
         };
@@ -221,7 +221,7 @@ class Button extends StatelessWidget {
           ButtonType.secondary => context.theme.appColors.primaryAccent,
           ButtonType.outlined => context.theme.appColors.secondaryText,
           ButtonType.disabled => context.theme.appColors.onPrimaryAccent,
-          ButtonType.menuInactive => context.theme.appColors.tertararyText,
+          ButtonType.menuInactive => context.theme.appColors.tertiaryText,
           ButtonType.menuActive => context.theme.appColors.primaryAccent,
           ButtonType.dropdown => context.theme.appColors.primaryText,
         };

@@ -50,7 +50,7 @@ class AccountsTile extends ConsumerWidget {
           ? Assets.svg.iconBlockCheckboxOnblue.icon(color: context.theme.appColors.onPrimaryAccent)
           : null,
       contentPadding: EdgeInsets.symmetric(horizontal: 16.0.s),
-      backgroundColor: context.theme.appColors.tertararyBackground,
+      backgroundColor: context.theme.appColors.tertiaryBackground,
       borderRadius: ListItem.defaultBorderRadius,
       constraints: ListItem.defaultConstraints,
     );

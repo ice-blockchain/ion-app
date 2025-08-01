@@ -38,7 +38,7 @@ class ConversationDeleteButton extends ConsumerWidget {
           Assets.svg.iconBlockDelete.icon(
             color: conversationsToManage.isNotEmpty
                 ? context.theme.appColors.attentionRed
-                : context.theme.appColors.tertararyText,
+                : context.theme.appColors.tertiaryText,
             size: 20.0.s,
           ),
           SizedBox(width: 4.0.s),
@@ -52,7 +52,7 @@ class ConversationDeleteButton extends ConsumerWidget {
               style: context.theme.appTextThemes.body2.copyWith(
                 color: conversationsToManage.isNotEmpty
                     ? context.theme.appColors.attentionRed
-                    : context.theme.appColors.tertararyText,
+                    : context.theme.appColors.tertiaryText,
               ),
             ),
           ),

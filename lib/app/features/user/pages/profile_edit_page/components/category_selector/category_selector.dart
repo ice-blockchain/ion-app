@@ -38,13 +38,13 @@ class CategorySelector extends HookConsumerWidget {
       borderColor: context.theme.appColors.strokeElements,
       leadingIcon: ButtonIconFrame(
         containerSize: 30.0.s,
-        color: context.theme.appColors.tertararyBackground,
+        color: context.theme.appColors.tertiaryBackground,
         icon: Assets.svg.iconBlockchain.icon(
           size: 20.0.s,
           color: context.theme.appColors.secondaryText,
         ),
         border: Border.fromBorderSide(
-          BorderSide(color: context.theme.appColors.onTerararyFill, width: 1.0.s),
+          BorderSide(color: context.theme.appColors.onTertiaryFill, width: 1.0.s),
         ),
       ),
       label: SizedBox(

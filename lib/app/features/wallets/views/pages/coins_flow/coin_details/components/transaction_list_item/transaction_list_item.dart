@@ -50,7 +50,7 @@ class TransactionListItem extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: context.theme.appColors.tertararyBackground,
+      backgroundColor: context.theme.appColors.tertiaryBackground,
       leading: TransactionListItemLeadingIcon(
         type: transactionData.transactionType,
         status: transactionData.origin.status,

@@ -29,7 +29,7 @@ class ForwardedMessageInfo extends StatelessWidget {
                   size: 16.0.s,
                   color: isMe
                       ? context.theme.appColors.strokeElements
-                      : context.theme.appColors.onTertararyBackground,
+                      : context.theme.appColors.onTertiaryBackground,
                 ),
                 SizedBox(width: 4.0.s),
                 Text(
@@ -37,7 +37,7 @@ class ForwardedMessageInfo extends StatelessWidget {
                   style: context.theme.appTextThemes.body2.copyWith(
                     color: isMe
                         ? context.theme.appColors.strokeElements
-                        : context.theme.appColors.onTertararyBackground,
+                        : context.theme.appColors.onTertiaryBackground,
                   ),
                 ),
               ],

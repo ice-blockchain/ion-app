@@ -56,7 +56,7 @@ class VerifyIdentityPromptDialog extends ConsumerWidget {
             Text(
               verifyIdentityType.getDesc(context),
               textAlign: TextAlign.center,
-              style: textThemes.body2.copyWith(color: colors.tertararyText),
+              style: textThemes.body2.copyWith(color: colors.tertiaryText),
             ),
             SizedBox(height: 69.0.s),
             IONLoadingIndicator(

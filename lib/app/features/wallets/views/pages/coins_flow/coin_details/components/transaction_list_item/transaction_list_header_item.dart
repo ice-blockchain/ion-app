@@ -21,13 +21,13 @@ class TransactionListHeaderItem extends StatelessWidget {
   Color _getBorderColor(BuildContext context) {
     return isSelected
         ? context.theme.appColors.primaryAccent
-        : context.theme.appColors.onTerararyFill;
+        : context.theme.appColors.onTertiaryFill;
   }
 
   Color _getTextColor(BuildContext context) {
     return isSelected
         ? context.theme.appColors.primaryText
-        : context.theme.appColors.onTertararyBackground;
+        : context.theme.appColors.onTertiaryBackground;
   }
 
   @override
@@ -41,7 +41,7 @@ class TransactionListHeaderItem extends StatelessWidget {
         child: Ink(
           height: TransactionListConstants.headerItemHeight,
           decoration: BoxDecoration(
-            color: context.theme.appColors.tertararyBackground,
+            color: context.theme.appColors.tertiaryBackground,
             borderRadius: borderRadius,
             border: Border.all(
               color: _getBorderColor(context),

@@ -21,7 +21,7 @@ class ReportOptionsSelectorButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final iconBorderSize = Border.fromBorderSide(
-      BorderSide(color: context.theme.appColors.onTerararyFill, width: 1.0.s),
+      BorderSide(color: context.theme.appColors.onTertiaryFill, width: 1.0.s),
     );
 
     return Button.dropdown(
@@ -32,7 +32,7 @@ class ReportOptionsSelectorButton extends StatelessWidget {
           ? context.theme.appColors.attentionRed
           : context.theme.appColors.strokeElements,
       leadingIcon: ButtonIconFrame(
-        color: context.theme.appColors.tertararyBackground,
+        color: context.theme.appColors.tertiaryBackground,
         icon: (state.value?.iconAsset ?? Assets.svg.iconSelect2).icon(
           size: 20.0.s,
           color: context.theme.appColors.secondaryText,

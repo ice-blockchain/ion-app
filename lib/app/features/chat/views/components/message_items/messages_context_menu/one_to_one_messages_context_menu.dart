@@ -103,7 +103,7 @@ class OneToOneMessagingContextMenu extends ConsumerWidget {
         ],
       ),
       child: Assets.svg.iconMorePopup.icon(
-        color: context.theme.appColors.onTertararyBackground,
+        color: context.theme.appColors.onTertiaryBackground,
       ),
     );
   }

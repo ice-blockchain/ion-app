@@ -292,7 +292,7 @@ class ChatTimestamp extends StatelessWidget {
     return Text(
       formatMessageTimestamp(time),
       style: context.theme.appTextThemes.caption3.copyWith(
-        color: context.theme.appColors.onTertararyBackground,
+        color: context.theme.appColors.onTertiaryBackground,
       ),
     );
   }
@@ -355,11 +355,11 @@ class ChatPreview extends HookConsumerWidget {
                 style: messageType == MessageType.emoji
                     ? context.theme.appTextThemes.body2
                         .copyWith(
-                          color: textColor ?? context.theme.appColors.onTertararyBackground,
+                          color: textColor ?? context.theme.appColors.onTertiaryBackground,
                         )
                         .platformEmojiAware()
                     : context.theme.appTextThemes.body2.copyWith(
-                        color: textColor ?? context.theme.appColors.onTertararyBackground,
+                        color: textColor ?? context.theme.appColors.onTertiaryBackground,
                       ),
               );
             },
@@ -393,7 +393,7 @@ class RecentChatMessageIcon extends StatelessWidget {
         padding: EdgeInsetsDirectional.only(end: 2.0.s),
         child: messageIconPath.icon(
           size: 16.0.s,
-          color: color ?? context.theme.appColors.onTertararyBackground,
+          color: color ?? context.theme.appColors.onTertiaryBackground,
         ),
       );
     }

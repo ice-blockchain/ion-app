@@ -27,7 +27,7 @@ class NewChatInitialView extends StatelessWidget {
               child: Text(
                 context.i18n.new_chat_modal_description,
                 style: context.theme.appTextThemes.caption2.copyWith(
-                  color: context.theme.appColors.onTertararyBackground,
+                  color: context.theme.appColors.onTertiaryBackground,
                 ),
                 textAlign: TextAlign.center,
               ),

@@ -63,7 +63,7 @@ class CounterItemsFooter extends HookConsumerWidget {
                 eventReference: eventReference,
                 size: 16.0.s,
                 padding: itemPadding + EdgeInsetsDirectional.only(end: 8.0.s, start: 14.0.s),
-                color: color ?? context.theme.appColors.onTertararyBackground,
+                color: color ?? context.theme.appColors.onTertiaryBackground,
               ),
               ShareButton(
                 eventReference: eventReference,

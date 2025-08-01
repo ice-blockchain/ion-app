@@ -30,7 +30,7 @@ class WebsiteInput extends StatelessWidget {
       prefix: Text(
         'https://',
         style: context.theme.appTextThemes.body.copyWith(
-          color: context.theme.appColors.tertararyText,
+          color: context.theme.appColors.tertiaryText,
         ),
       ),
       prefixIconAssetName: Assets.svg.iconArticleLink,

@@ -28,8 +28,8 @@ class ProfileAction extends StatelessWidget {
       size: buttonSize,
       fixedSize: Size(36.0.s, 24.0.s),
       borderRadius: BorderRadius.circular(20.0.s),
-      borderColor: colors.onTerararyFill,
-      backgroundColor: colors.tertararyBackground,
+      borderColor: colors.onTertiaryFill,
+      backgroundColor: colors.tertiaryBackground,
       tintColor: colors.primaryText,
       icon: assetName.icon(
         size: iconSize,

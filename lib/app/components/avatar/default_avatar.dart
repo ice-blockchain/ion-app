@@ -15,7 +15,7 @@ class DefaultAvatar extends StatelessWidget {
       alignment: Alignment.center,
       width: size,
       height: size,
-      color: context.theme.appColors.onTerararyFill,
+      color: context.theme.appColors.onTertiaryFill,
       child: Assets.svg.iconProfileNoimage.icon(size: size * 0.8),
     );
   }
