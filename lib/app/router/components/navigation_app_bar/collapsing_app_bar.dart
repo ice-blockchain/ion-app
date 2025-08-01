@@ -50,7 +50,6 @@ class CollapsingAppBar extends StatelessWidget {
                   Padding(
                     padding: EdgeInsetsDirectional.only(bottom: bottomOffset),
                     child: IgnorePointer(
-                      // ignoring: false,
                       ignoring: overlayOpacity > 0.5,
                       child: child,
                     ),

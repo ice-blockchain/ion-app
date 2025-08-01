@@ -12,7 +12,7 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_back_button.dart';
 
-class NavigationAppBar extends HookConsumerWidget implements PreferredSizeWidget {
+class NavigationAppBar extends HookWidget implements PreferredSizeWidget {
   const NavigationAppBar({
     required this.useScreenTopOffset,
     this.title,
