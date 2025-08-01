@@ -106,7 +106,7 @@ class NavigationAppBar extends HookWidget implements PreferredSizeWidget {
   final ScrollController? scrollController;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final hasScrolled = useState(false);
     if (scrollController != null) {
       useEffect(
