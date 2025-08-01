@@ -28,6 +28,7 @@ import 'package:ion/app/features/ion_connect/providers/relays/relay_picker_provi
 import 'package:ion/app/features/user/model/badges/badge_award.f.dart';
 import 'package:ion/app/features/user/model/badges/badge_definition.f.dart';
 import 'package:ion/app/features/user/model/user_delegation.f.dart';
+import 'package:ion/app/features/user/providers/relays/current_user_write_relay.r.dart';
 import 'package:ion/app/features/user/providers/relays/user_relays_manager.r.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.r.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -66,6 +67,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         triedRelay = relay;
 
         Logger.log('[RELAY] ${relay.url} is chosen for sending events, $dislikedRelaysUrls');
+
+        _handleWriteRelay(actionSource, relay.url);
 
         await ref
             .read(relayAuthProvider(relay))
@@ -361,6 +364,13 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       content: '',
       sig: signature,
     );
+  }
+
+  void _handleWriteRelay(ActionSource actionSource, String writeRelayUrl) {
+    if (actionSource is ActionSourceCurrentUser) {
+      // Set current user write relay to get the correct firebase config
+      ref.read(currentUserWriteRelayProvider.notifier).relay = writeRelayUrl;
+    }
   }
 
   Future<List<EventMessage>> _buildMetadata({
