@@ -80,7 +80,9 @@ class ChatInputBar extends HookConsumerWidget {
               ReplaceablePrivateDirectMessageData.textMessageLimit;
         }
 
-        textFieldController.addListener(onTextChanged);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          textFieldController.addListener(onTextChanged);
+        });
         return () => textFieldController.removeListener(onTextChanged);
       },
       [textFieldController, conversationId],
