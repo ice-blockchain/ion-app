@@ -14,7 +14,6 @@ class FeatureFlags extends _$FeatureFlags {
       /// Local flags
       WalletFeatureFlag.buyNftEnabled: false,
       WalletFeatureFlag.dappsEnabled: false,
-      WalletFeatureFlag.forceSecurityEnabled: true,
       FeedFeatureFlag.showTrendingVideo: true,
       FeedFeatureFlag.showSuggestions: true,
       ChatFeatureFlag.hideCommunity: true,

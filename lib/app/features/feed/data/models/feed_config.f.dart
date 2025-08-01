@@ -25,6 +25,7 @@ class FeedConfig with _$FeedConfig implements AppConfigWithVersion {
     required double followingMaxRetriesMultiplier,
     @Default(true) bool allowNewRegistrations,
     @Default(false) bool enableEarlyAccessRegistrations,
+    @Default(true) bool forceSecurityEnabled,
   }) = _FeedConfig;
 
   const FeedConfig._();
