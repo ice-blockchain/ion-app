@@ -47,39 +47,37 @@ class ChatTextField extends HookConsumerWidget {
       },
     );
 
-    return Expanded(
-      child: TextField(
-        focusNode: textFieldFocusNode,
-        controller: textFieldController,
-        maxLines: 5,
-        minLines: 1,
-        textCapitalization: TextCapitalization.sentences,
-        onChanged: onTextChanged,
-        onSubmitted: (_) => textFieldController.clear(),
-        style: context.theme.appTextThemes.body2.copyWith(
-          color: context.theme.appColors.primaryText,
+    return TextField(
+      focusNode: textFieldFocusNode,
+      controller: textFieldController,
+      maxLines: 5,
+      minLines: 1,
+      textCapitalization: TextCapitalization.sentences,
+      onChanged: onTextChanged,
+      onSubmitted: (_) => textFieldController.clear(),
+      style: context.theme.appTextThemes.body2.copyWith(
+        color: context.theme.appColors.primaryText,
+      ),
+      decoration: InputDecoration(
+        isDense: true,
+        contentPadding: EdgeInsets.symmetric(
+          vertical: 7.0.s,
+          horizontal: 12.0.s,
         ),
-        decoration: InputDecoration(
-          isDense: true,
-          contentPadding: EdgeInsets.symmetric(
-            vertical: 7.0.s,
-            horizontal: 12.0.s,
-          ),
-          fillColor: context.theme.appColors.onSecondaryBackground,
-          filled: true,
-          hintText: context.i18n.write_a_message,
-          hintStyle: context.theme.appTextThemes.body2.copyWith(
-            color: context.theme.appColors.quaternaryText,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(18.0.s),
-            borderSide: BorderSide.none,
-          ),
+        fillColor: context.theme.appColors.onSecondaryBackground,
+        filled: true,
+        hintText: context.i18n.write_a_message,
+        hintStyle: context.theme.appTextThemes.body2.copyWith(
+          color: context.theme.appColors.quaternaryText,
         ),
-        contentInsertionConfiguration: ContentInsertionConfiguration(
-          allowedMimeTypes: ['image/gif'],
-          onContentInserted: onGifInsertedByAndroidKeyboard,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18.0.s),
+          borderSide: BorderSide.none,
         ),
+      ),
+      contentInsertionConfiguration: ContentInsertionConfiguration(
+        allowedMimeTypes: ['image/gif'],
+        onContentInserted: onGifInsertedByAndroidKeyboard,
       ),
     );
   }
