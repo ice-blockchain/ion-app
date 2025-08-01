@@ -97,12 +97,18 @@ android {
         production {
             dimension "default"
             applicationIdSuffix ""
-            manifestPlaceholders = [appName: "Online+"]
+            manifestPlaceholders = [
+                appName: "Online+",
+                deeplink_host: "app.online.io"
+            ]
         }
         staging {
             dimension "default"
             applicationIdSuffix ".staging"
-            manifestPlaceholders = [appName: "Online+"]
+            manifestPlaceholders = [
+                appName: "Online+",
+                deeplink_host: "testnet.app.online.io"
+            ]
         }
     }
 }

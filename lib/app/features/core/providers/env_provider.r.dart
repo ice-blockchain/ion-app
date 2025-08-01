@@ -34,6 +34,8 @@ enum EnvVariable {
   AF_APP_ID,
   AF_ONE_LINK_TEMPLATE_ID,
   AF_DEV_KEY,
+  AF_BRAND_DOMAIN,
+  AF_BASE_HOST,
 }
 
 @Riverpod(keepAlive: true)
@@ -103,6 +105,8 @@ class Env extends _$Env {
       EnvVariable.AF_ONE_LINK_TEMPLATE_ID =>
         const String.fromEnvironment('AF_ONE_LINK_TEMPLATE_ID') as T,
       EnvVariable.AF_DEV_KEY => const String.fromEnvironment('AF_DEV_KEY') as T,
+      EnvVariable.AF_BRAND_DOMAIN => const String.fromEnvironment('AF_BRAND_DOMAIN') as T,
+      EnvVariable.AF_BASE_HOST => const String.fromEnvironment('AF_BASE_HOST') as T,
     };
   }
 }

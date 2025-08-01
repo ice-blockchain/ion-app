@@ -45,7 +45,14 @@ class DeeplinkPath extends _$DeeplinkPath {
 DeepLinkService deepLinkService(Ref ref) {
   final env = ref.read(envProvider.notifier);
   final templateId = env.get<String>(EnvVariable.AF_ONE_LINK_TEMPLATE_ID);
-  return DeepLinkService(ref.watch(appsflyerSdkProvider), templateId);
+  final brandDomain = env.get<String>(EnvVariable.AF_BRAND_DOMAIN);
+  final baseHost = env.get<String>(EnvVariable.AF_BASE_HOST);
+  return DeepLinkService(
+    ref.watch(appsflyerSdkProvider),
+    templateId: templateId,
+    brandDomain: brandDomain,
+    baseHost: baseHost,
+  );
 }
 
 @riverpod
@@ -72,21 +79,41 @@ Future<void> deeplinkInitializer(Ref ref) async {
     return null;
   }
 
+  bool isFallbackUrl(String eventReference) {
+    final fallbackUri = Uri.parse(service._fallbackUrl);
+    final segments = fallbackUri.pathSegments;
+    if (segments.isNotEmpty) {
+      final lastSegment = segments.last;
+      return '/$lastSegment' == eventReference;
+    }
+
+    return false;
+  }
+
   await service.init(
     onDeeplink: (eventReference) async {
-      final event = EventReference.fromEncoded(eventReference);
-
-      if (event is ReplaceableEventReference) {
-        final location = switch (event.kind) {
-          ModifiablePostEntity.kind => await handlePostDeepLink(event, eventReference),
-          ArticleEntity.kind => ArticleDetailsRoute(eventReference: eventReference).location,
-          UserMetadataEntity.kind => ProfileRoute(pubkey: event.masterPubkey).location,
-          _ => null,
-        };
-
-        if (location != null) {
-          ref.read(deeplinkPathProvider.notifier).path = location;
+      try {
+        if (isFallbackUrl(eventReference)) {
+          // Just open the app in case of fallback url
+          return;
         }
+
+        final event = EventReference.fromEncoded(eventReference);
+
+        if (event is ReplaceableEventReference) {
+          final location = switch (event.kind) {
+            ModifiablePostEntity.kind => await handlePostDeepLink(event, eventReference),
+            ArticleEntity.kind => ArticleDetailsRoute(eventReference: eventReference).location,
+            UserMetadataEntity.kind => ProfileRoute(pubkey: event.masterPubkey).location,
+            _ => null,
+          };
+
+          if (location != null) {
+            ref.read(deeplinkPathProvider.notifier).path = location;
+          }
+        }
+      } catch (error) {
+        Logger.error('Deep link parsing error: $error');
       }
     },
   );
@@ -113,19 +140,28 @@ AppsflyerSdk appsflyerSdk(Ref ref) {
 }
 
 final class DeepLinkService {
-  DeepLinkService(this._appsflyerSdk, this._templateId);
+  DeepLinkService(
+    this._appsflyerSdk, {
+    required String templateId,
+    required String brandDomain,
+    required String baseHost,
+  })  : _templateId = templateId,
+        _brandDomain = brandDomain,
+        _baseHost = baseHost;
 
   final AppsflyerSdk _appsflyerSdk;
 
   final String _templateId;
+  final String _brandDomain;
+  final String _baseHost;
 
-  static final oneLinkUrlRegex = RegExp(r'@?(https://ion\.onelink\.me/[A-Za-z0-9\-_/\?&%=#]*)');
-
-  static const _baseUrl = 'https://ion.onelink.me';
+  static final oneLinkUrlRegex = RegExp(
+    r'@?(https://(ion\.onelink\.me|app\.online\.io|testnet\.app\.online\.io)/[A-Za-z0-9\-_/\?&%=#]*)',
+  );
 
   // Defined on AppsFlyer portal for each template.
   // Used in case if generateInviteLink fails.
-  String get _fallbackUrl => '$_baseUrl/$_templateId/feed';
+  String get _fallbackUrl => 'https://$_baseHost/$_templateId/feed';
 
   static const Duration _linkGenerationTimeout = Duration(seconds: 10);
 
@@ -134,14 +170,24 @@ final class DeepLinkService {
   Future<void> init({required void Function(String path) onDeeplink}) async {
     _appsflyerSdk
       ..onDeepLinking((link) {
-        Logger.log('onDeepLinking $link');
-        if (link.status == Status.FOUND) {
-          final path = link.deepLink?.deepLinkValue;
-          if (path == null || path.isEmpty) return;
+        final path = link.deepLink?.deepLinkValue;
+        if (path != null) {
+          if (link.status == Status.FOUND) {
+            if (path.isEmpty) return;
 
-          return onDeeplink(path);
+            return onDeeplink(path);
+          }
+        } else {
+          final clickEvent = link.deepLink?.clickEvent;
+          final host = clickEvent?['host'] as String?;
+          if (host == _brandDomain) {
+            final url = clickEvent?['link'] as String?;
+            if (url != null) {
+              _appsflyerSdk.resolveOneLinkUrl(url.replaceAll(_brandDomain, _baseHost));
+              return;
+            }
+          }
         }
-
         onDeeplink(_fallbackUrl);
       })
       ..stop(true);
@@ -184,7 +230,10 @@ final class DeepLinkService {
 
     try {
       _appsflyerSdk.generateInviteLink(
-        AppsFlyerInviteLinkParams(customParams: {'deep_link_value': path}),
+        AppsFlyerInviteLinkParams(
+          brandDomain: _brandDomain,
+          customParams: {'deep_link_value': path},
+        ),
         (dynamic data) => _handleInviteLinkSuccess(data, completer),
         (dynamic error) => _handleInviteLinkError(error, completer, 'SDK callback error'),
       );
@@ -195,7 +244,7 @@ final class DeepLinkService {
     return completer.future.timeout(
       _linkGenerationTimeout,
       onTimeout: () {
-        Logger.log('Deep link generation timed out after ${_linkGenerationTimeout.inSeconds}s');
+        Logger.error('Deep link generation timed out after ${_linkGenerationTimeout.inSeconds}s');
         return _fallbackUrl;
       },
     );
@@ -211,11 +260,11 @@ final class DeepLinkService {
       if (link != null && link.isNotEmpty) {
         completer.complete(link);
       } else {
-        Logger.log('Deep link generation failed: empty or null URL in response');
+        Logger.error('Deep link generation failed: empty or null URL in response');
         completer.complete(_fallbackUrl);
       }
     } catch (error) {
-      Logger.log('Deep link parsing error', error: error);
+      Logger.error('Deep link parsing error: $error');
       completer.complete(_fallbackUrl);
     }
   }
@@ -225,7 +274,7 @@ final class DeepLinkService {
       return;
     }
 
-    Logger.log('AppsFlyer invite link generation error ($context)', error: error);
+    Logger.error('AppsFlyer invite link generation error ($context), $error');
     completer.complete(_fallbackUrl);
   }
 
